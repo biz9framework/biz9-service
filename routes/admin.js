@@ -282,7 +282,7 @@ router.post('/update_system', function(req, res, next) {
 			helper.left_nav.parent_data_type=helper.mobile.data_type;
 			helper.left_nav.top_tbl_id=helper.mobile.tbl_id;
 			helper.left_nav.top_data_type=helper.mobile.data_type;
-			helper.left_nav.left_nav_header=biz9.get_id()+"_header";
+			helper.left_nav.left_nav_header="BoSS AppZ are web and mobile applications built for the BoSS on the go!";
 			helper.left_nav.left_nav_sub_note=biz9.get_test_sub_note();
 			helper.left_nav.left_nav_bar_title="Stay Connected";
 			helper.left_nav.left_nav_bar_social="Contact Us";
@@ -1470,7 +1470,7 @@ router.post('/update_system', function(req, res, next) {
 				var service=biz9.get_new_item(DT_SERVICE,0);
 					service.title='Service Title '+ a + " " + b;
 					service.title_url=biz9.get_title_url(service.title);
-					service.visible=biz9.get_id(3);
+					service.visible=biz9.get_id(1);
 					service.order=b;
 					service.photofilename=helper.photofilename_list[biz9.get_id(helper.photofilename_list.length-1)];
 					service.sub_note=biz9.get_test_sub_note();

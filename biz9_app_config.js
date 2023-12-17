@@ -1,5 +1,5 @@
 /* --- APP CONFIG START  --- */
-const APP_ID='19';
+const PROJECT_ID='19';
 const APP_TITLE_ID='';
 const APP_TITLE='BiZ9-Service';
 const APP_PORT="1901";
@@ -23,8 +23,8 @@ const MONGO_IP='localhost';  // OS_ENV = process.env.BIZ9_BOX_IP_217; local = 'l
 const MONGO_USERNAME_PASSWORD=''; // local = ''; remote = 'ban:1234567@'
 const MONGO_PORT="27019";
 const MONGO_SERVER_USER='admin';
-const MONGO_CONFIG_FILE='/etc/mongod.conf';
-const SSH_KEY_FILE="";
+const MONGO_CONFIG='/etc/mongod.conf';
+const SSH_KEY="";
 /* --- MONGO END --- */
 /* --- REDIS START --- */
 const REDIS_URL="0.0.0.0";
@@ -46,7 +46,7 @@ const BREVO_FORM_SEND_TEMPLATE_ID='10';
 exports.BREVO_KEY = BREVO_KEY;
 exports.BREVO_FORM_SEND_SUBJECT = BREVO_FORM_SEND_SUBJECT;
 exports.BREVO_FORM_SEND_TEMPLATE_ID = BREVO_FORM_SEND_TEMPLATE_ID;
-exports.APP_ID = APP_ID;
+exports.PROJECT_ID = PROJECT_ID;
 exports.APP_TITLE_ID = APP_TITLE_ID;
 exports.APP_TITLE = APP_TITLE;
 exports.APP_PORT = APP_PORT;
@@ -54,8 +54,8 @@ exports.MONGO_USERNAME_PASSWORD = MONGO_USERNAME_PASSWORD;
 exports.MONGO_PORT = MONGO_PORT;
 exports.MONGO_IP = MONGO_IP;
 exports.MONGO_SERVER_USER = MONGO_SERVER_USER;
-exports.MONGO_CONFIG_FILE = MONGO_CONFIG_FILE;
-exports.SSH_KEY_FILE = SSH_KEY_FILE;
+exports.MONGO_CONFIG = MONGO_CONFIG;
+exports.SSH_KEY = SSH_KEY;
 exports.REDIS_URL = REDIS_URL;
 exports.REDIS_PORT = REDIS_PORT;
 exports.AWS_S3_SAVE = AWS_S3_SAVE;

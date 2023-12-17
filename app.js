@@ -15,11 +15,10 @@ biz9_app_config=require("./biz9_app_config");
 ENV=process.env.NODE_ENV;
 /*--- APP DEFAULT END ---*/
 /* --- APP CONFIG START  --- */
-BIZ9_SERVICE_VERSION='5.7.0';
-APP_VERSION='1.9.4'
+BIZ9_SERVICE_VERSION='5.7.4'
+APP_VERSION='2.9.0'
 APP_PORT=biz9_app_config.APP_PORT;
 /* --- APP CONFIG END  --- */
-
 /* --- MONGO START --- */
 MONGO_IP=biz9_app_config.MONGO_IP;
 MONGO_PORT=biz9_app_config.MONGO_PORT;
@@ -68,8 +67,8 @@ data_config={
     mongo_username_password:biz9_app_config.MONGO_USERNAME_PASSWORD,
     mongo_ip:biz9_app_config.MONGO_IP,
     mongo_port:biz9_app_config.MONGO_PORT,
-    mongo_config_file:biz9_app_config.MONGO_CONFIG_FILE,
-    ssh_key_file:biz9_app_config.SSH_KEY_FILE,
+    mongo_config:biz9_app_config.MONGO_CONFIG,
+    ssh_key:biz9_app_config.SSH_KEY,
     redis_url:biz9_app_config.REDIS_URL,
     redis_port:biz9_app_config.REDIS_PORT,
 };
@@ -77,11 +76,12 @@ app_config={
     app_title_id:biz9_app_config.APP_TITLE_ID,
     app_version:APP_VERSION,
     app_title:biz9_app_config.APP_TITLE,
-    app_id:biz9_app_config.APP_ID,
+    project_id:biz9_app_config.PROJECT_ID,
     file_url:biz9_app_config.FILE_URL,
     biz_map:biz9_app_config.BIZ_MAP
 }
-biz9=require("biz9-core")(app_config,data_config);
+//biz9=require("biz9-core")(app_config,data_config);
+biz9=require("/home/mama/www/doqbox/biz9/biz9-core/src/unstable")(app_config,data_config);
 /* --- BiZ9_CORE_CONFIG-END --- */
 /* --- PAGE_SIZE_START --- */
 PAGE_SIZE_CATEGORY_POPULAR_LIST=9;
