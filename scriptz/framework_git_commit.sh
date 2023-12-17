@@ -207,5 +207,9 @@ if [ "${app_type}" = "vendor-payment" ]; then
     echo "Repo URL:${REPO_URL}"
     echo "BIZ9-Vendor-Payment NEW VERSION : ${BIZ9_VERSION_NEW}"
 fi
-bash ./scriptz/dq_footer.sh
-exit
+echo "----------------------------------"
+echo "APP Title: ${APP_TITLE}"
+echo "APP Type: ${app_type}"
+echo "Done!"
+echo "----------------------------------"
+exit 1

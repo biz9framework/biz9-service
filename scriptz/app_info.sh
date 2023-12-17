@@ -7,39 +7,36 @@ echo "#################"
 echo "BiZ9 App Info"
 echo "#################"
 #mobile
-if [ "${APP_TITLE}" = "${BIZ9_MOBILE_TITLE}" ]; then
+if [ -n "${BIZ9_MOBILE_VERSION}" ]; then
     echo "BIZ9 MOBILE VERSION : ${BIZ9_MOBILE_VERSION}"
 fi
-if [ "$APP_TITLE" = "BIZ9_SERVICE_TITLE" ]; then
-    echo "BIZ9 SERVICE VERSION : ${BIZ9_SERVICE_VERSION}"
-fi
 #web
-if [ "${APP_TITLE}" = "${BIZ9_WEBSITE_TITLE}" ]; then
+if [ -n "${BIZ9_WEBSITE_VERSION}" ]; then
     echo "BIZ9 WEBSITE VERSION : ${BIZ9_WEBSITE_VERSION}"
 fi
 #core
-if [ "${APP_TITLE}" = "${BIZ9_CORE_TITLE}" ]; then
+if [ -n "${BIZ9_CORE_VERSION}" ]; then
     echo "BIZ9 CORE VERSION : ${BIZ9_CORE_VERSION}"
 fi
 #cms
-if [ "${APP_TITLE}" = "${BIZ9_CMS_TITLE}" ]; then
+if [ -n "${BIZ9_CMS_VERSION}" ]; then
     echo "BIZ9 CMS VERSION : ${BIZ9_CMS_VERSION}"
 fi
 #scriptz
-if [ "${APP_TITLE}" = "${BIZ9_SCRIPTZ_TITLE}" ]; then
+if [ -n "${BIZ9_SCRIPTZ_VERSION}" ]; then
     echo "BIZ9 SCRIPTZ VERSION : ${BIZ9_SCRIPTZ_VERSION}"
 fi
 #testz
-if [ "${APP_TITLE}" = "${BIZ9_TEST_TITLE}" ]; then
+if [ -n "${BIZ9_TEST_VERSION}" ]; then
     echo "BIZ9 TEST VERSION : ${BIZ9_TEST_VERSION}"
 fi
-#vendor
-if [ "${APP_TITLE}" = "${BIZ9_VENDOR_TITLE}" ]; then
-    echo "BIZ9 VENDOR VERSION : ${BIZ9_VENDOR_VERSION}"
+#server
+if [ -n "${BIZ9_SERVER_VERSION}" ]; then
+    echo "BIZ9 SERVER VERSION : ${BIZ9_TEST_VERSION}"
 fi
-#vendor-payment
-if [ "${APP_TITLE}" = "${BIZ9_VENDOR_PAYMENT_TITLE}" ]; then
-    echo "BIZ9 VENDOR-PAYMENT VERSION : ${BIZ9_VENDOR_PAYMENT_VERSION}"
+#service
+if [ -n "${BIZ9_SERVICE_VERSION}" ]; then
+    echo "BIZ9 SERVICE VERSION : ${BIZ9_SERVICE_VERSION}"
 fi
 echo "----------------------------------"
 echo "Project ID: ${PROJECT_ID}"

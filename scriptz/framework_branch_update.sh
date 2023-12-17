@@ -201,5 +201,7 @@ if [ "${app_type}" = "vendor-payment" ]; then
     sed -i "s/BIZ9_VENDOR_PAYMENT_VERSION=.*/BIZ9_VENDOR_PAYMENT_VERSION='${BIZ9_VENDOR_PAYMENT_VERSION}';/" ${destination_dir}/app.js
     echo Source ${source_dir}: Version: ${BIZ9_VENDOR_PAYMENT_VERSION};
 fi
-
+echo "----------------------------------"
+echo "Done!"
+echo "----------------------------------"
 exit 1

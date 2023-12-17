@@ -134,10 +134,8 @@ if [ "${app_type}" = "vendor-payment" ]&& [ "${g_push}" == true ] ; then
     echo "Repo URL:${REPO_URL}"
 fi
 echo "----------------------------------"
-echo "BiZ9 GitHub Push Complete"
-echo "Project PROJECT ID: ${PROJECT_ID}"
-echo "Project APP Title: ${APP_TITLE}"
-echo "Project APP Title ID: ${APP_TITLE_ID}"
-echo "BiZ9 Push Success: @ $(date +%F@%H:%M)"
+echo "APP Title: ${APP_TITLE}"
+echo "APP Type: ${app_type}"
+echo "Done!"
 echo "----------------------------------"
 exit 1
