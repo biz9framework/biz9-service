@@ -72,26 +72,25 @@ router.post('/update_system', function(req, res, next) {
 	*/
 
 	helper.photofilename_list=[
-		  'd1779e4a-3542-4992-a64a-897a48e7ed2b.png',
-  '34c68bcd-9efa-44a1-b29a-251e4968b08d.png',
-  '1fbbea8c-0f79-4c8d-bdb5-a0666083afd3.png',
-  'a0dbdeb8-9e26-47c3-9823-ef86f6faca55.png',
-  'cf1b4306-b0dd-4eb2-b834-10c052ecfe7c.png',
-  '3b31f282-786b-493c-a4ee-4bd5d793d3f7.png',
-  'c0c1f9c2-de4a-4f7d-926b-3b722c008743.png',
-  '5b530060-3c2a-43bd-86cd-5300a090aafc.png',
-  'f685f17a-1d95-4874-ba88-8aabc5686add.png',
-  'cba9785e-78c5-49fa-b733-7fea48df9381.png',
-  'b0442538-e2a3-4893-91b8-6d1de24b2783.png',
-  '56067963-928e-4348-80e7-75a64c9b41a5.png',
-  'c5d3bfe2-6dbd-4961-a173-d4813b864737.png',
-  'e404cedb-e16b-4a98-b8cc-65d150a10999.png',
-  '7cb2b796-d054-4a41-a479-32e949d635b0.png',
-  '643c4ad2-e082-4e85-b834-2186bedb027f.png',
-  '2cdef18a-57fa-4908-a042-2950f788c413.png',
-  'b4fa2f35-4ccd-450b-9a11-cbf34c118c4d.png',
-  '734f7858-2ffe-4492-88c2-1d23d78bb204.png'
-
+		 '948d91d7-f4b4-46c1-ad7b-ce88530bfe6e.png',
+  '1b863b40-3daa-4e91-bb8e-40c0d0d9f3b5.png',
+  'dd1e110b-aaa2-4653-91b6-2a6035a92377.png',
+  'cb904a0e-3a51-4753-8e40-992252db50f2.png',
+  '4f837f97-3cc2-466a-ba84-fcbabbcf9755.png',
+  'c8f454e5-8d13-48bb-80dc-ea3558dbb7e2.png',
+  '70cd9bd3-1028-4961-9071-5b6edcb485c8.png',
+  'ed069572-42e9-4fa3-b116-f873190dd606.png',
+  'da36f447-698f-491d-923c-f10bb671c018.png',
+  '1671b6d9-575e-49ab-98fb-4a0148178501.png',
+  '5b026e04-c159-4efc-91fe-45b39ee4e9ab.png',
+  'aa45f306-45d7-43b0-898c-02a87440b79d.png',
+  'b3e38658-5e1b-4c13-a00b-b60cdc9ec991.png',
+  'f8e028c1-db17-4c36-b76b-e30339d6f6b2.png',
+  '1a897449-8c6d-48ee-a11c-9971d33db3a0.png',
+  '20133db4-a8c0-4c0c-850e-88f171d37391.png',
+  '8e94fc05-0128-45c2-8f36-a5a31d33c68a.png',
+  '300c6014-5f60-4d02-aadb-253d2391e6bd.png',
+  'a0758597-140c-492d-a401-a2be456a13bf.png'
 	];//other
 	helper.photo_text_list=[
 "Accept yourself",
@@ -282,8 +281,8 @@ router.post('/update_system', function(req, res, next) {
 			helper.left_nav.parent_data_type=helper.mobile.data_type;
 			helper.left_nav.top_tbl_id=helper.mobile.tbl_id;
 			helper.left_nav.top_data_type=helper.mobile.data_type;
-			helper.left_nav.left_nav_header="BoSS AppZ are web and mobile applications built for the BoSS on the go!";
-			helper.left_nav.left_nav_sub_note=biz9.get_test_sub_note();
+			helper.left_nav.left_nav_header="BoSS AppZ Mobile";
+			helper.left_nav.left_nav_sub_note="BoSS AppZ are web and mobile applications built for the BoSS on the go!";
 			helper.left_nav.left_nav_bar_title="Stay Connected";
 			helper.left_nav.left_nav_bar_social="Contact Us";
 			helper.left_nav.left_nav_copyright=biz9.get_id()+"_copyright";
