@@ -10,7 +10,6 @@ G_BIZ_SCRIPT_FOLDER="${BIZ9_HOME}/biz9-scriptz/src/stable"
 G_BIZ_CHANGE_REQUEST_FOLDER="${BIZ9_HOME}/biz9-change-request/src/${des_branch}"
 G_BIZ_CMS_FOLDER="${BIZ9_HOME}/biz9-cms/src/${des_branch}"
 G_BIZ_CORE_FOLDER="${BIZ9_HOME}/biz9-core/src/${des_branch}"
-G_BIZ_DOCZ_FOLDER="${BIZ9_HOME}/biz9-docz/src/${des_branch}"
 G_BIZ_HELP_FOLDER="${BIZ9_HOME}/biz9-help/src/${des_branch}"
 G_BIZ_KEYBOARD_COMMANDZ_FOLDER="${BIZ9_HOME}/biz9-keyboard-commandz"
 G_BIZ_MOBILE_FOLDER="${BIZ9_HOME}/biz9-mobile/src/${des_branch}"
@@ -35,11 +34,6 @@ rm -rf ${G_BIZ_CORE_FOLDER}/scriptz
 mkdir ${G_BIZ_CORE_FOLDER}/scriptz
 cp -rf ${G_BIZ_SCRIPT_FOLDER}/*  ${G_BIZ_CORE_FOLDER}/scriptz
 echo "core-${des_branch}-update-done"
-#docz
-rm -rf ${G_BIZ_DOCZ_FOLDER}/scriptz
-mkdir ${G_BIZ_DOCZ_FOLDER}/scriptz
-cp -rf ${G_BIZ_SCRIPT_FOLDER}/*  ${G_BIZ_DOCZ_FOLDER}/scriptz
-echo "docz-${des_branch}-update-done"
 #help
 rm -rf ${G_BIZ_HELP_FOLDER}/scriptz
 mkdir ${G_BIZ_HELP_FOLDER}/scriptz

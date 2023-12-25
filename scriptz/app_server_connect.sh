@@ -6,8 +6,7 @@ source ./.biz9_config.sh
 echo "#################"
 echo 'BiZ9 App Server Connect'
 echo "#################"
-SSH_KEY_DIR=other/aws/ec2_key
-ssh -i ssh -i ${SSH_KEY} admin@${SERVER_IP}
+ssh -i ${SSH_KEY} admin@${SERVER_IP}
 echo "----------------------------------"
 echo "Done!"
 echo "----------------------------------"
