@@ -1,9 +1,9 @@
-BIZ9_SERVICE_VERSION='5.8.7'
+BIZ9_SERVICE_VERSION='5.8.8'
 APP_VERSION='1.0.0'
 PROJECT_ID="19";
 APP_TITLE="BiZ9-Service";
-APP_TITLE_ID='ser19';
-SERVER_IP_ADDR="0.00.000.000"
-SERVER_DEPLOY_DIR="/home/admin/www/service-_app_id_"
+APP_TITLE_ID='';
+SERVER_IP="0.00.000.000"
+SERVER_DIR="/home/admin/www/service-_app_id_"
 SSH_KEY="other/aws/ec2_key/_app_id_.pem"
-REPO_URL="${BIZ9_GIT_URL}biz9-service.git";
+GIT_REPO="${BIZ9_GIT_REPO}biz9-service.git";
