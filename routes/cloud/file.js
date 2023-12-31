@@ -29,28 +29,28 @@ router.post("/update_photo", function(req, res) {
         },
         function(call){
             if(helper.error==null){
-            let imageFileName = {}
-            const bb = busboy({ headers: req.headers });
-            const run = async function(a, b) {
-                bb.on("file", (fieldname, file, filename, encoding, mimetype) => {
-                    // Getting extension of any image
-                    const imageExtension = filename.filename.split(".")[filename.filename.split(".").length - 1];
-                    file_ext = imageExtension;
-                    // Setting filename
-                    //helper.item.photofilename = biz9.get_guid()+"."+file_ext;
-                    imageFileName = `${Math.round(Math.random() * 1000000000)}.${imageExtension}`;
-                    filepath = path.join(FILE_SAVE_PATH, imageFileName);
-                    // Creating path
-                    helper.item.photofilename=imageFileName;
-                    file.pipe(fs.createWriteStream(filepath));
-                });
-                bb.on("finish", () => {
-                    call();
-                });
-                req.pipe(bb);
-            }
-            run();
-           }else{
+                let imageFileName = {}
+                const bb = busboy({ headers: req.headers });
+                const run = async function(a, b) {
+                    bb.on("file", (fieldname, file, filename, encoding, mimetype) => {
+                        // Getting extension of any image
+                        const imageExtension = filename.filename.split(".")[filename.filename.split(".").length - 1];
+                        file_ext = imageExtension;
+                        // Setting filename
+                        //helper.item.photofilename = biz9.get_guid()+"."+file_ext;
+                        imageFileName = `${Math.round(Math.random() * 1000000000)}.${imageExtension}`;
+                        filepath = path.join(FILE_SAVE_PATH, imageFileName);
+                        // Creating path
+                        helper.item.photofilename=imageFileName;
+                        file.pipe(fs.createWriteStream(filepath));
+                    });
+                    bb.on("finish", () => {
+                        call();
+                    });
+                    req.pipe(bb);
+                }
+                run();
+            }else{
                 call();
             }
         },
@@ -133,13 +133,13 @@ router.post("/update_photo", function(req, res) {
         function(call){
             switch (file_ext) {
                 case 'png':
-                    file_mime_type='image/apng';
+                    file_mime_type='image/png';
                     break;
                 case 'jpeg':
-                    file_mime_type='image/jpgeg';
+                    file_mime_type='image/jpeg';
                     break;
                 case 'jpg':
-                    file_mime_type='image/jpgeg';
+                    file_mime_type='image/jpeg';
                     break;
                 case 'avif':
                     file_mime_type='image/avif';
@@ -155,21 +155,29 @@ router.post("/update_photo", function(req, res) {
             }
             call();
         },
-        //save with new filename primary_sizez
+        //save with new filename album_sizez
         function(call){
             if(helper.error==null){
-                var sizes = [{
-                    path:FILE_SAVE_PATH+PHOTO_SIZE_THUMB.title_url+helper.item.photofilename,
-                    xy: PHOTO_SIZE_THUMB.size
-                },{
-                    path:FILE_SAVE_PATH+PHOTO_SIZE_MID.title_url+helper.item.photofilename,
-                    xy: PHOTO_SIZE_MID.size
-                },
-                ];
-                biz9.set_resize_photo_file(FILE_SAVE_PATH+helper.item.photofilename,sizes,function(error,data) {
-                    helper.error=error;
-                    call();
-                });
+                async function run() {
+                    try {
+                        var sizes = [{
+                            path:FILE_SAVE_PATH+PHOTO_SIZE_THUMB.title_url+helper.item.photofilename,
+                            xy: PHOTO_SIZE_THUMB.size
+                        },{
+                            path:FILE_SAVE_PATH+PHOTO_SIZE_MID.title_url+helper.item.photofilename,
+                            xy: PHOTO_SIZE_MID.size
+                        },
+                        ];
+                        biz9.set_resize_photo_file(FILE_SAVE_PATH+helper.item.photofilename,sizes,function(error,data) {
+                            helper.error=error;
+                            call();
+                        });
+                    } catch (e) {
+                        helper.error=e;
+                        call();
+                    }
+                }
+                run();
             }else{
                 call();
             }
@@ -177,6 +185,8 @@ router.post("/update_photo", function(req, res) {
         //save with new filename square_sizez
         function(call){
             if(helper.error==null){
+                async function run() {
+                    try {
                 var sizes = [{
                     path:FILE_SAVE_PATH+PHOTO_SIZE_SQUARE_THUMB.title_url+helper.item.photofilename,
                     xy: PHOTO_SIZE_SQUARE_THUMB.size
@@ -184,11 +194,17 @@ router.post("/update_photo", function(req, res) {
                     path:FILE_SAVE_PATH+PHOTO_SIZE_SQUARE_MID.title_url+helper.item.photofilename,
                     xy: PHOTO_SIZE_SQUARE_MID.size
                 }
-                ];
+                        ];
                 biz9.set_resize_square_photo_file(FILE_SAVE_PATH+helper.item.photofilename,sizes,function(error,data) {
-                    helper.error=error;
-                    call();
-                });
+                            helper.error=error;
+                            call();
+                        });
+                    } catch (e) {
+                        helper.error=e;
+                        call();
+                    }
+                }
+                run();
             }else{
                 call();
             }
@@ -254,26 +270,6 @@ router.post("/update_photo", function(req, res) {
                 call();
             }
         },
-        //delete file large
-        /*
-        function(call){
-            if(helper.error==null){
-                if(AWS_S3_SAVE){
-                    try {
-                        fs.unlinkSync(FILE_SAVE_PATH+PHOTO_SIZE_LARGE.title_url+helper.item.photofilename)
-                        call();
-                    } catch(err) {
-                        helper.error='error: org could not delete file '+err;
-                        call();
-                    }
-                }else{
-                    call();
-                }
-            }else{
-                call();
-            }
-        },
-        */
         function(call){
             helper.item = biz9.set_biz_item(helper.item);
             call();
