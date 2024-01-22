@@ -686,7 +686,10 @@ router.post('/setting_update',function(req, res) {
         function(call){
             info_update = biz9.get_new_item(DT_ITEM,helper.info.tbl_id);
             info_update.business_cashapp=helper.business_cashapp;
+            info_update.business_cashapp_visible=helper.business_cashapp_visible;
             info_update.business_stripe_key=helper.business_stripe_key;
+            info_update.business_stripe_visible=helper.business_stripe_visible;
+            info_update.business_payondelivery_visible=helper.business_payondelivery_visible;
             biz9.update_item(db,DT_ITEM,info_update,function(error,data) {
                 helper.info_update=data;
                 call();
