@@ -690,6 +690,9 @@ router.post('/setting_update',function(req, res) {
             info_update.business_stripe_key=helper.business_stripe_key;
             info_update.business_stripe_visible=helper.business_stripe_visible;
             info_update.business_payondelivery_visible=helper.business_payondelivery_visible;
+            info_update.brevo_email=helper.brevo_email;
+            info_update.brevo_visible=helper.brevo_visible;
+            info_update.brevo_key=helper.brevo_key;
             biz9.update_item(db,DT_ITEM,info_update,function(error,data) {
                 helper.info_update=data;
                 call();

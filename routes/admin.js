@@ -189,6 +189,9 @@ router.post('/update_system', function(req, res, next) {
 			helper.store_info.business_state='FL';
 			helper.store_info.business_zip=biz9.get_id()+"_business_zip";
 			helper.store_info.business_cashapp=biz9.get_id()+"_business_cashapp";
+			helper.store_info.business_cashapp_visible='false';
+			helper.store_info.business_stripe_visible='false';
+			helper.store_info.business_payondelivery_visible='false';
 			//business-end
 			//social-start
 			helper.store_info.social_website=biz9.get_id()+"_social_website";

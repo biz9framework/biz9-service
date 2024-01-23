@@ -450,9 +450,7 @@ router.post('/checkout/cashapp/:customer_id',function(req, res) {
             sql = {title_url:'info'};
             sort={};
             biz9.get_sql(db,DT_ITEM,sql,sort,function(error,data_list) {
-                if(data_list.length>0){
-                    helper.info = data_list[0];
-                }
+                helper.info = data_list[0];
                 call();
             });
         },
@@ -483,18 +481,26 @@ router.post('/checkout/cashapp/:customer_id',function(req, res) {
             });
         },
         function(call){
-            get_order_send_mail_notification(customer,shipping,billing,cart,helper.order,mail_notification,function(_brevo_obj){
-                brevo_obj=_brevo_obj;
+            if(helper.info.brevo_visible=='true'){
+                get_order_send_mail_notification(customer,shipping,billing,cart,helper.order,mail_notification,function(_brevo_obj){
+                    brevo_obj=_brevo_obj;
+                    call();
+                });
+            }else{
                 call();
-            });
+            }
         },
         function(call){
-            biz9.send_brevo_mail(helper.info.brevo_key,brevo_obj,function(error,data) {
-                if(error){
-                    helper.validation_message=error;
-                }
+            if(helper.info.brevo_visible=='true'){
+                biz9.send_brevo_mail(helper.info.brevo_key,brevo_obj,function(error,data) {
+                    if(error){
+                        helper.validation_message=error;
+                    }
+                    call();
+                });
+            }else{
                 call();
-            });
+            }
         },
         function(call){
             biz9.close_client_db(client_db,function(error){
@@ -638,18 +644,26 @@ router.post('/checkout/payondelivery/:customer_id',function(req, res) {
             });
         },
         function(call){
-            get_order_send_mail_notification(customer,shipping,billing,cart,helper.order,mail_notification,function(_brevo_obj){
-                brevo_obj=_brevo_obj;
+            if(helper.info.brevo_visible=='true'){
+                get_order_send_mail_notification(customer,shipping,billing,cart,helper.order,mail_notification,function(_brevo_obj){
+                    brevo_obj=_brevo_obj;
+                    call();
+                });
+            }else{
                 call();
-            });
+            }
         },
         function(call){
-            biz9.send_brevo_mail(helper.info.brevo_key,brevo_obj,function(error,data) {
-                if(error){
-                    helper.validation_message=error;
-                }
+           if(helper.info.brevo_visible=='true'){
+                 biz9.send_brevo_mail(helper.info.brevo_key,brevo_obj,function(error,data) {
+                    if(error){
+                        helper.validation_message=error;
+                    }
+                    call();
+                });
+            }else{
                 call();
-            });
+            }
         },
         function(call){
             biz9.close_client_db(client_db,function(error){
@@ -687,9 +701,7 @@ router.post('/checkout/stripecard/:customer_id',function(req, res) {
             sql = {title_url:'info'};
             sort={};
             biz9.get_sql(db,DT_ITEM,sql,sort,function(error,data_list) {
-                if(data_list.length>0){
-                    helper.info = data_list[0];
-                }
+                helper.info = data_list[0];
                 call();
             });
         },
@@ -754,7 +766,7 @@ router.post('/checkout/stripecard/:customer_id',function(req, res) {
             }
         },
         function(call){
-            if(!helper.validation_message){
+            if(!helper.validation_message && helper.info.brevo_visible=='true'){
                 get_order_send_mail_notification(customer,shipping,billing,cart,helper.order,mail_notification,function(_brevo_obj){
                     brevo_obj=_brevo_obj;
                     call();
@@ -764,16 +776,14 @@ router.post('/checkout/stripecard/:customer_id',function(req, res) {
             }
         },
         function(call){
-            if(!helper.validation_message){
-                biz9.send_brevo_mail(helper.info.brevo_key,brevo_obj,function(error,data) {
+           if(!helper.validation_message && helper.info.brevo_visible=='true'){
+                 biz9.send_brevo_mail(helper.info.brevo_key,brevo_obj,function(error,data) {
                     if(error){
                         helper.validation_message=error;
                     }
                     call();
                 });
             }else{
-                console.log('STRIPE_CARD_ERROR')
-                console.log(helper.validation_message);
                 call();
             }
         },
