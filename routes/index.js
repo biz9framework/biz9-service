@@ -54,6 +54,7 @@ router.get('/home',function(req, res) {
             page_size=PAGE_SIZE_SLIDE_SHOW_LIST;
             sort={date_create:-1};
             if(helper.home.card_banner_visible=='true'){
+                console.log(helper.home.card_banner_data_type);
                 if(helper.home.card_banner_order=='category'){
                     sql={category:helper.home.card_banner_category};
                 }else{
@@ -81,6 +82,7 @@ router.get('/home',function(req, res) {
                     });
                 }else if(helper.home.card_banner_data_type==DT_GALLERY){
                     biz9.get_galleryz(db,sql,sort,page_current,page_size,function(error,data_list,item_count,page_count) { helper.card_banner_list = data_list;
+                        helper.card_banner_list = data_list;
                         call();
                     });
                 }else{
@@ -94,7 +96,7 @@ router.get('/home',function(req, res) {
         function(call){
             if(helper.home.card_popular_visible=='true'){
                 sql = {};
-                if(helper.home.card_popular_order=='recent'){
+                if(helper.home.card_popular_order=='all'){
                     sort={date_create:-1};
                 }else{
                     sort={view_count:-1};
@@ -156,7 +158,11 @@ router.get('/home',function(req, res) {
         function(call){
             if(helper.home.card_buy_visible=='true'){
                 if(helper.home.card_buy_category){
-                    sql={category:helper.home.card_buy_category};
+                    if(helper.home.card_buy_category=='all' || helper.home.card_buy_category==''){
+                        sql={};
+                    }else{
+                        sql={category:helper.home.card_buy_category};
+                    }
                 }else{
                     sql={category:DT_PRODUCT};
                 }
@@ -189,7 +195,11 @@ router.get('/home',function(req, res) {
         //card_double
         function(call){
             if(helper.home.card_double_visible=='true'){
-                sql={category:helper.home.card_double_category};
+                if(helper.home.card_double_category=='all'){
+                    sql={};
+                }else{
+                    sql={category:helper.home.card_double_category};
+                }
                 sort={date_create:-1};
                 page_current=1;
                 page_size=PAGE_SIZE_SLIDE_SHOW_LIST;
