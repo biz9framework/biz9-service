@@ -76,7 +76,6 @@ module.exports = function(){
 						shipping_price:cart.item_list[a].shipping.price
 					})
 				}
-				//biz9.o('send_in_blue_item_list',send_in_blue_item_list);
 				call();
 			},
 		],

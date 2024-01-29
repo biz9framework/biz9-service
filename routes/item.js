@@ -21,6 +21,13 @@ router.get('/photo_list/:parent_data_type/:parent_tbl_id',function(req, res) {
             });
         },
         function(call){
+            title_url='mobile';
+            biz9.get_page(db,title_url,{},function(error,data){
+                helper.mobile=data;
+                call();
+            });
+        },
+        function(call){
             biz9.get_item(db,helper.parent_data_type,helper.parent_tbl_id,function(error,data){
                 helper.parent_item=data;
                 call();
@@ -69,6 +76,13 @@ router.get('/photo_detail/:tbl_id/:parent_data_type/:parent_tbl_id',function(req
             biz9.get_client_db(function(error,_client_db){
                 client_db=_client_db;
                 db = client_db.db(helper.app_title_id);
+                call();
+            });
+        },
+        function(call){
+            title_url='mobile';
+            biz9.get_page(db,title_url,{},function(error,data){
+                helper.mobile=data;
                 call();
             });
         },
@@ -808,12 +822,14 @@ router.post('/review_update/:item_data_type/:item_tbl_id',function(req, res) {
             call();
         },
         function(call){
-            biz9.send_brevo_mail(helper.info.brevo_key,helper.brevo_obj,function(error,data) {
-                if(error){
-                    helper.validation_message=error;
-                }
-                call();
-            });
+            if(helper.info.brevo_visible=='true'){
+                biz9.send_brevo_mail(helper.info.brevo_key,helper.brevo_obj,function(error,data) {
+                    if(error){
+                        helper.validation_message=error;
+                    }
+                    call();
+                });
+            }
         },
         function(call){
             biz9.close_client_db(client_db,function(error){
@@ -929,7 +945,7 @@ router.post('/review_delete/:review_tbl_id/:item_data_type/:item_tbl_id',functio
                 call();
             });
         },
-      function(call){
+        function(call){
             helper.update_item.review_count=review_obj.review_list.length;
             helper.update_item.rating_avg=review_obj.rating_avg;
             biz9.update_item(db,helper.update_item.data_type,helper.update_item,function(error,data) {
@@ -938,7 +954,7 @@ router.post('/review_delete/:review_tbl_id/:item_data_type/:item_tbl_id',functio
                 call();
             });
         },
-          function(call){
+        function(call){
             biz9.close_client_db(client_db,function(error){
                 call();
             });

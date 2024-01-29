@@ -23,14 +23,12 @@ router.get('/report', function(req, res, next) {
             helper.item.field_3=biz9.get_id();
             biz9.update_item(db,DT_BLANK,helper.item,function(error,data) {
                 helper.item=data;
-                biz9.o('DB_FIELD_BLANK_SET',helper.item);
                 call();
             });
         },
         function(call){
             biz9.get_item(db,DT_BLANK,helper.item.tbl_id,function(error,data) {
                 helper.item=data;
-                biz9.o('DB_FIELD_BLANK_GET',helper.item);
                 call();
             });
         },

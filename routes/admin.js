@@ -306,21 +306,13 @@ router.post('/update_system', function(req, res, next) {
 			helper.home.order='1';
 			helper.home.delete_protection=true;
 			helper.home.photofilename=helper.photofilename_list[biz9.get_id(helper.photofilename_list.length-1)];
-			helper.home.card_banner_visible='true';
-			helper.home.card_banner_data_type=DT_PRODUCT;
-			helper.home.card_banner_order='category';
-			helper.home.card_banner_category=DT_PRODUCT;
-			helper.home.card_popular_visible='true';
-			helper.home.card_popular_data_type=DT_PRODUCT;
-			helper.home.card_category_visible='true';
-			helper.home.card_category_data_type=DT_PRODUCT;
-			helper.home.card_buy_visible='true';
-			helper.home.card_buy_data_type=DT_PRODUCT;
-			helper.home.card_buy_category=DT_PRODUCT;
-			helper.home.card_double_visible='true';
-			helper.home.card_double_data_type=DT_PRODUCT;
-			helper.home.card_double_category=DT_PRODUCT;
-			helper.home.biz_list="card_banner_visible,card_banner_data_type,card_banner_order,card_banner_category,card_popular_visible,card_popular_data_type,card_category_visible,card_category_data_type,  \card_buy_visible,card_buy_data_type,card_double_visible,card_double_data_type,card_double_category"
+			helper.home.card_banner_visible='false';
+			helper.home.card_image_visible='false';
+			helper.home.card_popular_visible='false';
+			helper.home.card_category_visible='false';
+			helper.home.card_buy_visible='false';
+			helper.home.card_double_visible='false';
+			helper.home.biz_list="card_banner_visible,card_popular_visible,card_image_visible,card_category_visible,card_buy_visible,card_double_visible"
 			biz9.update_item(db,DT_ITEM_MAP,helper.home,function(error,data) {
 				helper.home=data;
 				call();

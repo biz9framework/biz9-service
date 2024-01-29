@@ -54,7 +54,6 @@ router.get('/home',function(req, res) {
             page_size=PAGE_SIZE_SLIDE_SHOW_LIST;
             sort={date_create:-1};
             if(helper.home.card_banner_visible=='true'){
-                console.log(helper.home.card_banner_data_type);
                 if(helper.home.card_banner_order=='category'){
                     sql={category:helper.home.card_banner_category};
                 }else{
