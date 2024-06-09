@@ -7,20 +7,22 @@ router.get('/ping',function(req, res, next) {
 router.post('/update_system', function(req, res, next) {
 	//DEV_BOX='staging';
 	//testing--
-	/*
 	DEV_BOX='testing';
-	BIZ_LIST_SIZE_CATEGORY_LIST=9;
-	BIZ_LIST_SIZE_ITEM_LIST=10;
-	BIZ_LIST_SIZE_PHOTO_LIST=12;
-	BIZ_LIST_SIZE_SUB_ITEM_LIST=5;
-	*/
+	DEV_BOX_NEW_CATEGORY=true;
+	BIZ_LIST_SIZE_CATEGORY_LIST=6;
+	BIZ_LIST_SIZE_ITEM_LIST=8;
+	BIZ_LIST_SIZE_PHOTO_LIST=8;
+	BIZ_LIST_SIZE_SUB_ITEM_LIST=3;
 	//testing--
+
+	/*
 	//staging--
 	DEV_BOX='staging';
 	BIZ_LIST_SIZE_CATEGORY_LIST=2;
 	BIZ_LIST_SIZE_ITEM_LIST=2;
 	BIZ_LIST_SIZE_PHOTO_LIST=8;
 	BIZ_LIST_SIZE_SUB_ITEM_LIST=3;
+	*/
 	//staging--
 
 
@@ -72,26 +74,26 @@ router.post('/update_system', function(req, res, next) {
 	*/
 
 	helper.photofilename_list=[
-		  'ff4f1589-75a5-4d00-b83f-7b553bf0a664.png',
-  '4a50faf2-0a6e-42b6-83c3-3cb012dcbd00.png',
-  'b5a52994-b7b2-4d82-8c3c-4cbc69a838ef.png',
-  'c0e76c2a-7c54-4227-9a2f-536b4b52ee91.png',
-  'a584d3fb-f186-4d42-8d05-f0267d224469.png',
-  '80ef6b3e-9c03-4252-8051-cd31824aeb61.png',
-  'c7a6e69a-94ff-42ea-98ef-c8e7fed641a4.png',
-  '3c53f3d4-1384-45b5-9791-12c0bea705a7.png',
-  '8d25d450-428f-4c66-883e-81e805ec96ff.png',
-  'b6e65710-7538-4eca-b895-160fddb6b19b.png',
-  '85b4cb11-6e51-4834-a287-948e21f992d0.png',
-  '358b626e-0c7d-4a42-a6b8-9de02ebfca1d.png',
-  '01523e27-306c-4c06-a48a-665cc6eab804.png',
-  '9ae42708-02d9-424d-b532-b2c13a35ad3b.png',
-  '1b859da4-d396-44ef-a21d-fb5eab943591.png',
-  '6f6954dd-5e00-4267-9821-f06c39a332b5.png',
-  '4a14f7fd-ccad-4de8-9962-cf566175caa3.png',
-  '96b58f45-0d83-444f-836e-cde85d36eeb0.png',
-  '70df6538-29f1-41c4-97e5-4d8671abb530.png'
-	];//other
+		  '42b8d6fb-cbdf-4115-a4cd-7ef19b6cc36f.png',
+  '285c9b50-cb6a-4743-8964-aed340be4d6d.png',
+  '947a7984-4c4a-4002-8759-7b2764070daf.png',
+  '14803d61-a1aa-4adc-b3c6-42caf96e72b7.png',
+  'ea3b83f4-2733-4496-89e7-142e6654d23b.png',
+  '64b825f8-aa54-44fb-ad55-caf6f6b88061.png',
+  '8e1755cf-c555-460e-b537-bb380181a46c.png',
+  '6948f8f3-2c91-495a-97d9-866a15bf06a9.png',
+  'a1ecda84-b20b-4bee-825f-708c010df1ba.png',
+  '48f1896f-76c3-4b99-8f38-a5a5662b6c3c.png',
+  '138f8b98-7e29-4fe4-b830-d0f308985f79.png',
+  '674ff8de-51df-4063-b0ea-14266f8548f3.png',
+  'c41ecc0f-02f0-4d4c-9c29-307b8b7e0269.png',
+  '91a26128-948f-4109-afca-e953b3696315.png',
+  '76c87d24-0915-4b06-9e6a-2e1334854072.png',
+  '2eb789ff-42a3-4d8f-b35e-69eed001382a.png',
+  '4956a470-33e1-4f77-95ca-eb54427f4249.png',
+  '3e870348-9eb4-4b39-ab81-7810154bf434.png',
+  'c2ff324a-21d6-4c0f-8e12-b093783f5c86.png'
+	];//business women
 	helper.photo_text_list=[
 "Accept yourself",
 "Act justly",
@@ -206,6 +208,7 @@ router.post('/update_system', function(req, res, next) {
 			biz9.update_item(db,DT_ITEM,helper.store_info,function(error,data) {
 				helper.store_info=data;
 				call();
+
 			});
 		},
 		//item_store_paper
@@ -288,8 +291,11 @@ router.post('/update_system', function(req, res, next) {
 			helper.left_nav.left_nav_sub_note="BoSS AppZ are web and mobile applications built for the BoSS on the go!";
 			helper.left_nav.left_nav_bar_title="Stay Connected";
 			helper.left_nav.left_nav_bar_social="Contact Us";
+			helper.left_nav.left_nav_icon_about="heart";
+			helper.left_nav.left_nav_icon_contact="heart";
+			helper.left_nav.left_nav_icon_page="heart";
 			helper.left_nav.left_nav_copyright=biz9.get_id()+"_copyright";
-			helper.left_nav=biz9.convert_biz_item(helper.left_nav,['left_nav_header','left_nav_sub_note','left_nav_bar_title','left_nav_bar_social','left_nav_copyright'])
+			helper.left_nav=biz9.convert_biz_item(helper.left_nav,['left_nav_header','left_nav_sub_note','left_nav_bar_title','left_nav_bar_social','left_nav_copyright,left_nav_icon_about,left_nav_icon_contact,left_nav_icon_page'])
 			biz9.update_item(db,helper.mobile.title_url,helper.left_nav,function(error,data) {
 				helper.left_nav=data;
 				call();
@@ -392,8 +398,9 @@ router.post('/update_system', function(req, res, next) {
 			helper.blog_post.sub_note="Latest news and highlights";
 			helper.blog_post.type=DT_BLOG_POST;
 			helper.blog_post.title_type='Blog Post';
+			helper.blog_post.icon_footer='heart';
 			helper.blog_post.photofilename=helper.photofilename_list[biz9.get_id(helper.photofilename_list.length-1)];
-			helper.blog_post=biz9.convert_biz_item(helper.blog_post,['sub_note','type','title_type'])
+			helper.blog_post=biz9.convert_biz_item(helper.blog_post,['sub_note','type','title_type','icon_footer'])
 			biz9.update_item(db,helper.mobile.title_url,helper.blog_post,function(error,data) {
 				helper.blog_post=data;
 				call();
@@ -415,8 +422,9 @@ router.post('/update_system', function(req, res, next) {
 			helper.event.sub_note="Purchase tickets to upcoming events";
 			helper.event.type=DT_EVENT;
 			helper.event.title_type='Event';
+			helper.event.icon_footer='heart';
 			helper.event.photofilename=helper.photofilename_list[biz9.get_id(helper.photofilename_list.length-1)];
-			helper.event=biz9.convert_biz_item(helper.event,['sub_note','type','title_type'])
+			helper.event=biz9.convert_biz_item(helper.event,['sub_note','type','title_type','icon_footer'])
 			biz9.update_item(db,helper.mobile.title_url,helper.event,function(error,data) {
 				helper.event=data;
 				call();
@@ -439,8 +447,9 @@ router.post('/update_system', function(req, res, next) {
 			helper.gallery.sub_note="View recent media from our gallery";
 			helper.gallery.type=DT_GALLERY;
 			helper.gallery.title_type='Gallery';
+			helper.gallery.icon_footer='heart';
 			helper.gallery.photofilename=helper.photofilename_list[biz9.get_id(helper.photofilename_list.length-1)];
-			helper.gallery=biz9.convert_biz_item(helper.gallery,['header','sub_note','type','title_type'])
+			helper.gallery=biz9.convert_biz_item(helper.gallery,['header','sub_note','type','title_type','icon_footer'])
 			biz9.update_item(db,helper.mobile.title_url,helper.gallery,function(error,data) {
 				helper.gallery=data;
 				call();
@@ -462,8 +471,9 @@ router.post('/update_system', function(req, res, next) {
 			helper.product.sub_note="View recent media from our gallery";
 			helper.product.type=DT_PRODUCT;
 			helper.product.title_type='Product';
+			helper.product.icon_footer='heart';
 			helper.product.photofilename=helper.photofilename_list[biz9.get_id(helper.photofilename_list.length-1)];
-			helper.product=biz9.convert_biz_item(helper.product,['sub_note','title_type'])
+			helper.product=biz9.convert_biz_item(helper.product,['sub_note','title_type','icon_footer'])
 			biz9.update_item(db,helper.mobile.title_url,helper.product,function(error,data) {
 				helper.product=data;
 				call();
@@ -485,8 +495,9 @@ router.post('/update_system', function(req, res, next) {
 			helper.service.sub_note="Listing of professional service we offer";
 			helper.service.type=DT_SERVICE;
 			helper.service.title_type='Service';
+			helper.service.icon_footer='heart';
 			helper.service.photofilename=helper.photofilename_list[biz9.get_id(helper.photofilename_list.length-1)];
-			helper.service=biz9.convert_biz_item(helper.service,['sub_note','type','title_type'])
+			helper.service=biz9.convert_biz_item(helper.service,['sub_note','type','title_type','icon_footer'])
 			biz9.update_item(db,helper.mobile.title_url,helper.service,function(error,data) {
 				helper.service=data;
 				call();
@@ -508,8 +519,9 @@ router.post('/update_system', function(req, res, next) {
 			helper.team.sub_note="Meet our executive team";
 			helper.team.type=DT_MEMBER;
 			helper.team.title_type='Member';
+			helper.team.icon_footer='heart';
 			helper.team.photofilename=helper.photofilename_list[biz9.get_id(helper.photofilename_list.length-1)];
-			helper.team=biz9.convert_biz_item(helper.team,['sub_note','type','title_type'])
+			helper.team=biz9.convert_biz_item(helper.team,['sub_note','type','title_type','icon_footer'])
 			biz9.update_item(db,helper.mobile.title_url,helper.team,function(error,data) {
 				helper.team=data;
 				call();
@@ -551,8 +563,10 @@ router.post('/update_system', function(req, res, next) {
 				member.title_url=biz9.get_title_url(member.first_name);
 				member.visible='true';
 				member.order=a;
-				member.position='CEO'
-				member.location='City and or State';
+				member.position='CEO';
+				member.type='Staff';
+				member.city='Atlanta';
+				member.state='Georgia';
 				member.bio=biz9.get_test_sub_note();
 				member.category=helper.member_category_list[biz9.get_id(helper.member_category_list.length)-1].title;
 				member.photofilename=helper.photofilename_list[biz9.get_id(helper.photofilename_list.length-1)];
@@ -583,6 +597,7 @@ router.post('/update_system', function(req, res, next) {
 							blog_cat_list.push({title:biz9.get_id()+'_title category',sub_note:biz9.get_id()+'_sub_note'});
 				}
 			}
+			if(DEV_BOX_NEW_CATEGORY){
 			for(a=0;a<blog_cat_list.length;a++){
 				var blog_post_category=biz9.get_new_item(DT_CATEGORY,0);
 				blog_post_category.title=blog_cat_list[a].title;
@@ -599,6 +614,14 @@ router.post('/update_system', function(req, res, next) {
 				helper.blog_post_category_list=data_list;
 				call();
 			});
+			}else{
+				sql = {type:DT_BLOG_POST};
+            	sort={};
+            	biz9.get_sql(db,DT_CATEGORY,sql,sort,function(error,data_list) {
+                	helper.blog_post_category_list = data_list;
+                	call();
+            	});
+			}
 		},
 		//blog_post
 		//-- blog_post_list
@@ -608,7 +631,7 @@ router.post('/update_system', function(req, res, next) {
 			for(a=0;a<helper.blog_post_category_list.length;a++){
 				for(b=0;b<BIZ_LIST_SIZE_ITEM_LIST;b++){
 					var blog_post=biz9.get_new_item(DT_BLOG_POST,0);
-					blog_post.title='Blog Post Title '+ a + " " + b;
+					blog_post.title='Blog Post Title '+ biz9.get_id(999);
 					blog_post.title_url=biz9.get_title_url(blog_post.title);
 					blog_post.visible='true';
 					blog_post.order=b;
@@ -618,6 +641,7 @@ router.post('/update_system', function(req, res, next) {
 					blog_post.note=biz9.get_test_note();
 					blog_post.category=helper.blog_post_category_list[a].title;
 					blog_post.youtube_url='https://youtu.be/lXoLJLBPU-Q';
+					blog_post.pdf_link='https://mypdflink.com';
 					blog_post=biz9.convert_biz_item(blog_post,['youtube_url'])
 					helper.blog_post_list.push(blog_post);
 				}
@@ -632,15 +656,13 @@ router.post('/update_system', function(req, res, next) {
 		//---
 		function(call){
 			helper.blog_post_photo_list=[];
-			top_len=helper.blog_post_list.length;
-			for(b=0;b<top_len;b++){
-				len=BIZ_LIST_SIZE_PHOTO_LIST;
-				for(a=0;a<len;a++){
+			for(a=0;a<helper.blog_post_list.length;a++){
+				for(b=0;b<BIZ_LIST_SIZE_PHOTO_LIST;b++){
 					var blog_post_photo=biz9.get_new_item(DT_PHOTO,0);
 					blog_post_photo.visible='true';
 					blog_post_photo.order=a;
-					blog_post_photo.text=helper.photo_text_list[biz9.get_id(helper.photo_text_list.length-1)];
-					blog_post =helper.blog_post_list[b];
+					blog_post_photo.title=helper.photo_text_list[biz9.get_id(helper.photo_text_list.length-1)];
+					blog_post =helper.blog_post_list[a];
 					blog_post_photo.parent_tbl_id=blog_post.tbl_id;
 					blog_post_photo.parent_data_type=blog_post.data_type;
 					blog_post_photo.top_tbl_id=blog_post.tbl_id;
@@ -670,6 +692,7 @@ router.post('/update_system', function(req, res, next) {
 						event_cat_list.push({title:biz9.get_id()+'_title category',sub_note:biz9.get_id()+'_sub_note'});
 				}
 			}
+			if(DEV_BOX_NEW_CATEGORY){
 			for(a=0;a<event_cat_list.length;a++){
 				var event_category=biz9.get_new_item(DT_CATEGORY,0);
 				event_category.title=event_cat_list[a].title;
@@ -685,6 +708,14 @@ router.post('/update_system', function(req, res, next) {
 				helper.event_category_list=data_list;
 				call();
 			});
+			}else{
+				sql = {type:DT_EVENT};
+            	sort={};
+            	biz9.get_sql(db,DT_CATEGORY,sql,sort,function(error,data_list) {
+                	helper.event_category_list = data_list;
+                	call();
+            	});
+			}
 		},
 		//event
 		//-- event_list
@@ -694,7 +725,7 @@ router.post('/update_system', function(req, res, next) {
 			for(a=0;a<helper.event_category_list.length;a++){
 				for(b=0;b<BIZ_LIST_SIZE_ITEM_LIST;b++){
 					var event=biz9.get_new_item(DT_EVENT,0);
-					event.title='Event Title '+ a + " " + b;
+					event.title='Event Title '+biz9.get_id(99999)
 					event.title_url=biz9.get_title_url(event.title);
 					event.visible=biz9.get_id(3);
 					event.order=b;
@@ -727,15 +758,13 @@ router.post('/update_system', function(req, res, next) {
 		//---
 		function(call){
 			helper.event_photo_list=[];
-			top_len=helper.event_list.length;
-			for(b=0;b<top_len;b++){
-				len=BIZ_LIST_SIZE_PHOTO_LIST;
-				for(a=0;a<len;a++){
+			for(a=0;a<helper.event_list.length;a++){
+				for(b=0;b<BIZ_LIST_SIZE_PHOTO_LIST;b++){
 					var event_photo=biz9.get_new_item(DT_PHOTO,0);
 					event_photo.visible='true';
 					event_photo.order=a;
-					event_photo.text=helper.photo_text_list[biz9.get_id(helper.photo_text_list.length-1)];
-					event =helper.event_list[b];
+					event_photo.title=helper.photo_text_list[biz9.get_id(helper.photo_text_list.length-1)];
+					event =helper.event_list[a];
 					event_photo.parent_tbl_id=event.tbl_id;
 					event_photo.parent_data_type=event.data_type;
 					event_photo.top_tbl_id=event.tbl_id;
@@ -780,16 +809,14 @@ router.post('/update_system', function(req, res, next) {
 		//---
 		function(call){
 			helper.event_item_size_item_list=[];
-			top_len=helper.event_item_size_list.length;
-			for(b=0;b<top_len;b++){
-				len=BIZ_LIST_SIZE_SUB_ITEM_LIST;
-				for(a=0;a<len;a++){
+			for(a=0;a<helper.event_item_size_list.length;a++){
+				for(b=0;b<BIZ_LIST_SIZE_SUB_ITEM_LIST;b++){
 					var event_item_size_item=biz9.get_new_item(DT_ITEM,0);
 					event_item_size_item.title='Size Title '+a;
 					event_item_size_item.title_url=biz9.get_title_url(event_item_size_item.title);
 					event_item_size_item.visible='true';
 					event_item_size_item.order=a;
-					event_item_size =helper.event_item_size_list[b];
+					event_item_size =helper.event_item_size_list[a];
 					event_item_size_item.parent_tbl_id=event_item_size.tbl_id;
 					event_item_size_item.parent_data_type=event_item_size.data_type;
 					event_item_size_item.top_tbl_id=event_item_size.top_tbl_id;
@@ -836,16 +863,14 @@ router.post('/update_system', function(req, res, next) {
 		//---
 		function(call){
 			helper.event_item_color_item_list=[];
-			top_len=helper.event_item_color_list.length;
-			for(var b=0;b<top_len;b++){
-				var len=BIZ_LIST_SIZE_SUB_ITEM_LIST;
-				for(var a=0;a<len;a++){
+			for(var a=0;a<helper.event_item_color_list.length;a++){
+				for(var b=0;b<BIZ_LIST_SIZE_SUB_ITEM_LIST;b++){
 					var event_item_color_item=biz9.get_new_item(DT_ITEM,0);
 					event_item_color_item.title='Color Title '+a;
 					event_item_color_item.title_url=biz9.get_title_url(event_item_color_item.title);
 					event_item_color_item.visible='true';
 					event_item_color_item.order=a;
-					var event_item_color =helper.event_item_color_list[b];
+					var event_item_color =helper.event_item_color_list[a];
 					event_item_color_item.parent_tbl_id=event_item_color.tbl_id;
 					event_item_color_item.parent_data_type=event_item_color.data_type;
 					event_item_color_item.top_tbl_id=event_item_color.top_tbl_id;
@@ -891,16 +916,14 @@ router.post('/update_system', function(req, res, next) {
 		//---
 		function(call){
 			helper.event_item_brand_item_list=[];
-			top_len=helper.event_item_brand_list.length;
-			for(var b=0;b<top_len;b++){
-				len=BIZ_LIST_SIZE_SUB_ITEM_LIST;
-				for(a=0;a<len;a++){
+			for(var a=0;a<helper.event_item_brand_list.length;a++){
+				for(b=0;b<BIZ_LIST_SIZE_SUB_ITEM_LIST;b++){
 					var event_item_brand_item=biz9.get_new_item(DT_ITEM,0);
-					event_item_brand_item.title='Brand Title '+a;
+					event_item_brand_item.title='Brand Title '+b;
 					event_item_brand_item.title_url=biz9.get_title_url(event_item_brand_item.title);
 					event_item_brand_item.visible='true';
 					event_item_brand_item.order=a;
-					var event_item_brand =helper.event_item_brand_list[b];
+					var event_item_brand =helper.event_item_brand_list[a];
 					event_item_brand_item.parent_tbl_id=event_item_brand.tbl_id;
 					event_item_brand_item.parent_data_type=event_item_brand.data_type;
 					event_item_brand_item.top_tbl_id=event_item_brand.top_tbl_id;
@@ -946,16 +969,14 @@ router.post('/update_system', function(req, res, next) {
 		//---
 		function(call){
 			helper.event_item_shipping_item_list=[];
-			top_len=helper.event_item_shipping_list.length;
-			for(b=0;b<top_len;b++){
-				len=BIZ_LIST_SIZE_SUB_ITEM_LIST;
-				for(a=0;a<len;a++){
+			for(a=0;a<helper.event_item_shipping_list.length;a++){
+				for(b=0;b<BIZ_LIST_SIZE_SUB_ITEM_LIST;b++){
 					var event_item_shipping_item=biz9.get_new_item(DT_ITEM,0);
 					event_item_shipping_item.title='Shipping Title '+a;
 					event_item_shipping_item.title_url=biz9.get_title_url(event_item_shipping_item.title);
 					event_item_shipping_item.visible='true';
 					event_item_shipping_item.order=a;
-					event_item_shipping =helper.event_item_shipping_list[b];
+					event_item_shipping =helper.event_item_shipping_list[a];
 					event_item_shipping_item.parent_tbl_id=event_item_shipping.tbl_id;
 					event_item_shipping_item.parent_data_type=event_item_shipping.data_type;
 					event_item_shipping_item.top_tbl_id=event_item_shipping.top_tbl_id;
@@ -987,6 +1008,7 @@ router.post('/update_system', function(req, res, next) {
 						gallery_cat_list.push({title:biz9.get_id()+'_category_title',sub_note:biz9.get_id()+'_sub_note'});
 				}
 			}
+			if(DEV_BOX_NEW_CATEGORY){
 			for(a=0;a<gallery_cat_list.length;a++){
 				var gallery_category=biz9.get_new_item(DT_CATEGORY,0);
 				gallery_category.title=gallery_cat_list[a].title;
@@ -1002,6 +1024,14 @@ router.post('/update_system', function(req, res, next) {
 				helper.gallery_category_list=data_list;
 				call();
 			});
+			}else{
+				sql = {type:DT_GALLERY};
+            	sort={};
+            	biz9.get_sql(db,DT_CATEGORY,sql,sort,function(error,data_list) {
+                	helper.blog_post_category_list = data_list;
+                	call();
+            	});
+			}
 		},
 		//gallery
 		//-- gallery_list
@@ -1011,7 +1041,7 @@ router.post('/update_system', function(req, res, next) {
 			for(a=0;a<helper.gallery_category_list.length;a++){
 				for(b=0;b<BIZ_LIST_SIZE_ITEM_LIST;b++){
 					var gallery=biz9.get_new_item(DT_GALLERY,0);
-					gallery.title='Gallery Title '+ a + " " + b;
+					gallery.title='Gallery Title '+biz9.get_id(99999)
 					gallery.title_url=biz9.get_title_url(gallery.title);
 					gallery.visible='true';
 					gallery.order=b;
@@ -1041,14 +1071,13 @@ router.post('/update_system', function(req, res, next) {
 					var gallery_photo=biz9.get_new_item(DT_PHOTO,0);
 					gallery_photo.visible='true';
 					gallery_photo.order=a;
-					gallery_photo.text=helper.photo_text_list[biz9.get_id(helper.photo_text_list.length-1)];
+					gallery_photo.title=helper.photo_text_list[biz9.get_id(helper.photo_text_list.length-1)];
 					gallery =helper.gallery_list[b];
 					gallery_photo.parent_tbl_id=gallery.tbl_id;
 					gallery_photo.parent_data_type=gallery.data_type;
 					gallery_photo.top_tbl_id=gallery.tbl_id;
 					gallery_photo.top_data_type=gallery.data_type;
 					gallery_photo.photofilename=helper.photofilename_list[biz9.get_id(helper.photofilename_list.length-1)];
-					//gallery_photo=biz9.convert_biz_item(gallery_photo,['text'])
 					helper.gallery_photo_list.push(gallery_photo);
 				}
 			}
@@ -1057,52 +1086,8 @@ router.post('/update_system', function(req, res, next) {
 				call();
 			});
 		},
-		//video_category
-		//-- video_category_list
 		//---
-		/*
-		function(call){
-			helper.video_category_list=[];
-			len =BIZ_LIST_SIZE_CATEGORY_LIST;
-			for(a=0;a<len;a++){
-				var video_category=biz9.get_new_item(DT_CATEGORY,0);
-				video_category.title='Video Category Title '+ a;
-				video_category.type=DT_VIDEO;
-				video_category.title_url=biz9.get_title_url(video_category.title);
-				video_category.visible='true';
-				video_category.order=a;
-				video_category.sub_note=biz9.get_test_sub_note();
-				video_category.photofilename=helper.photofilename_list[biz9.get_id(helper.photofilename_list.length-1)];
-				helper.video_category_list.push(video_category);
-			}
-			biz9.update_list(db,helper.video_category_list,function(error,data_list) {
-				helper.video_category_list=data_list;
-				call(); });
-		},
-		//video
-		//-- video_list
-		//---
-		function(call){
-			helper.video_list=[];
-			len =BIZ_LIST_SIZE_ITEM_LIST;
-			for(a=0;a<len;a++){
-				var video=biz9.get_new_item(DT_VIDEO,0);
-				video.title='Video Title '+ a;
-				video.title_url=biz9.get_title_url(video.title);
-				video.visible='true';
-				video.order=a;
-				video.sub_note=biz9.get_test_sub_note();
-				video.note=biz9.get_test_note();
-				video.category=helper.video_category_list[biz9.get_id(2)-1].title;
-				video.photofilename=helper.photofilename_list[biz9.get_id(helper.photofilename_list.length-1)];
-				helper.video_list.push(video);
-			}
-			biz9.update_list(db,helper.video_list,function(error,data_list) {
-				helper.video_list=data;
-				call();
-			});
-		},
-		*/
+
 		//product_category
 		//-- product_category_list
 		//---
@@ -1119,6 +1104,7 @@ router.post('/update_system', function(req, res, next) {
 						product_cat_list.push({title:biz9.get_id()+'_category_title',sub_note:biz9.get_id()+'_sub_note'});
 				}
 			}
+			if(DEV_BOX_NEW_CATEGORY){
 			for(a=0;a<product_cat_list.length;a++){
 				var product_category=biz9.get_new_item(DT_CATEGORY,0);
 				product_category.title=product_cat_list[a].title;
@@ -1134,6 +1120,14 @@ router.post('/update_system', function(req, res, next) {
 				helper.product_category_list=data_list;
 				call();
 			});
+			}else{
+				sql = {type:DT_PRODUCT};
+            	sort={};
+            	biz9.get_sql(db,DT_CATEGORY,sql,sort,function(error,data_list) {
+                	helper.blog_post_category_list = data_list;
+                	call();
+            	});
+			}
 		},
 		//product
 		//-- product_list
@@ -1143,7 +1137,7 @@ router.post('/update_system', function(req, res, next) {
 			for(a=0;a<helper.product_category_list.length;a++){
 				for(b=0;b<BIZ_LIST_SIZE_ITEM_LIST;b++){
 					var product=biz9.get_new_item(DT_PRODUCT,0);
-					product.title='Product Title '+ a + " " + b;
+					product.title='Product Title '+biz9.get_id(8888);
 					product.title_url=biz9.get_title_url(product.title);
 					product.visible=biz9.get_id(5);
 					product.order=b;
@@ -1175,7 +1169,7 @@ router.post('/update_system', function(req, res, next) {
 					var product_photo=biz9.get_new_item(DT_PHOTO,0);
 					product_photo.visible='true';
 					product_photo.order=a;
-					product_photo.text=helper.photo_text_list[biz9.get_id(helper.photo_text_list.length-1)];
+					product_photo.title=helper.photo_text_list[biz9.get_id(helper.photo_text_list.length-1)];
 					var product =helper.product_list[b];
 					product_photo.parent_tbl_id=product.tbl_id;
 					product_photo.parent_data_type=product.data_type;
@@ -1426,8 +1420,8 @@ router.post('/update_system', function(req, res, next) {
 				for(a=0;a<BIZ_LIST_SIZE_CATEGORY_LIST;a++){
 						service_cat_list.push({title:biz9.get_id()+'_title category',sub_note:biz9.get_id()+'_sub_note'});
 				}
-				}
-
+			}
+			if(DEV_BOX_NEW_CATEGORY){
 			for(a=0;a<service_cat_list.length;a++){
 				var service_category=biz9.get_new_item(DT_CATEGORY,0);
 				service_category.title=service_cat_list[a].title;
@@ -1443,6 +1437,14 @@ router.post('/update_system', function(req, res, next) {
 				helper.service_category_list=data_list;
 				call();
 			});
+			}else{
+				sql = {type:DT_SERVICE};
+            	sort={};
+            	biz9.get_sql(db,DT_CATEGORY,sql,sort,function(error,data_list) {
+                	helper.blog_post_category_list = data_list;
+                	call();
+            	});
+			}
 		},
 		//service
 		//-- service_list
@@ -1462,7 +1464,7 @@ router.post('/update_system', function(req, res, next) {
 			for(a=0;a<helper.service_category_list.length;a++){
 					for(b=0;b<BIZ_LIST_SIZE_ITEM_LIST;b++){
 				var service=biz9.get_new_item(DT_SERVICE,0);
-					service.title='Service Title '+ a + " " + b;
+					service.title='Service Title '+biz9.get_id(8888);
 					service.title_url=biz9.get_title_url(service.title);
 					service.visible=biz9.get_id(1);
 					service.order=b;
@@ -1494,7 +1496,7 @@ router.post('/update_system', function(req, res, next) {
 					var service_photo=biz9.get_new_item(DT_PHOTO,0);
 					service_photo.visible='true';
 					service_photo.order=a;
-					service_photo.text=helper.photo_text_list[biz9.get_id(helper.photo_text_list.length-1)];
+					service_photo.title=helper.photo_text_list[biz9.get_id(helper.photo_text_list.length-1)];
 					service =helper.service_list[b];
 					service_photo.parent_tbl_id=service.tbl_id;
 					service_photo.parent_data_type=service.data_type;

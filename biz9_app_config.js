@@ -8,7 +8,7 @@ const APP_CLOUD_BUCKET='bappz';
 /* --- CONFIG END --- */
 /* --- FILE START --- */
 const FILE_SAVE_PATH=__dirname+"/public/uploads/";//prod
-//const FILE_URL="/uploads/"; //prod
+//const FILE_URL="http://localhost:1901/uploads/"; //prod
 const FILE_URL="https://"+APP_CLOUD_BUCKET+".s3.amazonaws.com/" //aws_s3_url
 /* --- FILE END --- */
 /* --- BIZ9 CONFIG START --- */
@@ -43,9 +43,20 @@ const BREVO_FORM_SEND_SUBJECT ='Form Message Send';
 const BREVO_ORDER_SEND_TEMPLATE_ID='7';
 const BREVO_FORM_SEND_TEMPLATE_ID='10';
 /* --- BREVO-END --- */
+
+/* --- FIREBASE-START --- */
+const FIREBASE_TOPIC_MOBILE_ALL='/topics/mobile_all';
+const FIREBASE_TOPIC_MOBILE_GUEST='/topics/mobile_guest';
+const FIREBASE_TOPIC_MOBILE_ADMIN='/topics/mobile_admin';
+const FIREBASE_KEY_FILE=__dirname+"/keys/firebase/";
+/* --- FIREBASE-END --- */
 exports.BREVO_KEY = BREVO_KEY;
 exports.BREVO_FORM_SEND_SUBJECT = BREVO_FORM_SEND_SUBJECT;
 exports.BREVO_FORM_SEND_TEMPLATE_ID = BREVO_FORM_SEND_TEMPLATE_ID;
+exports.FIREBASE_TOPIC_MOBILE_ALL = FIREBASE_TOPIC_MOBILE_ALL;
+exports.FIREBASE_TOPIC_MOBILE_GUEST = FIREBASE_TOPIC_MOBILE_GUEST;
+exports.FIREBASE_TOPIC_MOBILE_ADMIN = FIREBASE_TOPIC_MOBILE_ADMIN;
+exports.FIREBASE_KEY_FILE = FIREBASE_KEY_FILE;
 exports.PROJECT_ID = PROJECT_ID;
 exports.APP_TITLE_ID = APP_TITLE_ID;
 exports.APP_TITLE = APP_TITLE;

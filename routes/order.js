@@ -13,6 +13,7 @@ router.post("/cart_add/:item_data_type/:item_tbl_id/:customer_id/:quantity",func
     helper.cart_item = biz9.get_new_item(DT_CART_ITEM,0);
     helper.item = biz9.get_new_item(helper.item_data_type,helper.item_tbl_id);
     helper.select_option_item_list=[];
+    var option_list_note_html_str='';
     async.series([
         function(call){
             biz9.get_client_db(function(error,_client_db){
@@ -60,6 +61,15 @@ router.post("/cart_add/:item_data_type/:item_tbl_id/:customer_id/:quantity",func
                         helper.cart_item['item_option_'+c+'_top_data_type'] = helper.option_item_list[b].top_data_type;
                         helper.cart_item['item_option_'+c+'_top_tbl_id'] = helper.option_item_list[b].top_tbl_id;
                         helper.cart_item['item_option_'+c+'_price'] = biz9.remove_money(helper.option_item_list[b].price);
+                        for(d=0;d<helper.option_item_list.length;d++){
+                            if(helper.option_item_list[d].tbl_id == helper.option_item_list[b].parent_tbl_id){
+                                helper.cart_item['item_option_'+c+'_parent_type'] = helper.option_item_list[d].data_type;
+                                helper.cart_item['item_option_'+c+'_parent_tbl_id'] = helper.option_item_list[d].tbl_id;
+                                helper.cart_item['item_option_'+c+'_parent_title'] = helper.option_item_list[d].title;
+                                option_list_note_html_str =option_list_note_html_str+"<b>" +helper.option_item_list[d].title + " " +helper.option_item_list[b].title +":</b> "+biz9.get_money(helper.option_item_list[b].price) +"&nbsp;";
+                                break;
+                            }
+                        }
                         c=c+1;
                         break;
                     }
@@ -80,13 +90,15 @@ router.post("/cart_add/:item_data_type/:item_tbl_id/:customer_id/:quantity",func
             helper.cart_item.title_url=helper.item.title_url;
             helper.cart_item.photofilename=helper.item.photofilename;
             helper.cart_item.cart_note = ' ' ;
-            helper.cart_item.option_note = ' ' ;
+            helper.cart_item.cart_note_html = ' ' ;
             if(helper.cart_item.parent_data_type==DT_SERVICE){
                 helper.cart_item.start_date=helper.start_date;
                 helper.cart_item.start_time=helper.start_time;
-                helper.cart_item.cart_note=biz9.get_date_time_str(helper.cart_item.start_date,helper.cart_item.start_time);
-                if(helper.cart_item.cart_note=='Invalid date'){
-                    helper.cart_item.cart_note='Invalid date ' + helper.cart_item.start_date+ " " +helper.cart_item.start_time;
+
+                helper.cart_item.cart_note_html=biz9.get_date_time_str(helper.cart_item.start_date,helper.cart_item.start_time);
+                if(helper.cart_item.cart_note_html=='Invalid date'){ helper.cart_item.cart_note_html='Invalid date ' + helper.cart_item.start_date+ " " +helper.cart_item.start_time;
+                }else{
+                    helper.cart_item.cart_note_html='<b>Appointment:</b> ' + helper.cart_item.cart_note_html + "</br>";
                 }
             }else if(helper.cart_item.parent_data_type==DT_EVENT){
                 helper.cart_item.website=helper.item.website;
@@ -95,15 +107,23 @@ router.post("/cart_add/:item_data_type/:item_tbl_id/:customer_id/:quantity",func
                 helper.cart_item.start_date=helper.item.start_date;
                 helper.cart_item.start_time=helper.item.start_time;
                 var event_str='';
-                event_str=biz9.get_date_time_str(helper.item.start_date,helper.item.start_time);
+                var event_str_html='';
+                date_str=biz9.get_date_time_str(helper.item.start_date,helper.item.start_time);
+                date_str_html="<b>Date and Time: </b> "+biz9.get_date_time_str(helper.item.start_date,helper.item.start_time)+"</br>";
+                event_str = date_str;
+                event_str_html = date_str_html;
                 if(helper.cart_item.website){
-                    event_str= event_str + ", "+ helper.cart_item.website;
+                    event_str= date_str + ", "+ helper.cart_item.website;
+                    event_str_html= date_str_html + "<b>Website:</b> "+ helper.cart_item.website+"</br>";
                 }
                 if(helper.cart_item.location){
-                    event_str= event_str + ", "+ helper.cart_item.location;
+                    event_str= date_str + ", "+ helper.cart_item.location;
+                    event_str_html= date_str_html + "<b>Location:</b> "+ helper.cart_item.location+"</br>";
                 }
                 helper.cart_item.cart_note=event_str;
+                helper.cart_item.cart_note_html=event_str_html;
             }
+            helper.cart_item.cart_note_html=option_list_note_html_str + helper.cart_item.cart_note_html;
             biz9.update_item(db,DT_CART_ITEM,helper.cart_item,function(error,data) {
                 helper.cart_item=data;
                 call();
@@ -1284,16 +1304,18 @@ cart_checkout_order_add=function(checkout_form,cart,callback){
                 order_item.sub_total=cart.item_list[a].sub_total;
                 order_item.grand_total=cart.item_list[a].grand_total;
                 order_item.shipping_total=cart.item_list[a].shipping_total;
+
                 order_item.option_note=cart.item_list[a].option_note;
                 order_item.cart_note=cart.item_list[a].cart_note;
+
+                order_item.option_note_html=cart.item_list[a].option_note_html;
+                order_item.cart_note_html=cart.item_list[a].cart_note_html;
+
                 order_item.quantity=cart.item_list[a].quantity;
                 if(order_item.parent_data_type==DT_EVENT){
-                    order_item.cart_note = order_item.cart_note + "<br/>";
-                    if(cart.item_list[a].location){
-                        order_item.cart_note = order_item.cart_note + "<b>Location:</b> "+cart.item_list[a].location + "<br/>";
-                    }
                     if(cart.item_list[a].meeting_link){
                         order_item.cart_note = order_item.cart_note + "<b>Meeting Link:</b> "+cart.item_list[a].meeting_link + "<br/>";
+                        order_item.cart_note_html = order_item.cart_note_html + "<b>Meeting Link:</b> "+cart.item_list[a].meeting_link + "<br/>";
                     }
                 }
                 order_item_list.push(order_item);

@@ -5,7 +5,7 @@ router.get('/ping',function(req, res, next) {
     res.end();
 });
 //9_category_list
-router.get('/category_list/:data_type/:page_current',function(req, res) {
+router.get('/list/:data_type',function(req, res) {
     /*--default_start */
     var helper = biz9.get_helper(req);
     helper.mobile = biz9.get_new_item(DT_BLANK,0);
@@ -38,7 +38,7 @@ router.get('/category_list/:data_type/:page_current',function(req, res) {
         function(call){
             sort={date_create:-1};
             page_current=helper.page_current;
-            page_size=PAGE_SIZE_CATEGORY_LIST;
+            page_size=99;
             biz9.get_category_biz_list(db,helper.data_type,sort,page_current,page_size,function(error,data_list,item_count,page_count) {
                 helper.category_list = data_list;
                 helper.item_count=item_count;
