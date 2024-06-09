@@ -98,8 +98,8 @@ app_config={
     file_url:biz9_app_config.FILE_URL,
     biz_map:biz9_app_config.BIZ_MAP
 }
-biz9=require("/home/mama/www/doqbox/biz9/biz9-core/src/unstable")(app_config,data_config);
-//biz9=require("biz9-core")(app_config,data_config);
+//biz9=require("/home/mama/www/doqbox/biz9/biz9-core/src/unstable")(app_config,data_config);
+biz9=require("biz9-core")(app_config,data_config);
 /* --- BiZ9_CORE_CONFIG-END --- */
 /* --- PAGE_SIZE_START --- */
 
