@@ -1,4 +1,7 @@
-VERSION='5.0.6'
-TITLE='BiZ9-Service'
-REPO='git@github.com:biz9framework/biz9-service.git'
-BRANCH='5.0.5'
+VERSION='5.0.7'
+TITLE='BiZ9-Service';
+APP_TITLE_ID='app-19';
+PROJECT_ID='19';
+PORT_ID='1901';
+REPO='git@github.com:biz9framework/biz9-service.git';
+BRANCH='5.0.5';

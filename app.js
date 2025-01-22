@@ -14,8 +14,9 @@ biz9_app_config=require("./biz9_app_config");
 /* --- CONFIG START --- */
 TITLE=biz9_app_config.TITLE;
 PROJECT_ID=biz9_app_config.PROJECT_ID;
-VERSION="1.0.3";
+VERSION=biz9_app_config.VERSION;
 PORT_ID=biz9_app_config.PORT_ID;
+APP_TITLE_ID=biz9_app_config.APP_TITLE_ID;
 /*--- CONFIG END ---*/
 /* --- BIZ9-START -- */
 /* --- BIZ9-END -- */

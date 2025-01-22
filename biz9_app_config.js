@@ -1,8 +1,10 @@
+const biz9_config_file="biz9_config";
 /* --- APP CONFIG START  --- */
-const PROJECT_ID='19';
-const APP_TITLE_ID='';
-const TITLE='BiZ9-Service';
-const PORT_ID="1901";
+const PROJECT_ID=biz9_config.PROJECT_ID;
+const APP_TITLE_ID=biz9_config.APP_TITLE_ID;
+const TITLE=biz9_config.TITLE;
+const PORT_ID=biz9_config.PORT_ID;
+const VERSION=biz9_config.VERSION;
 /* --- APP CONFIG START  --- */
 /* --- CONFIG END --- */
 /* --- FILE START --- */
@@ -30,6 +32,7 @@ const REDIS_PORT_ID="27019";
 /* --- REDIS END --- */
 exports.PROJECT_ID = PROJECT_ID;
 exports.APP_TITLE_ID = APP_TITLE_ID;
+exports.VERSION = VERSION;
 exports.TITLE = TITLE;
 exports.PORT_ID = PORT_ID;
 exports.MONGO_USERNAME_PASSWORD = MONGO_USERNAME_PASSWORD;
