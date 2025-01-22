@@ -1,4 +1,4 @@
-VERSION='5.0.5'
+VERSION='5.0.6'
 TITLE='BiZ9-Service'
 REPO='git@github.com:biz9framework/biz9-service.git'
 BRANCH='5.0.5'
