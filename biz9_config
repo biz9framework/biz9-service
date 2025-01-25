@@ -1,7 +1,15 @@
-VERSION='5.0.7'
+VERSION='5.0.8'
 TITLE='BiZ9-Service';
 APP_TITLE_ID='app-19';
 PROJECT_ID='19';
-PORT_ID='1901';
-REPO='git@github.com:biz9framework/biz9-service.git';
-BRANCH='5.0.5';
+PORT_ID="1901";
+REPO="git@github.com:biz9framework/biz9-service.git";
+BRANCH="5.0.5";
+MONGO_IP="0.0.0.0";
+MONGO_USERNAME_PASSWORD=""; // local = ''; remote = 'ban:1234567@'
+MONGO_PORT_ID="27019";
+MONGO_SERVER_USER="admin";
+MONGO_CONFIG_FILE_PATH='/etc/mongod.conf';
+SSH_KEY="";
+REDIS_URL="0.0.0.0";
+REDIS_PORT_ID="27019";

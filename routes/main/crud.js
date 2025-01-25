@@ -1,8 +1,8 @@
 let express = require('express');
 let router = express.Router();
-const { get_helper,get_new_item,set_item_data } = require(process.env.BIZ9_HOME + "/biz9-app/code");
-const { get_db_connect,close_db_connect,update_item,get_item,delete_item} = require(process.env.BIZ9_HOME + "/biz9-data/code");
-const { w,w_error,get_id } = require(process.env.BIZ9_HOME + "/biz9-utility/code");
+const { get_helper,get_new_item,set_item_data } = require("biz9-app");
+const { get_db_connect,close_db_connect,update_item,get_item,delete_item} = require("biz9-data");
+const { w,w_error,get_id } = require(process.env.BIZ9_HOME + "biz9-utility");
 router.get('/ping', function(req, res, next) {
     let helper = get_helper(req);
     helper.test = "crud-ping";
@@ -52,6 +52,8 @@ router.get('/update/:data_type/:id', function(req, res, next) {
     helper.item = set_item_data(helper.data_type,helper.id,req.body);
     async.series([
         function(call){
+            console.log('aaaaaaaaa');
+
             get_db_connect(helper.app_title_id).then(([error,data]) => {
                 db_connect = data;
                 call();

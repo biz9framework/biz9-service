@@ -1,10 +1,10 @@
-const biz9_config_file="biz9_config";
+const biz9_config_file=require("./biz9_config");
 /* --- APP CONFIG START  --- */
-const PROJECT_ID=biz9_config.PROJECT_ID;
-const APP_TITLE_ID=biz9_config.APP_TITLE_ID;
-const TITLE=biz9_config.TITLE;
-const PORT_ID=biz9_config.PORT_ID;
-const VERSION=biz9_config.VERSION;
+const PROJECT_ID=biz9_config_file.PROJECT_ID;
+const APP_TITLE_ID=biz9_config_file.APP_TITLE_ID;
+const TITLE=biz9_config_file.TITLE;
+const PORT_ID=biz9_config_file.PORT_ID;
+const VERSION=biz9_config_file.VERSION;
 /* --- APP CONFIG START  --- */
 /* --- CONFIG END --- */
 /* --- FILE START --- */
@@ -19,30 +19,30 @@ const EMAIL_SENDER="notifications@biz9framework.com";
 const EMAIL_REPLY="notifications@biz9framework.com";
 /* --- EMAILZ START --- */
 /* --- MONGO START --- */
-const MONGO_IP='0.0.0.0';  // OS_ENV = process.env.BIZ9_BOX_IP_217; local = 'localhost'; ip_address = '0.0.0.0'
-const MONGO_USERNAME_PASSWORD=''; // local = ''; remote = 'ban:1234567@'
-const MONGO_PORT_ID="27019";
-const MONGO_SERVER_USER='admin';
-const MONGO_CONFIG_FILE_PATH='/etc/mongod.conf';
-const SSH_KEY="";
+//const MONGO_IP='0.0.0.0';  // OS_ENV = process.env.BIZ9_BOX_IP_217; local = 'localhost'; ip_address = '0.0.0.0'
+//const MONGO_USERNAME_PASSWORD=''; // local = ''; remote = 'ban:1234567@'
+//const MONGO_PORT_ID="27019";
+//const MONGO_SERVER_USER='admin';
+//const MONGO_CONFIG_FILE_PATH='/etc/mongod.conf';
+//const SSH_KEY="";
 /* --- MONGO END --- */
 /* --- REDIS START --- */
-const REDIS_URL="0.0.0.0";
-const REDIS_PORT_ID="27019";
+//const REDIS_URL="0.0.0.0";
+//const REDIS_PORT_ID="27019";
 /* --- REDIS END --- */
 exports.PROJECT_ID = PROJECT_ID;
 exports.APP_TITLE_ID = APP_TITLE_ID;
 exports.VERSION = VERSION;
 exports.TITLE = TITLE;
 exports.PORT_ID = PORT_ID;
-exports.MONGO_USERNAME_PASSWORD = MONGO_USERNAME_PASSWORD;
-exports.MONGO_PORT_ID = MONGO_PORT_ID;
-exports.MONGO_IP = MONGO_IP;
-exports.MONGO_SERVER_USER = MONGO_SERVER_USER;
-exports.MONGO_CONFIG_FILE_PATH = MONGO_CONFIG_FILE_PATH;
-exports.SSH_KEY = SSH_KEY;
-exports.REDIS_URL = REDIS_URL;
-exports.REDIS_PORT_ID = REDIS_PORT_ID;
+//exports.MONGO_USERNAME_PASSWORD = MONGO_USERNAME_PASSWORD;
+//exports.MONGO_PORT_ID = MONGO_PORT_ID;
+//exports.MONGO_IP = MONGO_IP;
+//exports.MONGO_SERVER_USER = MONGO_SERVER_USER;
+//exports.MONGO_CONFIG_FILE_PATH = MONGO_CONFIG_FILE_PATH;
+//exports.SSH_KEY = SSH_KEY;
+//exports.REDIS_URL = REDIS_URL;
+//exports.REDIS_PORT_ID = REDIS_PORT_ID;
 exports.EMAIL_SENDER = EMAIL_SENDER;
 exports.EMAIL_REPLY = EMAIL_REPLY;
 exports.FILE_SAVE_PATH = FILE_SAVE_PATH;

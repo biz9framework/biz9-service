@@ -9,7 +9,8 @@ fs=require('fs-extra')
 mp3Duration=require('mp3-duration');
 path=require("path");
 session=require("express-session");
-biz9_app_config=require("./biz9_app_config");
+const { get_biz9_app_config } = require("biz9-scriptz");
+biz9_app_config = get_biz9_app_config();
 /* --- REQUIRE END -- */
 /* --- CONFIG START --- */
 TITLE=biz9_app_config.TITLE;
@@ -24,9 +25,9 @@ APP_TITLE_ID=biz9_app_config.APP_TITLE_ID;
 ENV=process.env.NODE_ENV;
 /*--- DEFAULT END ---*/
 /* --- MONGO START --- */
-MONGO_IP=biz9_app_config.MONGO_IP;
-MONGO_PORT_ID=biz9_app_config.MONGO_PORT_ID;
-MONGO_URL=biz9_app_config.MONGO_URL;
+//MONGO_IP=biz9_app_config.MONGO_IP;
+//MONGO_PORT_ID=biz9_app_config.MONGO_PORT_ID;
+//MONGO_URL=biz9_app_config.MONGO_URL;
 /* --- MONGO END --- */
 /* --- EMAILZ START --- */
 EMAIL_TO=biz9_app_config.EMAIL_TO;
