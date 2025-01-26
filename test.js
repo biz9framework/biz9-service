@@ -47,7 +47,6 @@ describe('test_connect', function(){ this.timeout(25000);
             },
             function(call){
                 console.log('--TEST-GET-DB-CONNECT-2-START--');
-                /*
                 check_db_connect(db_connect).then((data)=> {
                     if(error){
                         throw '--TEST-GET-CLIENT-DB-CONNECT-CHECK-- '+ error;
@@ -59,7 +58,6 @@ describe('test_connect', function(){ this.timeout(25000);
                 function handleError(error) {
                     console.error("--Error--",error);
                 }
-                */
             },
             function(call){
                 console.log('--TEST-GET-DB-CONNECT-3-END--');
