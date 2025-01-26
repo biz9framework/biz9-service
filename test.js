@@ -1,12 +1,21 @@
 var request = require('request') , async = require('async')
 const { get_db_connect,close_db_connect,check_db_connect,update_item,update_item_list,get_item,delete_item,get_item_list,delete_item_list,count_item_list } = require("biz9-data");
 const {get_new_item}  = require("biz9-app");
-const { get_id } = require("biz9-utility");
+const { get_id,w,w_error } = require("biz9-utility");
 const assert = require('node:assert');
+const { get_biz9_config } = require("biz9-scriptz");
+const biz9_config = get_biz9_config();
+/* --- TEST CONFIG START --- */
 const APP_TITLE_ID = 'mobile-jan25';
 const ID = 'b6b28f87-5049-4ab5-8d7b-74ac650829adff';
 const DATA_TYPE = 'blank_biz';
+const PORT_ID="1901";
+const TEST_CLOUD_APP_URL="http://localhost:"+PORT_ID;
 const SQL = {};
+const RUN_URL='/main/crud/ping';
+const EMAIL_ID='contact@biz9app.com';
+const PASSWORD_ID='1234567';
+/* --- TEST CONFIG END --- */
 /*
 test_connect
 test_item_update
@@ -20,18 +29,13 @@ test_item_list_count
 */
 /* --- BiZ9_CORE_CONFIG-END --- */
 describe('test_connect', function(){ this.timeout(25000);
-    console.log('aaaaaa');
     it("_test_connect", function(done){
-        console.log('bbbbbbb');
         let db_connect = {};
-        console.log('cccccccccc');
         async.series([
             function(call){
                 console.log('--TEST-GET-DB-CONNECT-START--');
                 console.log(APP_TITLE_ID);
-                console.log('bbbbbbbb');
                 get_db_connect(APP_TITLE_ID).then(([error,data])=> {
-                    console.log('rrr');
                     if(error){
                         throw '--TEST-GET-CLIENT-DB-- '+ error;
                     }
@@ -719,7 +723,283 @@ describe('test_count_list', function(){ this.timeout(25000);
             });
     });
 });
-
+/*
+ * -- testz --
+ * connect *
+ * ping *
+ * uptime *
+ * run *
+ * item_get *
+ * item_update *
+ * item_again_update *
+ * item_delete *
+ */
+//9_crud_test_ping 9_ping
+describe('ping', function(){ this.timeout(25000);
+    it("_ping", function(done){
+        let helper = {app_title_id:APP_TITLE_ID};
+        let url=get_box_url('/main/test/ping');
+        async.series([
+            function(call){
+                request.get({url:url,
+                    form:helper
+                },
+                    function(err,req,data) {
+                        report_show(err,data);
+                        call();
+                    })
+            }
+        ],
+            function(err, results){
+                done();
+            });
+    });
+});
+//9_connect
+describe('connect', function(){ this.timeout(25000);
+    it("_connect", function(done){
+        let helper = {};
+        let url=get_box_url('/main/test/connect');
+        async.series([
+            function(call){
+                helper.app_title_id=APP_TITLE_ID;
+                request.get({url:url,
+                    form:helper
+                },
+                    function(err,req,data) {
+                        report_show(err,data);
+                        call();
+                    })
+            }
+        ],
+            function(err, results){
+                done();
+            });
+    });
+});
+//9_uptime
+describe('uptime', function(){ this.timeout(25000);
+    it("_uptime", function(done){
+        let helper = {};
+        let url=get_box_url('/main/test/uptime');
+        async.series([
+            function(call){
+                helper.app_title_id=APP_TITLE_ID;
+                request.get({url:url,
+                    form:helper
+                },
+                    function(err,req,data) {
+                        report_show(err,data);
+                        call();
+                    })
+            }
+        ],
+            function(err, results){
+                done();
+            });
+    });
+});
+//9_run
+describe('run', function(){ this.timeout(25000);
+    it("_run", function(done){
+        let helper = {};
+        url=get_box_url(RUN_URL);
+        async.series([
+            function(call){
+                helper.app_title_id=APP_TITLE_ID;
+                helper.form_title='Form Title '+get_id();
+                helper.customer_name='Customer Name '+get_id();
+                helper.customer_email="bossappz6@gmail.com";
+                helper.location='Location '+get_id();
+                helper.comment='Comment '+get_id();
+                helper.rating=get_id(4);
+                call();
+            },
+            function(call){
+                request.post({url:url,
+                    form:helper
+                },
+                    function(err,req,data) {
+                        report_show(err,data);
+                        call();
+                    })
+            }
+        ],
+            function(err, results){
+                done();
+            });
+    });
+});
+describe('item_delete', function(){ this.timeout(25000);
+    it("_item_delete", function(done){
+        let helper = {};
+        let url=get_box_url('/main/crud/delete/'+DATA_TYPE+'/'+ID);
+        async.series([
+            function(call){
+                helper.app_title_id=APP_TITLE_ID;
+                helper.data_type=DATA_TYPE;
+                helper.id=ID;
+                call();
+            },
+            function(call){
+                request.get({url:url,
+                    form:helper
+                },
+                    function(err,req,data) {
+                        report_show(err,data);
+                        call();
+                    })
+            },
+        ],
+            function(err, results){
+                done();
+            });
+    });
+});
+//9_get
+describe('item_get', function(){ this.timeout(25000);
+    it("_item_get", function(done){
+        let helper = {};
+        let url=get_box_url('/main/crud/get/'+DATA_TYPE+'/'+ID);
+        async.series([
+            function(call){
+                helper.app_title_id=APP_TITLE_ID;
+                helper.data_type=DATA_TYPE;
+                helper.id=ID;
+                call();
+            },
+            function(call){
+                request.get({url:url,
+                    form:helper
+                },
+                    function(err,req,data) {
+                        report_show(err,data);
+                        call();
+                    })
+            },
+        ],
+            function(err, results){
+                done();
+            });
+    });
+});
+//9_update
+describe('item_update', function(){ this.timeout(25000);
+    it("_item_update", function(done){
+        let helper = {};
+        let url=get_box_url('/main/crud/update/'+DATA_TYPE+'/'+0);
+        async.series([
+            function(call){
+                helper = get_test_item();
+                helper.app_title_id=APP_TITLE_ID;
+                call();
+            },
+            function(call){
+                request.get({url:url,
+                    form:helper
+                },
+                    function(err,req,data) {
+                        report_show(err,data);
+                        call();
+                    })
+            },
+        ],
+            function(err, results){
+                done();
+            });
+    });
+});
+describe('item_again_update', function(){ this.timeout(25000);
+    it("_item_again_update", function(done){
+        let helper = {};
+        let url=get_box_url('/main/crud/update/'+DATA_TYPE+'/'+ID);
+        async.series([
+            function(call){
+                helper.app_title_id=APP_TITLE_ID;
+                helper.data_type=DATA_TYPE;
+                helper.id=ID;
+                helper.first_name='again_first_name'+get_id();
+                helper.last_name='again_last_name'+get_id();
+                helper.email='again_email_'+get_id();
+                call();
+            },
+            function(call){
+                request.get({url:url,
+                    form:helper
+                },
+                    function(err,req,data) {
+                        report_show(err,data);
+                        call();
+                    })
+            },
+        ],
+            function(err, results){
+                done();
+            });
+    });
+});
+describe('item_again_update', function(){ this.timeout(25000);
+    it("_item_again_update", function(done){
+        let helper = {};
+        let url=get_box_url('/main/crud/update/'+DATA_TYPE+'/'+ID);
+        async.series([
+            function(call){
+                helper.app_title_id=APP_TITLE_ID;
+                helper.data_type=DATA_TYPE;
+                helper.id=ID;
+                helper.first_name='again_first_name'+get_id();
+                helper.last_name='again_last_name'+get_id();
+                helper.email='again_email_'+get_id();
+                call();
+            },
+            function(call){
+                request.get({url:url,
+                    form:helper
+                },
+                    function(err,req,data) {
+                        report_show(err,data);
+                        call();
+                    })
+            },
+        ],
+            function(err, results){
+                done();
+            });
+    });
+});
+describe('update_local_system', function(){ this.timeout(25000);
+    it("_update_local_system", function(done){
+        let helper = {};
+        let url=get_box_url('/admin/update_system');
+        async.series([
+            function(call){
+                helper.app_title_id=APP_TITLE_ID;
+                helper.data_type=DATA_TYPE;
+                helper.id=0;
+                helper.user={};
+                helper.email=EMAIL_ID;
+                helper.password=PASSWORD_ID;
+                console.log('aaaaaaa');
+                console.log(helper);
+                call();
+            },
+            function(call){
+                request.post({url:url,
+                    form:helper
+                },
+                    function(err,req,data) {
+                        console.log('aaaaaaa');
+                        console.log(data);
+                        //report_show(err,data);
+                        //call();
+                    })
+            },
+        ],
+            function(err, results){
+                done();
+            });
+    });
+});
 function report_show(error,item,cloud_url){
     if(error){
         console.log('ERROR HAS OCCORED------------------------------------');
@@ -745,3 +1025,9 @@ function get_test_item(){
     item_test.test_group_id=_id;
     return item_test;
 }
+function get_box_url(url){
+    var test_query='?app_title_id='+APP_TITLE_ID;
+    console.log('test_box_url',TEST_CLOUD_APP_URL+url+test_query);
+    return TEST_CLOUD_APP_URL+url+test_query;
+}
+
