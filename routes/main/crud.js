@@ -2,7 +2,7 @@ let express = require('express');
 let router = express.Router();
 const { get_helper,get_new_item,set_item_data } = require("biz9-app");
 const { get_db_connect,close_db_connect,update_item,get_item,delete_item} = require("biz9-data");
-const { w,w_error,get_id } = require(process.env.BIZ9_HOME + "biz9-utility");
+const { w,w_error,get_id } = require("biz9-utility");
 router.get('/ping', function(req, res, next) {
     let helper = get_helper(req);
     helper.test = "crud-ping";

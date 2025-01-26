@@ -1,0 +1,4 @@
+echo 'BiZ9 Test App'
+run_test=$1
+echo $run_test
+mocha -g $run_test test.js

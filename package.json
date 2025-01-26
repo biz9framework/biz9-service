@@ -1,16 +1,15 @@
 {
   "name": "blank-service",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
   },
   "dependencies": {
     "async": "^3.2.6",
-    "biz9-app": "^1.0.31",
-    "biz9-data": "^1.3.40",
-    "biz9-scriptz": "^5.1.7",
-    "biz9-utility": "^1.0.20",
+    "biz9-app": "^1.0.36",
+    "biz9-data": "^1.3.49",
+    "biz9-utility": "^1.0.26",
     "busboy": "^1.6.0",
     "compression": "^1.7.5",
     "cookie-parser": "~1.4.4",
