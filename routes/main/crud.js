@@ -52,8 +52,6 @@ router.get('/update/:data_type/:id', function(req, res, next) {
     helper.item = set_item_data(helper.data_type,helper.id,req.body);
     async.series([
         function(call){
-            console.log('aaaaaaaaa');
-
             get_db_connect(helper.app_title_id).then(([error,data]) => {
                 db_connect = data;
                 call();

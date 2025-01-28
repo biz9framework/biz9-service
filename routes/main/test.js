@@ -6,6 +6,7 @@ const { w,w_error,get_id } = require("biz9-utility");
 router.get('/ping', function(req, res, next) {
     let helper = get_helper(req);
     helper.test = "test-test-ping";
+    console.log(helper);
     res.send({helper:helper});
     res.end();
 });
