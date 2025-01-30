@@ -1,5 +1,5 @@
 var request = require('request') , async = require('async')
-const { get_db_connect,close_db_connect,check_db_connect,update_item,update_item_list,get_item,delete_item,get_item_list,delete_item_list,count_item_list } = require("biz9-data");
+const { get_db_connect,close_db_connect,check_db_connect,update_item,update_item_list,get_item,delete_item,get_item_list,delete_item_list,count_item_list } = require("biz9-data-server");
 const {get_new_item}  = require("biz9-app");
 const { get_id,w,w_error } = require("biz9-utility");
 const assert = require('node:assert');
@@ -1016,8 +1016,8 @@ function report_show(error,item,cloud_url){
     }
 }
 function get_test_item(){
-    item_test = get_new_item(DATA_TYPE,0);
-    _id=get_id(999);
+    let item_test = get_new_item(DATA_TYPE,0);
+    let _id=get_id(999);
     item_test.title='title_'+_id;
     item_test.first_name='first_name_'+_id;
     item_test.last_name='last_name_'+_id;
@@ -1026,7 +1026,7 @@ function get_test_item(){
     return item_test;
 }
 function get_box_url(url){
-    var test_query='?app_title_id='+APP_TITLE_ID;
+    let test_query='?app_title_id='+APP_TITLE_ID;
     console.log('test_box_url',TEST_CLOUD_APP_URL+url+test_query);
     return TEST_CLOUD_APP_URL+url+test_query;
 }

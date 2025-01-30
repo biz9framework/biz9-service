@@ -6,12 +6,17 @@ Description: BiZ9 Framework: Data - Mongo - Base
 */
 const async = require('async');
 const { get_title_url,w_error } = require("biz9-utility");
-const {get_new_item,set_biz_item} = require("biz9-app");
 const {get_db_connect_main,check_db_connect_main,close_db_connect_main,update_item_main,get_item_main,delete_item_main,get_id_list_main,delete_item_list_main,count_item_list_main} = require('./mongo/index.js');
 const {get_cache_connect_main,close_cache_connect_main,get_cache_string_main,delete_cache_string_main,set_cache_string_main} = require('./redis/index.js');
 const DB_TITLE='DB';
 const CACHE_TITLE='CACHE';
 const NOT_FOUND_TITLE='NOT-FOUND';
+const get_new_item = (data_type,id) => {
+    if(!id){
+        id=0;
+    }
+    return {data_type:data_type,id:id};
+}
 const get_db_connect_adapter = (db_name) => {
     return new Promise((callback) => {
         get_db_connect_main(db_name).then(([error,data]) => {
@@ -35,7 +40,7 @@ const close_db_connect_adapter = (db_connect) => {
 const check_db_connect_adapter = (db_connect) => {
     return check_db_connect_main(db_connect);
 }
-const update_item_list_adapter = (db_connect,item_data_list,options) => {
+const update_item_list_adapter = (db_connect,item_data_list) => {
     return new Promise((callback) => {
         let cache_connect = {};
         let item_data_new_list = [];
@@ -97,8 +102,7 @@ const update_item_list_adapter = (db_connect,item_data_list,options) => {
             },
             async function(call) {
                 for(const item of item_data_list) {
-                    const [error,data] = await set_biz_item(item,options);
-                    item_data_new_list.push(data);
+                    item_data_new_list.push(item);
                 }
             },
             function(call) {
@@ -117,7 +121,7 @@ const update_item_list_adapter = (db_connect,item_data_list,options) => {
         });
     });
 }
-const update_item_adapter = (db_connect,data_type,item_data,options) => {
+const update_item_adapter = (db_connect,data_type,item_data) => {
     return new Promise((callback) => {
         let cache_connect = {};
         async.series([
@@ -167,19 +171,14 @@ const update_item_adapter = (db_connect,data_type,item_data,options) => {
                 });
             },
         ]).then(result => {
-            set_biz_item(item_data,options).then(([error,data]) => {
-                callback([error,data]);
-            }).catch(error => {
-                w_error("Data-Adapter-Update-Item-Adapter-5-Error",error);
-                callback([error,null]);
-            });
+            callback([error,item_data]);
         }).catch(error => {
             w_error("Data-Adapter-Update-Item-Adapter-END",error);
             callback([error,null]);
         });
     });
 }
-const get_item_list_adapter = (db_connect,data_type,sql,sort_by,page_current,page_size,options) => {
+const get_item_list_adapter = (db_connect,data_type,sql,sort_by,page_current,page_size) => {
     return new Promise((callback) => {
         let cache_connect = {};
         let item_data_count = 0;
@@ -208,7 +207,7 @@ const get_item_list_adapter = (db_connect,data_type,sql,sort_by,page_current,pag
             },
             async function(call) {
                 for(const item of item_id_list) {
-                    [error,data] = await get_item_cache_db(cache_connect,db_connect,data_type,item.id,options);
+                    [error,data] = await get_item_cache_db(cache_connect,db_connect,data_type,item.id);
                     if(data){
                         item_data_list.push(data);
                     }
@@ -222,7 +221,7 @@ const get_item_list_adapter = (db_connect,data_type,sql,sort_by,page_current,pag
         });
     });
 }
-const get_item_adapter = (db_connect,data_type,id,options) => {
+const get_item_adapter = (db_connect,data_type,id) => {
     return new Promise((callback) => {
         let cache_connect = {};
         let cache_found = false;
@@ -240,7 +239,7 @@ const get_item_adapter = (db_connect,data_type,id,options) => {
                 });
             },
             function(call) {
-                get_item_cache_db(cache_connect,db_connect,data_type,id,options).then(([error,data]) => {
+                get_item_cache_db(cache_connect,db_connect,data_type,id).then(([error,data]) => {
                     item_data = data;
                     call();
                 }).catch(error => {
@@ -338,7 +337,7 @@ const delete_item_adapter = (db_connect,data_type,id) => {
         });
     });
 }
-const get_item_cache_db = (cache_connect,db_connect,data_type,id,options) => {
+const get_item_cache_db = (cache_connect,db_connect,data_type,id) => {
     return new Promise((callback) => {
         let cache_found = false;
         let cache_key_list = null;
@@ -378,9 +377,9 @@ const get_item_cache_db = (cache_connect,db_connect,data_type,id,options) => {
                 else{
                     get_item_main(db_connect,data_type,id).then(([error,data]) => {
                         if(data){
-                            set_cache_item(cache_connect,data_type,id,data).then(([error,data]) => {
-                                item_data = data;
-                                item_data.source = DB_TITLE;
+                            item_data = data;
+                            item_data.source = DB_TITLE;
+                            set_cache_item(cache_connect,data_type,id,data).then(([error,data2]) => {
                                 call();
                             }).catch(error => {
                                 w_error("Data-Adapter-Get-Item-Cache-DB-2",error);
@@ -397,12 +396,7 @@ const get_item_cache_db = (cache_connect,db_connect,data_type,id,options) => {
                 }
             },
         ]).then(result => {
-            set_biz_item(item_data,options).then(([error,data]) => {
-                callback([error,data]);
-            }).catch(error => {
-                w_error("Data-Adapter-Get-Item-Cache-DB-4",error);
-                callback([error,null]);
-            });
+            callback([error,item_data]);
         }).catch(error => {
             w_error("Data-Adapter-Get-Item-Cache-DB",error);
             callback([error,null]);

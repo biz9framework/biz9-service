@@ -14,32 +14,21 @@ const close_db_connect = async (db_connect) => {
 const check_db_connect = async (db_connect) => {
     return check_db_connect_adapter(db_connect);
 };
-const update_item = async (db_connect,data_type,item_data,options) => {
-    if(!options){
-        options={};
-    }
-    return [error,data] = await update_item_adapter(db_connect,data_type,item_data,options);
+const update_item = async (db_connect,data_type,item_data) => {
+    return [error,data] = await update_item_adapter(db_connect,data_type,item_data);
 };
-const get_item = async (db_connect,data_type,id,options) => {
-    if(!options){
-        options={};
-    }
-    return [error,data] = await get_item_adapter(db_connect,data_type,id,options);
+const get_item = async (db_connect,data_type,id) => {
+    [error,data] = await get_item_adapter(db_connect,data_type,id);
+    return [error,data] = await get_item_adapter(db_connect,data_type,id);
 };
-const update_item_list = async (db_connect,item_data_list,options) => {
-    if(!options){
-        options={};
-    }
-    return [error,data] = await update_item_list_adapter(db_connect,item_data_list,options);
+const update_item_list = async (db_connect,item_data_list) => {
+    return [error,data] = await update_item_list_adapter(db_connect,item_data_list);
 };
 const delete_item = async (db_connect,data_type,id) => {
     return [error,data] = await delete_item_adapter(db_connect,data_type,id);
 };
-const get_item_list = async (db_connect,data_type,sql,sort_by,page_current,page_size,options) => {
-    if(!options){
-        options={};
-    }
-    return [error,data_list,item_count,page_count] = await get_item_list_adapter(db_connect,data_type,sql,sort_by,page_current,page_size,options);
+const get_item_list = async (db_connect,data_type,sql,sort_by,page_current,page_size) => {
+    return [error,data_list,item_count,page_count] = await get_item_list_adapter(db_connect,data_type,sql,sort_by,page_current,page_size);
 };
 const delete_item_list = async (db_connect,data_type,sql) => {
     return [error,data_list] = await delete_item_list_adapter(db_connect,data_type,sql);

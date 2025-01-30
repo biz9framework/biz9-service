@@ -1,10 +1,11 @@
 var request = require('request') , async = require('async')
 const { get_db_connect,close_db_connect,check_db_connect,update_item,update_item_list,get_item,delete_item,get_item_list,delete_item_list,count_item_list } = require("./");
-const {get_new_item}  = require("biz9-app");
 const { get_id } = require("biz9-utility");
+const { get_biz9_config } = require("biz9-scriptz");
+const biz9_config = get_biz9_config();
 const assert = require('node:assert');
 const APP_TITLE_ID = 'mobile-jan25';
-const ID = 'b6b28f87-5049-4ab5-8d7b-74ac650829adff';
+const ID = 'c7a6648e-76a1-4f63-8e91-c6d2e52110a0';
 const DATA_TYPE = 'blank_biz';
 const SQL = {};
 /*
@@ -81,8 +82,6 @@ describe('test_item_update', function(){ this.timeout(25000);
     it("_test_item_update", function(done){
         let db_connect = {};
         let item_test = get_test_item();
-        let options={get_count:false,get_mp3:false,get_photo:false,get_date:false};
-        //let options={get_count:true,get_mp3:true,get_photo:true,get_date:true};
         async.series([
             function(call){
                 console.log('--TEST-GET-ITEM-UPDATE--START--');
@@ -101,7 +100,7 @@ describe('test_item_update', function(){ this.timeout(25000);
             },
             function(call){
                 console.log('--TEST-GET-ITEM-UPDATE-2--START--');
-                update_item(db_connect,DATA_TYPE,item_test,options).then(([error,data])=> {
+                update_item(db_connect,DATA_TYPE,item_test).then(([error,data])=> {
                     if(error){
                         throw '--TEST-GET-ITEM-UPDATE-2--ERROR '+ error;
                     }
@@ -152,8 +151,6 @@ describe('test_item_again_update', function(){ this.timeout(25000);
     it("_test_item_again_update", function(done){
         let db_connect = {};
         let item_test = get_new_item(DATA_TYPE,ID);
-        let options={get_count:false,get_mp3:false,get_photo:false,get_date:false};
-        //let options={get_count:true,get_mp3:true,get_photo:true,get_date:true};
         async.series([
             function(call){
                 console.log('--TEST-GET-ITEM-UPDATE--START--');
@@ -174,7 +171,7 @@ describe('test_item_again_update', function(){ this.timeout(25000);
                 console.log('--TEST-GET-ITEM-UPDATE-2--START--');
                 item_test.first_name = 'cool_bean_first';
                 item_test.last_name = 'cool_bean_last';
-                update_item(db_connect,DATA_TYPE,item_test,options).then(([error,data])=> {
+                update_item(db_connect,DATA_TYPE,item_test).then(([error,data])=> {
                     if(error){
                         throw '--TEST-GET-ITEM-UPDATE-2--ERROR '+ error;
                     }
@@ -228,8 +225,6 @@ describe('test_item_list_update', function(){ this.timeout(25000);
     it("_test_item_list_update", function(done){
         let db_connect = {};
         let item_test_list = [];
-        let options={get_count:false,get_mp3:false,get_photo:false,get_date:false};
-        //let options={get_count:true,get_mp3:true,get_photo:true,get_date:true};
         async.series([
             function(call){
                 console.log('--TEST-GET-ITEM-UPDATE-LIST-START--');
@@ -254,7 +249,7 @@ describe('test_item_list_update', function(){ this.timeout(25000);
                     item_test.test_group_id=test_group_id;
                     item_test_list.push(item_test);
                 }
-                update_item_list(db_connect,item_test_list,options).then(([error,data])=> {
+                update_item_list(db_connect,item_test_list).then(([error,data])=> {
                     if(error){
                         throw '--TEST-INSERT-LIST-2-ERROR '+ error;
                     }
@@ -306,8 +301,6 @@ describe('test_item_get', function(){ this.timeout(25000);
     it("_test_item_get", function(done){
         let db_connect = {};
         let item_test = get_new_item(DATA_TYPE,ID);
-        let options={get_count:false,get_mp3:false,get_photo:false,get_date:false};
-        // let options={get_count:true,get_mp3:true,get_photo:true,get_date:true};
         async.series([
             function(call){
                 console.log('--TEST-GET-ITEM-START--');
@@ -326,12 +319,15 @@ describe('test_item_get', function(){ this.timeout(25000);
             },
             function(call){
                 console.log('--TEST-GET-ITEM-2-START--');
-                get_item(db_connect,DATA_TYPE,item_test.id,options).then(([error,data])=> {
+                console.log('aAAAAAAAA');
+                console.log(DATA_TYPE);
+                console.log(item_test.id);
+                console.log('BBBBBBBB');
+                get_item(db_connect,DATA_TYPE,item_test.id).then(([error,data])=> {
                     if(error){
                         throw '--TEST-GET-ITEM-2-ERROR--'+ error;
                     }
                     item_test = data;
-                    console.log(item_test);
                     assert.notEqual(0,data.id);
                     assert.equal(DATA_TYPE,data.data_type);
                     console.log('--TEST-GET-ITEM-2-END--');
@@ -515,8 +511,6 @@ describe('list_get_item', function(){ this.timeout(25000);
         let sort_by = {};
         let page_current = 0;
         let page_size = 5;
-        let options={get_count:false,get_mp3:false,get_photo:false,get_date:false};
-        //let options={get_count:true,get_mp3:true,get_photo:true,get_date:true};
         async.series([
             function(call){
                 console.log('--TEST-ITEM-LIST-START--');
@@ -535,7 +529,7 @@ describe('list_get_item', function(){ this.timeout(25000);
             },
             function(call){
                 console.log('--TEST-ITEM-LIST-2-START--');
-                get_item_list(db_connect,DATA_TYPE,SQL,sort_by,page_current,page_size,options).then(([error,item_data_list,item_data_count,page_count])=> {
+                get_item_list(db_connect,DATA_TYPE,SQL,sort_by,page_current,page_size).then(([error,item_data_list,item_data_count,page_count])=> {
                     if(error){
                         throw '--TEST-ITEM-LIST-3-ERROR--'+ error;
                     }
@@ -739,3 +733,7 @@ function get_test_item(){
     item_test.test_group_id=_id;
     return item_test;
 }
+const get_new_item = (data_type,id) =>{
+  return {data_type:data_type,id:id};
+}
+

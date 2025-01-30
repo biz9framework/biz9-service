@@ -1,7 +1,7 @@
 let express = require('express');
 let router = express.Router();
 const { get_helper,get_new_item,set_item_data } = require("biz9-app");
-const { get_db_connect,close_db_connect,update_item,get_item,delete_item} = require("biz9-data");
+const { get_db_connect,close_db_connect,update_item,get_item,delete_item} = require("biz9-data-server");
 const { w,w_error,get_id } = require("biz9-utility");
 router.get('/ping', function(req, res, next) {
     let helper = get_helper(req);
@@ -61,6 +61,9 @@ router.get('/update/:data_type/:id', function(req, res, next) {
             });
         },
         function(call){
+            console.log('helper.item-start');
+            console.log(helper.item);
+            console.log('helper.item-end');
             update_item(db_connect,helper.data_type,helper.item).then(([error,data]) => {
                 helper.item = data;
                 call();

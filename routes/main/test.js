@@ -1,7 +1,7 @@
 let express = require('express');
 let router = express.Router();
 const { get_helper,get_new_item } = require("biz9-app");
-const { get_db_connect,close_db_connect,update_item,get_item } = require("biz9-data");
+const { get_db_connect,close_db_connect,update_item,get_item } = require("biz9-data-server");
 const { w,w_error,get_id } = require("biz9-utility");
 router.get('/ping', function(req, res, next) {
     let helper = get_helper(req);
