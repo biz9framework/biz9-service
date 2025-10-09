@@ -27,7 +27,6 @@ router.post('/detail', function(req, res, next) {
     data.review_list = [];
     async.series([
         async function(call){
-            console.log('1111111111111');
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
             const [biz_error,biz_data] = await Database.get(biz9_config);
             if(biz_error){
@@ -50,13 +49,35 @@ router.post('/detail', function(req, res, next) {
         async function(call){
             const [biz_error,biz_data] = await Product_Data.get(database,data.product.key,{get_image:true,get_item:true});
             if(biz_error){
-                Log.w('biz_data_product',biz_data);
                 error=Log.append(error,biz_error);
             }else{
                 data.product = biz_data;
             }
             Log.w('data',data);
         },
+        //product_hosting_type
+        async function(call){
+            let key = "Hosting";
+            let search = App_Logic.get_search(DataType.PRODUCT,{type:key},{title:-1},1,0);
+            const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.product_sub_hosting_type_list = biz_data.product_list;
+            }
+        },
+        //product_hosting_type
+        async function(call){
+            let key = "CMS";
+            let search = App_Logic.get_search(DataType.PRODUCT,{type:key},{title:-1},1,0);
+            const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.product_sub_cms_type_list = biz_data.product_list;
+            }
+        },
+
         /*
         //post_item_view_count
         async function(call){
@@ -87,17 +108,7 @@ router.post('/detail', function(req, res, next) {
         },
         */
         /*
-        //product_hosting_type
-        async function(call){
-            let key = "product_hosting_type";
-            const [biz_error,biz_data] = await Content_Data.get(database,key,{get_item:true});
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }else{
-                data.product_sub_hosting_type_list = data.items;
-            }
-        },
-        //product_cms_type
+       //product_cms_type
         async function(call){
             let key = "product_cms_type";
             const [biz_error,biz_data] = await Content_Data.get(database,key,{get_item:true});

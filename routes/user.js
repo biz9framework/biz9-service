@@ -38,7 +38,7 @@ router.post('/dashboard', function(req, res, next) {
             if(error){
                 error=Log.append(error,biz_error);
             }else{
-                data.user_success = data.user_success;
+                data.user_resultOK = data.user_resultOK;
                 data.user = data.user;
             }
         },
@@ -53,7 +53,7 @@ router.post('/dashboard', function(req, res, next) {
 router.post('/post', function(req, res, next) {
     let error = null;
     let database = {};
-    let data = {user:DataItem.get_new(DataType.USER,req.body.data.id),email_success:false,title_success:false};
+    let data = {user:DataItem.get_new(DataType.USER,req.body.data.id),email_resultOK:false,title_resultOK:false};
     let post_user = DataItem.get_new(DataType.USER,req.body.data.id,req.body.data.data);
    async.series([
         async function(call){
@@ -71,8 +71,8 @@ router.post('/post', function(req, res, next) {
                 error=Log.append(error,biz_error);
             }else{
                 data.user =biz_data.user;
-                data.email_success =biz_data.email_success;
-                data.title_success =biz_data.title_success;
+                data.email_resultOK =biz_data.email_resultOK;
+                data.title_resultOK =biz_data.title_resultOK;
             }
         },
     ],
@@ -86,7 +86,7 @@ router.post('/post', function(req, res, next) {
 router.post('/register', function(req, res, next) {
     let error = null;
     let database = {};
-    let data = {user:DataItem.get_new(DataType.USER,0),email_success:false,title_success:false,stat:DataItem.get_new(DataType.STAT,0)};
+    let data = {user:DataItem.get_new(DataType.USER,0),email_resultOK:false,title_resultOK:false,stat:DataItem.get_new(DataType.STAT,0)};
     let post_user = DataItem.get_new(DataType.USER,0,req.body.data.user);
     let post_stat = DataItem.get_new(DataType.STAT,0,{type:Type.STAT_REGISTER});
     let post_device = req.body.data.device;
@@ -110,8 +110,8 @@ router.post('/register', function(req, res, next) {
             }else{
                 data.user =biz_data.user;
                 data.stat.user_id = data.user.id;
-                data.email_success =biz_data.email_success;
-                data.title_success =biz_data.title_success;
+                data.email_resultOK =biz_data.email_resultOK;
+                data.title_resultOK =biz_data.title_resultOK;
             }
         },
     ],
@@ -125,7 +125,7 @@ router.post('/register', function(req, res, next) {
 router.post('/login', function(req, res, next) {
     let error = null;
     let database = {};
-    let data = {user:DataItem.get_new(DataType.USER,0),user_success:false,stat:DataItem.get_new(DataType.STAT,0)};
+    let data = {user:DataItem.get_new(DataType.USER,0),user_resultOK:false,stat:DataItem.get_new(DataType.STAT,0)};
     let post_user = DataItem.get_new(DataType.USER,0,req.body.data.user);
     let post_stat = DataItem.get_new(DataType.STAT,0,{type:Type.STAT_LOGIN});
     let post_device = req.body.data.device;
@@ -149,13 +149,13 @@ router.post('/login', function(req, res, next) {
             }else{
                 data.user =biz_data.user;
                 data.stat.user_id = data.user.id;
-                data.user_success =biz_data.user_success;
+                data.user_resultOK =biz_data.user_resultOK;
             }
         },
         //persist user
         /*
         async function(call){
-            if(!data.user_success && APP_ENV == !App_Logic.ENVIRONMENT_TESTING){
+            if(!data.user_resultOK && APP_ENV == !App_Logic.ENVIRONMENT_TESTING){
                 data.user_post_server = true;
                 User_Logic.post_request_user(req,data.user);
             }
@@ -163,6 +163,7 @@ router.post('/login', function(req, res, next) {
         */
     ],
         function(err, result){
+            Log.w('i am here',data);
             res.send({error:error,data:data});
             res.end();
         });

@@ -145,6 +145,8 @@ router.post('/home', function(req, res, next) {
                 error=Log.append(error,biz_error);
             }else{
                 data.category_list = biz_data.data_list;
+                Log.w('data.category_list_44_55_66',data.category_list);
+                Log.w('data.category_list_44_55_66_len',data.category_list.length);
                 biz_data.data_list.forEach(item => {
                     data.category_product_title_list.push({title:item.title,count:Number(item.item_count),items:[]});
                 });
@@ -254,6 +256,7 @@ router.post('/home', function(req, res, next) {
                 error=Log.append(error,biz_error);
             }else{
                 data.product_explore_list_1 = biz_data.product_list;
+
             }
         },
         //product_explore_list_2cloud
@@ -267,7 +270,7 @@ router.post('/home', function(req, res, next) {
                 error=Log.append(error,biz_error);
             }else{
                 data.product_explore_list_2 = biz_data.product_list;
-            }
+           }
         },
         //product_explore_list_3
         async function(call){

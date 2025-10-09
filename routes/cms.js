@@ -252,7 +252,7 @@ router.post('/search_item_type_category', function(req, res, next) {
         },
         //type
         async function(call){
-            let search = App_Logic.get_search(DataType.TYPE,{type:data.data_type},{},1,0);
+            let search = App_Logic.get_search(DataType.TYPE,{},{},1,0);
             let option ={get_field:true,fields:'title,type'};
             const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
@@ -263,9 +263,9 @@ router.post('/search_item_type_category', function(req, res, next) {
         },
         //category
         async function(call){
-            let search = App_Logic.get_search(DataType.CATEGORY,{type:data.data_type},{},1,0);
-            let option ={get_field:true,fields:'title,type'};
-            const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            let search = App_Logic.get_search(DataType.CATEGORY,{category:data.data_type},{},1,0);
+            let option = {get_field:false,fields:'title,type,data_type',get_distinct:true,distinct_field:'title'};
+   const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
