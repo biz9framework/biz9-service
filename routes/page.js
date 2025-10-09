@@ -1,0 +1,457 @@
+let express=require('express');
+let router=express.Router();
+/* -- biz9_start -- */
+const {Admin,Business,Data,Database,Portal,Product_Data,Page_Data,Category_Data,Blog_Post_Data,Content_Data,Template_Data,Business_Data,Review_Data,Faq_Data,Favorite_Data}=require("/home/think2/www/doqbox/biz9-framework/biz9-data/code");
+const {DataType,DataItem,User_Logic,Favorite_Logic,App_Logic,Type}=require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
+const {Scriptz}=require("biz9-scriptz");
+const {Project_Logic}=require("../project_logic");
+const {Error,Log,Form,Str}=require("/home/think2/www/doqbox/biz9-framework/biz9-utility/code");
+/* -- biz9-end -- */
+router.get('/ping', function(req, res, next) {
+    let error={};
+    let data="cms-ping";
+    res.send({data:data});
+    res.end();
+});
+//9_home
+// - required_form_data = user_id
+router.post('/home', function(req, res, next) {
+    let error = null;
+    let database,data = {};
+    let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter();
+    let app_dev_search_option = {get_field:true,fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count'};
+
+    //
+    data.user = req.body.data.user_id ? DataItem.get_new(DataType.USER,req.body.data.user_id): User_Logic.get_guest();
+    //
+    data.page = DataItem.get_new(DataType.PAGE,0,{key:Type.PAGE_HOME});
+    //
+    data.favorite_list = [];
+    //
+
+    data.product_popular_list = [];
+    data.product_latest_list = [];
+    data.product_top_list = [];
+    data.product_trending_list = [];
+    //
+    data.category_list = [];
+    //
+    data.category_product_title_list = [];
+    //
+    data.partner_list = [];
+    //
+    data.blog_post_list = [];
+    //
+    data.product_explore_list_1 = [];
+    data.product_explore_list_2 = [];
+    data.product_explore_list_3 = [];
+    data.product_explore_list_4 = [];
+    //
+    data.faq_list = [];
+    //
+    async.series([
+        async function(call){
+            let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
+            const [biz_error,biz_data] = await Database.get(biz9_config);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                database = biz_data;
+            }
+        },
+        //page
+        async function(call){
+            const [biz_error,biz_data] = await Page_Data.get(database,data.page.key);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.page = biz_data;
+            }
+        },
+        //favorite_list
+        async function(call){
+                let option = {get_parent:false,get_field:true,fields:'id,parent_id,data_type,user_id',get_user:false};
+                let search = App_Logic.get_search(DataType.FAVORITE,{user_id:data.user.id},{},0,1);
+                const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
+                if(biz_error){
+                    error=Log.append(error,biz_error);
+                }else{
+                    data.favorite_list = biz_data.data_list;
+                }
+        },
+        //product_list - popular
+        async function(call){
+            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{view_count:1},1,12);
+            let option = app_dev_search_option;
+            const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,app_dev_search_option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.product_popular_list = biz_data.product_list;
+                    if(data.favorite_list.length>0){
+                        data.product_popular_list = Favorite_Logic.get_favorite_by_list(data.favorite_list,data.product_popular_list);
+                    }
+            }
+        },
+        //product_list - latest
+        async function(call){
+            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            let option = app_dev_search_option;
+            const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.product_latest_list =  biz_data.product_list;
+                    if(data.favorite_list.length>0){
+                        data.product_latest_list = Favorite_Logic.get_favorite_by_list(data.favorite_list,data.product_latest_list);
+                    }
+            }
+        },
+        //product_list - rating_avg
+        async function(call){
+            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter ,{rating_avg:-1},1,12);
+            let option = app_dev_search_option;
+            const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.product_top_list =  biz_data.product_list;
+                    if(data.favorite_list.length>0){
+                        data.product_top_list = Favorite_Logic.get_favorite_by_list(data.favorite_list,data.product_top_list);
+                    }
+            }
+        },
+        //product_list - trending
+        async function(call){
+            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter ,{date_create:-1,view_count:-1},1,12);
+            let option = app_dev_search_option;
+            const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.product_trending_list = biz_data.product_list;
+                    if(data.favorite_list.length>0){
+                        data.product_trending_list = Favorite_Logic.get_favorite_by_list(data.favorite_list,data.product_trending_list);
+                    }
+            }
+        },
+        //category_list
+        async function(call){
+            console.log('star_category_list');
+            let search = App_Logic.get_search(DataType.CATEGORY,{},{title:1},1,0);
+            let option = {get_distinct:true,distinct_field:'title',distinct_sort:'asc',get_count:true,count_data_type:DataType.PRODUCT,count_field:'category',count_value:'title',get_field:true,fields:'id,title,title_url,image_filename,cost'};
+            const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.category_list = biz_data.data_list;
+                biz_data.data_list.forEach(item => {
+                    data.category_product_title_list.push({title:item.title,count:Number(item.item_count),items:[]});
+                });
+            }
+        },
+        async function(call){
+            data.category_product_title_list.sort((a, b) => b.count - a.count);
+        },
+        //category_product_title_list - 0
+        async function(call){
+            let query = {};
+            query.category = data.category_product_title_list[0].title;
+            let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,12);
+            let option = {get_field:true,fields:'id,title,title_url'};
+            const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.category_product_title_list[0].items = biz_data.product_list;
+            }
+        },
+        //category_product_title_list - 1
+        async function(call){
+            let query = {};
+            query.category = data.category_product_title_list[1].title;
+            let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,12);
+            let option = {get_field:true,fields:'id,title,title_url'};
+            const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.category_product_title_list[1].items = biz_data.product_list;
+            }
+        },
+        //category_product_title_list - 2
+        async function(call){
+            let query = {};
+            query.category = data.category_product_title_list[2].title;
+            let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,12);
+            let option = {get_field:true,fields:'id,title,title_url'};
+            const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.category_product_title_list[2].items = biz_data.product_list;
+            }
+        },
+        //category_product_title_list - 3
+        async function(call){
+            let query = {};
+            query.category = data.category_product_title_list[3].title;
+            let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,12);
+            let option = {get_field:true,fields:'id,title,title_url'};
+            const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.category_product_title_list[3].items = biz_data.product_list;
+            }
+        },
+        //category_product_title_list - 4
+        async function(call){
+            let query = {};
+            query.category = data.category_product_title_list[4].title;
+            let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,12);
+            let option = {get_field:true,fields:'id,title,title_url'};
+            const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.category_product_title_list[4].items = biz_data.product_list;
+            }
+        },
+        //category_product_title_list - 5
+        async function(call){
+            let query = {};
+            query.category = data.category_product_title_list[5].title;
+            let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,12);
+            let option = {get_field:true,fields:'id,title,title_url'};
+            const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.category_product_title_list[5].items = biz_data.product_list;
+            }
+        },
+        //blog_post_list
+        async function(call){
+            let query = {};
+            let search = App_Logic.get_search(DataType.BLOG_POST,query,{},1,12);
+            let option = {get_field:true,fields:'id,title,title_url,image_filename,description,author'};
+            const [biz_error,biz_data] = await Blog_Post_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.blog_post_list = biz_data.blog_post_list;
+            }
+        },
+        //product_explore_list_1
+        async function(call){
+            let query = {};
+            query.category = data.category_product_title_list[6].title;
+            let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,6);
+            let option = {get_field:true,fields:'id,title,title_url'};
+            const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.product_explore_list_1 = biz_data.product_list;
+            }
+        },
+        //product_explore_list_2cloud
+        async function(call){
+            let query = {};
+            query.category = data.category_product_title_list[7].title;
+            let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,6);
+            let option = {get_field:true,fields:'id,title,title_url'};
+            const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.product_explore_list_2 = biz_data.product_list;
+            }
+        },
+        //product_explore_list_3
+        async function(call){
+            let query = {};
+            query.category = data.category_product_title_list[8].title;
+            let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,6);
+            let option = {get_field:true,fields:'id,title,title_url'};
+            const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.product_explore_list_3 = biz_data.product_list;
+            }
+        },
+        //product_explore_list_4
+        async function(call){
+            let query = {};
+            query.category = data.category_product_title_list[9].title;
+            let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,6);
+            let option = {get_field:true,fields:'id,title,title_url'};
+            const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.product_explore_list_4 = biz_data.product_list;
+            }
+        },
+        //product_explore_list_5
+        async function(call){
+            let query = {};
+            query.category = data.category_product_title_list[10].title;
+            let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,6);
+            let option = {get_field:true,fields:'id,title,title_url'};
+            const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.product_explore_list_5 = biz_data.product_list;
+            }
+        },
+        /*
+        //business review list
+        //async function(call){
+            //let query = {};
+            //let search = App_Logic.get_search(DataType.REVIEW,query,{date_create:-1,date_create:-1},1,6);
+            //const [biz_error,biz_data] = await Review_Data.get(database,DataType.PRODUCT,data.business.id,{date_create:-1},1,12);
+            //if(biz_error){
+                //error=Log.append(error,biz_error);
+            //}else{
+                //data.review_list = data.item_list;
+            //}
+        //},
+        //faq_list
+        async function(call){
+            let query = {};
+            let key = 'primary';
+            const [biz_error,biz_data] = await Faq_Data.get(database,key,{question_count:6});
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.faq_list = biz_data;
+            }
+        },
+        //partner_list
+        //async function(call){
+            //let key = 'partners';
+            //const [biz_error,biz_data] = await Content_Data.get(database,key,{get_item:true});
+            //if(biz_error){
+                //error=Log.append(error,biz_error);
+            //}else{
+                //data.partner_list = data.items;
+            //}
+        //},
+        */
+    ],
+        function(err, result){
+            res.send({error:error,data:data});
+            res.end();
+        });
+});
+//9_faq
+// - required_form_data = key
+router.post('/faq', function(req, res, next) {
+    let error = null;
+    let database,data = {};
+    data.page = DataItem.get_new(DataType.PAGE,0);
+    data.faq_list = [];
+    async.series([
+        async function(call){
+            let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
+            const [biz_error,biz_data] = await Database.get(biz9_config);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                database = biz_data;
+            }
+        },
+        //page
+        async function(call){
+            const [biz_error,biz_data] = await Page_Data.get(database,Type.PAGE_FAQ,{get_item:true});
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.page = data.item;
+            }
+        },
+        //faq_list
+        async function(call){
+            let query = {};
+            let key = 'primary';
+            const [biz_error,biz_data] = await Faq_Data.get(database,key,{question_count:99});
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.faq_list = data.item.questions;
+            }
+        },
+    ],
+        function(err, result){
+            res.send({error:error,data:data});
+            res.end();
+        });
+});
+// - required_form_data = n/a
+router.post('/about', function(req, res, next) {
+    let error = null;
+    let database,data = {};
+    data.about = DataItem.get_new(DataType.PAGE);
+    async.series([
+        async function(call){
+            let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
+            const [biz_error,biz_data] = await Database.get(biz9_config);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                database = biz_data;
+            }
+        },
+        //page
+        async function(call){
+            let key = Type.PAGE_ABOUT;
+            const [biz_error,biz_data] = await Page_Data.get(database,key);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.page = data.item;
+            }
+        },
+    ],
+        function(err, result){
+            res.send({error:error,data:data});
+            res.end();
+        });
+});
+//9_contact
+// - required_form_data = none
+router.post('/contact', function(req, res, next) {
+    let error = null;
+    let database,data = {};
+    data.page = DataItem.get_new(DataType.PAGE);
+    async.series([
+        async function(call){
+            let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
+            const [biz_error,biz_data] = await Database.get(biz9_config);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                database = biz_data;
+            }
+        },
+        //page
+        async function(call){
+            let key = Type.PAGE_CONTACT;
+            const [biz_error,biz_data] = await Page_Data.get(database,key);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.page = biz_data;
+            }
+        },
+    ],
+        function(err, result){
+            res.send({error:error,data:data});
+            res.end();
+        });
+});
+module.exports = router;

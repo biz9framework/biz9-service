@@ -1,0 +1,38 @@
+{
+  "name": "biz9-service",
+  "version": "5.6.267",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "async": "^3.2.6",
+    "axios": "^1.7.9",
+    "biz9-data": "^2.5.2",
+    "biz9-logic": "^4.8.352",
+    "biz9-scriptz": "^5.8.10",
+    "biz9-utility": "^3.8.36",
+    "compression": "^1.7.5",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "express-session": "^1.18.1",
+    "http-errors": "~1.6.3",
+    "path": "^0.12.7",
+    "session": "^0.1.0",
+    "sharp": "^0.34.3",
+    "stripe": "^18.3.0"
+  },
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/biz9framework/biz9-service.git"
+  },
+  "author": "BiZ9 Framework LLC",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/biz9framework/biz9-service/issues"
+  },
+  "homepage": "https://github.com/biz9framework/biz9-service#readme",
+  "description": ""
+}
