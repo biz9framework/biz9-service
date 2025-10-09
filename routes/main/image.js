@@ -72,7 +72,6 @@ router.post('/cdn_post',function(req,res,next){
         },
         //cdn - image_list
         async function(call){
-            console.log('33333333333');
             for (const item of data.image_list) {
                 let image_process_list = Image_Logic.get_process_list(upload_dir,item.image_filename);
                 console.log(item);

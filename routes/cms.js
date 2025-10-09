@@ -290,20 +290,15 @@ router.post('/search_item_type_category', function(req, res, next) {
 });
 
 //9_demo_post
-// - required_form_data = type_logic.type_list, option
+// - required_form_data = type_logic.type_list, data_type, option
 router.post('/demo_post', function(req, res, next) {
     let error = null;
     let database = {};
     let data = {type_list:[]};
     let post_type_list = req.body.data.type_list;
+    let post_data_type = req.body.data.data_type;
     let option = req.body.data.option;
     async.series([
-        async function(call){
-            Log.w('data',data);
-            Log.w('post_type_list',post_type_list);
-            Log.w('category_0',post_type_list[0].categorys[0]);
-            Log.w('option',option);
-        },
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
             const [biz_error,biz_data] = await Database.get(biz9_config);
@@ -315,10 +310,7 @@ router.post('/demo_post', function(req, res, next) {
         },
         //demo_portal_post
         async function(call){
-            console.log('1111111');
-            console.log('1111111');
-            console.log('1111111');
-            const [biz_error,biz_data] = await Portal.demo_post(database,DataType.PRODUCT,post_type_list,option);
+            const [biz_error,biz_data] = await Portal.demo_post(database,post_data_type,post_type_list,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
