@@ -68,7 +68,7 @@ router.post('/detail', function(req, res, next) {
         },
         //product_hosting_type
         async function(call){
-            let key = "CMS";
+            let key = "Content Management System";
             let search = App_Logic.get_search(DataType.PRODUCT,{type:key},{title:-1},1,0);
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){

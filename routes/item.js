@@ -142,11 +142,12 @@ router.post('/cart', function(req, res, next) {
         });
 });
 //9_post_cart - 9_cart - 9_cart_post
-// - required form_data = parent_data_type
+// - required form_data = cart
 router.post('/cart_post', function(req, res, next) {
     let error = null;
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
+    data.data_type = req.body.data.data_type;
     data.cart = req.body.data.cart;
     async.series([
         async function(call){
