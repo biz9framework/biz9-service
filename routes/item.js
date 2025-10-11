@@ -147,7 +147,6 @@ router.post('/cart_post', function(req, res, next) {
     let error = null;
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
-    data.data_type = req.body.data.data_type;
     data.cart = req.body.data.cart;
     async.series([
         async function(call){
@@ -164,39 +163,9 @@ router.post('/cart_post', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }
-            data.cart = data;
         },
         async function(call){
             const [biz_error,biz_data] = await Cart_Data.get(database,data.cart.cart_number,option);
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }
-            data.cart = data;
-        },
-    ],
-        function(err, result){
-            res.send({error:error,data:data});
-            res.end();
-        });
-});
-//9_get_search_cart 9_cart 9_cart_search
-// - required form_data = parent_data_type
-router.post('/cart_search', function(req, res, next) {
-    let error = null;
-    let database,data = {};
-    let search = req.body.data.search;
-    async.series([
-        async function(call){
-            let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
-            const [biz_error,biz_data] = await Database.get(biz9_config);
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }else{
-                database = biz_data;
-            }
-        },
-        async function(call){
-            const [biz_error,biz_data] = await Cart_Data.search(database,req.body.data.parent_data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }
@@ -218,6 +187,7 @@ router.post('/order_post', function(req, res, next) {
     let option = req.body.data.option ? req.body.data.option : {};
     async.series([
         async function(call){
+            console.log('1111111111111');
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
             const [biz_error,biz_data] = await Database.get(biz9_config);
             if(biz_error){
@@ -227,29 +197,36 @@ router.post('/order_post', function(req, res, next) {
             }
         },
         async function(call){
+            console.log('2222222222222222');
             const [biz_error,biz_data] = await Order_Data.post(database,post_order,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }
-            data.order = data;
+            data.order = biz_data;
         },
         async function(call){
+            console.log('333333333333');
             if(!Str.check_is_null(data.order.id)){
                 const [biz_error,biz_data] = await Order_Data.get(database,data.order.order_number,option);
                 if(biz_error){
                     error=Log.append(error,biz_error);
                 }
-                data.order = data;
+                data.order = biz_data;
             }
         },
         async function(call){
-            if(!Str.check_is_null(data.order.id)){
+            console.log('44444444444444444');
+            if(!data.order.id){
+                console.log('555555555555555555');
                 data.order_payment = Order_Logic.get_new_order_payment(data.order.order_number,data.order.last_payment_method_type,order.last_payment_amount);
+                Log.w('order_payment',data.order_payment);
+                /*
                 const [biz_error,biz_data] = await Portal.post(database,DataType.ORDER_PAYMENT,data.order_payment,option);
                 if(biz_error){
                     error=Log.append(error,biz_error);
                 }
-                data.order_payment = data;
+                data.order_payment = biz_data;
+                */
             }
         },
     ],
@@ -280,7 +257,7 @@ router.delete('/order_delete', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }
-            data.order = data;
+            data.order = biz_data;
         },
     ],
         function(err, result){
@@ -310,36 +287,9 @@ router.post('/order', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }
-            data.order = biz_data;
-        },
-    ],
-        function(err, result){
-            res.send({error:error,data:data});
-            res.end();
-        });
-});
-//9_get_search_order 9_order 9_searh_order
-// - required form_data = parent_data_type
-router.post('/order_search', function(req, res, next) {
-    let error = null;
-    let database,data = {};
-    let search = req.body.data.search;
-    async.series([
-        async function(call){
-            let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
-            const [biz_error,biz_data] = await Database.get(biz9_config);
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }else{
-                database = biz_data;
-            }
-        },
-        async function(call){
-            const [biz_error,biz_data] = await Order_Data.search(database,req.body.data.parent_data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }
             data = biz_data;
+            Log.w("aaaaa",biz_data);
+            Log.w("bbbb",option);
         },
     ],
         function(err, result){

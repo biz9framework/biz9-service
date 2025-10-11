@@ -6,6 +6,7 @@ const {Portal,Database,Page_Data,Stat_Data,Data_Logic,Stat_Logic,Content_Data,Re
 const {DataType,DataItem,User_Logic,App_Logic,Review_Logic,Favorite_Logic,Type}=require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
 const {Log,Form,Str,Num}=require("biz9-utility");
 const stripe = require('stripe')('sk_test_51RkvILBLx49RFzHwqq12TwN0zYMBUbQEbmpVsNapnyIlkgtLL4TUCKSqI6lTx4IGdHRxggScXRyg9pzZu8tJPxEQ00s7YEtaQt');
+const {Project_Logic}=require("../project_logic");
 /* -- biz9-end -- */
 router.get('/ping', function(req, res, next) {
     let error={};
@@ -14,18 +15,19 @@ router.get('/ping', function(req, res, next) {
     res.send({error:biz_error,biz_data:data});
     res.end();
 });
-//9_detail
+//9_product
 // - required_form_data = key
-router.post('/detail', function(req, res, next) {
+router.post('/product', function(req, res, next) {
     let error = null;
-    let database = {};
-    let data = {product:DataItem.get_new(DataType.PRODUCT,0,{key:req.body.data.key}),page:DataItem.get_new(DataType.PAGE,0),product_list:[]};
+    let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
+    data.product = DataItem.get_new(DataType.PRODUCT,0,{key:req.params.key,items:[],images:[]});
+    data.product_list = [];
+    data.page = DataItem.get_new(DataType.PAGE,0,{items:[],images:[]});
     data.product_sub_hosting_type_list = [];
     data.product_sub_cms_type_list = [];
-    data.product_list = [];
     data.review_list = [];
-    async.series([
+   async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
             const [biz_error,biz_data] = await Database.get(biz9_config);
@@ -38,6 +40,7 @@ router.post('/detail', function(req, res, next) {
         //page
         async function(call){
             let key = Type.PAGE_PRODUCT_DETAIL;
+            Log.w('key',key);
             const [biz_error,biz_data] = await Page_Data.get(database,key,{get_item:true});
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -53,9 +56,8 @@ router.post('/detail', function(req, res, next) {
             }else{
                 data.product = biz_data;
             }
-            Log.w('data',data);
         },
-        //product_hosting_type
+       //product_hosting_type
         async function(call){
             let key = "Hosting";
             let search = App_Logic.get_search(DataType.PRODUCT,{type:key},{title:-1},1,0);
@@ -77,7 +79,19 @@ router.post('/detail', function(req, res, next) {
                 data.product_sub_cms_type_list = biz_data.product_list;
             }
         },
-
+        //product_list
+        async function(call){
+            let query = {};
+            let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter();
+            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            let option = {get_field:true,fields:'id,title,title_url,image_filename'};
+            const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.product_list = biz_data.product_list;
+            }
+        },
         /*
         //post_item_view_count
         async function(call){
@@ -107,33 +121,7 @@ router.post('/detail', function(req, res, next) {
             }
         },
         */
-        /*
-       //product_cms_type
-        async function(call){
-            let key = "product_cms_type";
-            const [biz_error,biz_data] = await Content_Data.get(database,key,{get_item:true});
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }else{
-                data.product_sub_cms_type_list = data.items;
-            }
-        },
-        //product_list
-        async function(call){
-            let query = { $and:[
-                { application_type: { $regex:data.product.application_type, $options: "i" } },
-                { category: { $regex:data.product.category, $options: "i" } }
-            ] };
-            let search = App_Logic.get_search(DataType.PRODUCT,query,{title:1},1,12);
-            const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }else{
-                data.product_list=data.product_list;
-            }
-        },
-        */
-     ],
+    ],
         function(err, result){
             res.send({error:error,data:data});
             res.end();
@@ -216,7 +204,7 @@ router.post('/', function(req, res, next) {
                 data.product_list=data.item_list;
             }
         },
-            //category_list
+        //category_list
         async function(call){
             let query = {category:'Application'};
             //here

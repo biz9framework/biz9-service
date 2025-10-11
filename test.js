@@ -155,101 +155,40 @@ DATA_CONFIG = {
 describe('connect', function(){ this.timeout(25000);
 	it("_connect", function(done){
 		console.log('TEST-CONNECT-START');
-		let cloud_error=null;
+		let error=null;
 		let db_connect = {};
-		let item_test = Item_Logic.get_test(DATA_TYPE,0);
 		async.series([
 			function(call){
-				console.log('BiZ9-CONFIG-FILE-START');
+				console.log('CONNECT-START');
+				//let biz9_config = Scriptz.get_biz9_config();
 				//Log.w('biz9_config',biz9_config);
-				console.log('BiZ9-CONFIG-FILE-END');
-				call();
-			},
-			function(call){
-				console.log('BiZ9-URL-START');
-				let biz9_config = Scriptz.get_biz9_config();
-				let title_url = 'primary';
-				let page_url = 'home';
-				let data_type = 'page_biz';
-				//let cloud_url = BiZ_Url.get_template(biz9_config,title_url);
-				//let cloud_url = BiZ_Url.get_page(biz9_config,page_url);
-				//let cloud_url = Url.get(biz9_config,'cms_home');
-				//let cloud_url = GET_URL;
-				//Log.w('biz9_config',biz9_config);
-				//Log.w('cloud_url',cloud_url);
-				//Log.w('biz9_config',biz9_config);
-				//console.log(Scriptz.get_biz9_config({app_id:DYNAMIC_TITLE}));
-				//console.log(Scriptz.get_biz9_config({app_id:''}));
-				//console.log('BiZ9-URL-END');
-				call();
-			},
-			function(call){
-				console.log('CONNECT-LOCAL-START');
-				let biz9_config = Scriptz.get_biz9_config();
-				Data.open_db(biz9_config).then(([error,data]) => {
-					if(error){
-						cloud_error=Log.append(cloud_error,error);
-					}else{
-						db_connect = data;
-						Log.w('db_connect',db_connect);
-						console.log('CONNECT-LOCAL-SUCCESS');
-					}
-					call();
-				}).catch(error => {
-					Log.w('CONNECT-LOCAL-ERROR',error);
-					cloud_error=Log.append(cloud_error,error);
-				});
-			},
-			function(call){
-				console.log('CONNECT-LOCAL-CLOSE-START');
-				Data.close_db(db_connect).then(([error,data]) => {
-					if(error){
-						cloud_error=Log.append(cloud_error,error);
-					}else{
-						db_connect = data;
-						Log.w('db_connect',db_connect);
-						console.log('CONNECT-LOCAL-CLOSE-SUCCESS');
-					}
-					call();
-				}).catch(error => {
-					Log.w('CONNECT-LOCAL-CLOSE-ERROR',error);
-					cloud_error=Log.append(cloud_error,error);
-				});
-			},
-			function(call){
-				console.log('CONNECT-REMOTE-START');
-				let biz9_config = Scriptz.get_biz9_config();
-				Log.w('biz9_config',biz9_config);
-				let dynamic_app_id = 'app_id_dynamic_'+Num.get_id(); //dynamic
 				//let cloud_url = Url.connect(Scriptz.get_biz9_config({app_id:dynamic_app_id})); //dynamic
+				//
 				//let cloud_url = Url.get_connect(biz9_config); //single
 				//let cloud_url = Url.get_connect(Scriptz.get_biz9_config({app_id:''})); //blank
-				let item_test = Item_Logic.get_test_item(DATA_TYPE,0);
-				Log.w('cloud_url',cloud_url);
-				Log.w('item_test',item_test);
-				/*
-				axios.get(cloud_url, {
-					data: item_test
+				//let item_test = Item_Logic.get_test_item(DATA_TYPE,0);
+				let key = 'key1';
+				let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.BLOG_POST);
+				let data = {key:key};
+				Log.w('url',url);
+
+				axios.post(url, {
+					data: data
 				})
 					.then(function (response) {
-						if(response.data.cloud_error){
-							cloud_error=Log.append(cloud_error,response.data.cloud_error);
-						}else{
-							Log.w('cloud',response.data.cloud);
-							console.log('CONNECT-REMOTE-SUCCESS');
-						}
+						Log.w('RESPONSE_DATA',response.data);
+						Log.w('URL',url);
+						console.log('CONNECT-REMOTE-SUCCESS');
 						call();
 					})
 					.catch(function (error) {
 						Log.w('CONNECT-REMOTE-ERROR',error);
-						cloud_error=Log.append(cloud_error,error);
 					});
-					*/
 			}
 		],
 			function(error, result){
-				if(cloud_error){
-					Log.error("CONNECT-REMOTE-ERROR",cloud_error);
+				if(error){
+					Log.error("CONNECT-REMOTE-ERROR",error);
 				}else{
 					console.log('CONNECT-LOCAL-SUCCESS-DONE');
 					console.log('CONNECT-REMOTE-SUCCESS-DONE');
@@ -776,62 +715,18 @@ describe('post_data', function(){ this.timeout(25000);
 			let data_type = DataType.PRODUCT;
 			let id = 0;
 			//let cloud_url = Url.url(DATA_CONFIG,'main/crud/update_item_photo_list/'+data_type+"/"+0);
+			let cloud_url =  App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PRODUCT_DETAIL);
+			Log.w('cloud_url',cloud_url);
+			let data = {key:'admin_panel_product_9'};
+			Log.w('data',data);
 			//let cloud_url = User_Url.login(DATA_CONFIG.APP_ID,DATA_CONFIG.URL);
 			//let cloud_url = Item_Url.post_cdn_photo(DATA_CONFIG.APP_ID,DATA_CONFIG.URL);
 			//let data = [];
 			//let cloud_url = "http://localhost:1904/item/activity?app_id=test-stage";
-			/*
-			let parent_data_type = DataType.PRODUCT;
-			let search = App_Logic.get_search(DataType.PRODUCT,{},{},1,0);
-			let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.CMS_ITEM_TYPE_CATEGORY);
-			let data = {data_type:parent_data_type,search:search};
-			Log.w('search',search);
-			Log.w('cloud_url',cloud_url);
-			*/
-			//DEMO-POST-START
-			//demo_post - post - start
-			/*
-			let post_product_type_list = [
-	        Demo_Logic.get_new_type('Landing Page',{get_category:true,categorys:'Beauty,Pets',get_item:true,item_count:9,item_data_type:DataType.PRODUCT,category_data_type:DataType.PRODUCT})
-			];
-			*/
-
-			/*
-			let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.CMS_DEMO_POST);
-			Log.w('cloud_url',cloud_url);
-			Log.w('post_product_type_list',post_product_type_list);
-			let data = {type_list:post_product_type_list};
-			*/
 			//let user = DataItem.get_new(DataType.USER,0,{email:"ceo@bossappz.com",password:"1234567"});
 			//super_admin - add - end
 			//DEMO-POST-END
 			//super_admin - add - start
-			let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST);
-			let data = DataItem.get_new(DataType.USER,0,{title:'ceo',title_url:'ceo',email:"ceo@bossappz.com",password:"1234567",role:Type.USER_ROLE_SUPER_ADMIN});
-			Log.w('cloud_url',cloud_url);
-			Log.w('data',data);
-			//let user = DataItem.get_new(DataType.USER,0,{email:"ceo@bossappz.com",password:"1234567"});
-			//super_admin - add - end
-			//POT-ITEM-START
-			/*
-			let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST);
-			let item = DataItem.get_new(DataType.BLOG_POST,0,{title:'my_title_'+Num.get_id()});
-			Log.w('new_item',item);
-			*/
-			//POT-ITEM-END
-
-			/*
-			//POST-LIST-START
-			let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST_LIST);
-			let data_list = [
-				DataItem.get_new(DataType.BLOG_POST,0,{title:'my_title_'+Num.get_id()}),
-				DataItem.get_new(DataType.BLOG_POST,0,{title:'my_title_'+Num.get_id()}),
-				DataItem.get_new(DataType.BLOG_POST,0,{title:'my_title_'+Num.get_id()})
-			];
-			Log.w('cloud_url',cloud_url);
-			Log.w('my_list',data_list);
-			//POST-LIST-END
-			*/
 
 			axios.post(cloud_url, {
 				data: data
