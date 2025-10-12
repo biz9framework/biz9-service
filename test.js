@@ -167,10 +167,11 @@ describe('connect', function(){ this.timeout(25000);
 				//let cloud_url = Url.get_connect(biz9_config); //single
 				//let cloud_url = Url.get_connect(Scriptz.get_biz9_config({app_id:''})); //blank
 				//let item_test = Item_Logic.get_test_item(DATA_TYPE,0);
-				let key = 'item_80379';
-				let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.BLOG_POST);
-				let data = {key:key};
-				Log.w('url',url);
+				let key = 'item_24184';
+				let search = App_Logic.get_search(DataType.SERVICE,{},{},1,0);
+				let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PAGE_SERVICE);
+				let data = {key:key,search:search};
+				Log.w('url_22',url);
 
 				axios.post(url, {
 					data: data
