@@ -183,11 +183,11 @@ router.post('/order_post', function(req, res, next) {
     let error = null;
     let database,data = {};
     let post_order = req.body.data.order;
-    let order_payment = DataItem.get_new(DataType.ORDER_PAYMENT,0);
+    let post_order_payment = Order_Logic.get_new_order_payment(post_order.order_number,post_order.last_payment_method_type,post_order.last_payment_amount);
     let option = req.body.data.option ? req.body.data.option : {};
+    data.order = DataItem.get_new(DataType.ORDER,0);
     async.series([
         async function(call){
-            console.log('1111111111111');
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
             const [biz_error,biz_data] = await Database.get(biz9_config);
             if(biz_error){
@@ -197,15 +197,18 @@ router.post('/order_post', function(req, res, next) {
             }
         },
         async function(call){
-            console.log('2222222222222222');
+            Log.w('post_order',post_order);
+            Log.w('post_order_payment',post_order_payment);
+            /*
             const [biz_error,biz_data] = await Order_Data.post(database,post_order,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }
             data.order = biz_data;
+            */
         },
+        /*
         async function(call){
-            console.log('333333333333');
             if(!Str.check_is_null(data.order.id)){
                 const [biz_error,biz_data] = await Order_Data.get(database,data.order.order_number,option);
                 if(biz_error){
@@ -215,20 +218,15 @@ router.post('/order_post', function(req, res, next) {
             }
         },
         async function(call){
-            console.log('44444444444444444');
-            if(!data.order.id){
-                console.log('555555555555555555');
-                data.order_payment = Order_Logic.get_new_order_payment(data.order.order_number,data.order.last_payment_method_type,order.last_payment_amount);
-                Log.w('order_payment',data.order_payment);
-                /*
+            //if(!data.order.id){
                 const [biz_error,biz_data] = await Portal.post(database,DataType.ORDER_PAYMENT,data.order_payment,option);
                 if(biz_error){
                     error=Log.append(error,biz_error);
                 }
                 data.order_payment = biz_data;
-                */
-            }
+            //}
         },
+        */
     ],
         function(err, result){
             res.send({error:error,data:data});

@@ -26,13 +26,10 @@ CLOUD_FLARE_ACCOUNT_ID="d5141ab35f31b135fa3e3ceef222d3a8";
 ENV=process.env.NODE_ENV;
 /*--- DEFAULT END ---*/
 /* --- APP URL-CUSTOM START  -- */
-const blog_post=require("./routes/blog_post");
 const cms=require("./routes/cms");
-const gallery=require("./routes/gallery");
 const item=require("./routes/item");
 const index=require("./routes/index");
 const page=require("./routes/page");
-const product=require("./routes/product");
 const user=require("./routes/user");
 /* --- APP URL-CUSTOM END  -- */
 /* --- APP URL START  -- */
@@ -46,7 +43,6 @@ const corsConfig = {
   origin: true,
   credentials: true,
 };
-
 app.use(cors(corsConfig));
 app.options('*', cors(corsConfig))
 app.use(session({
@@ -62,12 +58,9 @@ app.use(bodyParser.urlencoded({limit:"50mb",extended:true,parameterLimit:50000})
 app.use(express.static(path.join(__dirname,"public")));
 /* --- APP EXPRESS END --- */
 /* --- APP ROUTES-CUSTOM START --- */
-app.use("/blog_post",blog_post);
 app.use("/cms",cms);
-app.use("/gallery",gallery);
 app.use("/item",item);
 app.use("/page",page);
-app.use("/product",product);
 app.use("/user",user);
 /* --- APP ROUTES-CUSTOM START --- */
 /* --- APP ROUTES START --- */
