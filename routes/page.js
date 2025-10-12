@@ -463,8 +463,9 @@ router.post('/blog_post', function(req, res, next) {
     let error = null;
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
-    data.blog_post = DataItem.get_new(DataType.BLOG_POST,0,{key:req.params.key,items:[],images:[]});
-    data.blog_post = [];
+    let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.BLOG_POST,{},{},1,6);
+    data.blog_post = DataItem.get_new(DataType.BLOG_POST,0,{key:req.body.data.key,items:[],images:[]});
+    data.blog_post_list = [];
     data.page = DataItem.get_new(DataType.BLOG_POST,0,{items:[],images:[]});
     async.series([
         async function(call){
@@ -496,13 +497,11 @@ router.post('/blog_post', function(req, res, next) {
         },
         //blog_post_list
         async function(call){
-            let query = {};
-            search = search ? search : App_Logic.get_search(DataType.BLOG_POST,query,{},1,12);
             const [biz_error,biz_data] = await Blog_Post_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.blog_post_list = biz_data.data_list;
+                data.blog_post_list = biz_data.blog_post_list;
             }
         },
         async function(call){
@@ -518,7 +517,8 @@ router.post('/blog_post', function(req, res, next) {
 router.post('/blog_post_home', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let search = req.body.data.search;
+    let option = req.body.data.option ? req.body.data.option : {};
+    let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.BLOG_POST,{},{},1,6);
     data.page  = DataItem.get_new(DataType.PAGE,0);
     data.blog_post_list = [];
     async.series([
@@ -540,17 +540,16 @@ router.post('/blog_post_home', function(req, res, next) {
                 data.page = biz_data;
             }
         },
-        //blog_post_list
+       //blog_post_list
         async function(call){
-            let search = search ? search : App_Logic.get_search(DataType.BLOG_POST,{},{date_create:-1},1,0);
-            const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size);
+            const [biz_error,biz_data] = await Blog_Post_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.blog_post_list=data.data_list;
+                data.blog_post_list = biz_data.blog_post_list;
             }
         },
-    ],
+     ],
         function(err, result){
             res.send({error:error,data:data});
             res.end();
@@ -596,7 +595,7 @@ router.post('/service/:key', function(req, res, next) {
     let database,data = {};
     let search = req.body.data.search;
     let option = req.body.data.option ? req.body.data.option : {};
-    data.service = DataItem.get_new(DataType.SERVICE,0,{key:req.params.key});
+    data.service = DataItem.get_new(DataType.SERVICE,0,{key:req.body.data.key});
     data.service_list = [];
     async.series([
         async function(call){
@@ -694,7 +693,7 @@ router.post('/event/:key', function(req, res, next) {
     let database,data = {};
     let search = req.body.data.search;
     let option = req.body.data.option ? req.body.data.option : {};
-    data.event = DataItem.get_new(DataType.EVENT,0,{key:req.params.key});
+    data.event = DataItem.get_new(DataType.EVENT,0,{key:req.body.data.key});
     data.event_list = [];
     async.series([
         async function(call){
@@ -793,7 +792,7 @@ router.post('/gallery/:key', function(req, res, next) {
     let database,data = {};
     let search = req.body.data.search;
     let option = req.body.data.option ? req.body.data.option : {};
-    data.gallery = DataItem.get_new(DataType.GALLERY,0,{key:req.params.key});
+    data.gallery = DataItem.get_new(DataType.GALLERY,0,{key:req.body.data.key});
     data.gallery_list = [];
     async.series([
         async function(call){

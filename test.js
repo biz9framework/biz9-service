@@ -167,7 +167,7 @@ describe('connect', function(){ this.timeout(25000);
 				//let cloud_url = Url.get_connect(biz9_config); //single
 				//let cloud_url = Url.get_connect(Scriptz.get_biz9_config({app_id:''})); //blank
 				//let item_test = Item_Logic.get_test_item(DATA_TYPE,0);
-				let key = 'key1';
+				let key = 'item_80379';
 				let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.BLOG_POST);
 				let data = {key:key};
 				Log.w('url',url);
