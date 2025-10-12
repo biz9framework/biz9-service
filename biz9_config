@@ -1,4 +1,4 @@
-VERSION='8.3.7'
+VERSION='8.3.8'
 BIZ9_PRODUCT_TITLE='biz9-service';
 TITLE='BiZ9-Service';
 APP_ID='biz9-service';
