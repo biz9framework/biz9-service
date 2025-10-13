@@ -183,9 +183,10 @@ router.post('/order_post', function(req, res, next) {
     let error = null;
     let database,data = {};
     let post_order = req.body.data.order;
-    let post_order_payment = Order_Logic.get_new_order_payment(post_order.order_number,post_order.last_payment_method_type,post_order.last_payment_amount);
+    let post_order_payment_list = req.body.data.order_payment_list;
     let option = req.body.data.option ? req.body.data.option : {};
     data.order = DataItem.get_new(DataType.ORDER,0);
+    data.order_payment_list = [];
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -197,36 +198,12 @@ router.post('/order_post', function(req, res, next) {
             }
         },
         async function(call){
-            Log.w('post_order',post_order);
-            Log.w('post_order_payment',post_order_payment);
-            /*
-            const [biz_error,biz_data] = await Order_Data.post(database,post_order,option);
+            const [biz_error,biz_data] = await Order_Data.post(database,post_order,post_order_payment_list,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }
-            data.order = biz_data;
-            */
+            data = biz_data;
         },
-        /*
-        async function(call){
-            if(!Str.check_is_null(data.order.id)){
-                const [biz_error,biz_data] = await Order_Data.get(database,data.order.order_number,option);
-                if(biz_error){
-                    error=Log.append(error,biz_error);
-                }
-                data.order = biz_data;
-            }
-        },
-        async function(call){
-            //if(!data.order.id){
-                const [biz_error,biz_data] = await Portal.post(database,DataType.ORDER_PAYMENT,data.order_payment,option);
-                if(biz_error){
-                    error=Log.append(error,biz_error);
-                }
-                data.order_payment = biz_data;
-            //}
-        },
-        */
     ],
         function(err, result){
             res.send({error:error,data:data});
@@ -286,8 +263,6 @@ router.post('/order', function(req, res, next) {
                 error=Log.append(error,biz_error);
             }
             data = biz_data;
-            Log.w("aaaaa",biz_data);
-            Log.w("bbbb",option);
         },
     ],
         function(err, result){
