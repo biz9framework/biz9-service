@@ -150,6 +150,7 @@ router.post('/cart_post', function(req, res, next) {
     data.cart = req.body.data.cart;
     async.series([
         async function(call){
+            console.log('11111111111111');
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
             const [biz_error,biz_data] = await Database.get(biz9_config);
             if(biz_error){
@@ -170,6 +171,7 @@ router.post('/cart_post', function(req, res, next) {
                 error=Log.append(error,biz_error);
             }
             data.cart = biz_data;
+            Log.w('333_cart_post',data.cart);
         },
     ],
         function(err, result){

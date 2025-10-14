@@ -137,7 +137,6 @@ router.post('/home', function(req, res, next) {
         },
         //category_list
         async function(call){
-            console.log('star_category_list');
             let search = App_Logic.get_search(DataType.CATEGORY,{},{title:1},1,0);
             let option = {get_distinct:true,distinct_field:'title',distinct_sort:'asc',get_count:true,count_data_type:DataType.PRODUCT,count_field:'category',count_value:'title',get_field:true,fields:'id,title,title_url,image_filename,cost'};
             const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
@@ -145,8 +144,6 @@ router.post('/home', function(req, res, next) {
                 error=Log.append(error,biz_error);
             }else{
                 data.category_list = biz_data.data_list;
-                Log.w('data.category_list_44_55_66',data.category_list);
-                Log.w('data.category_list_44_55_66_len',data.category_list.length);
                 biz_data.data_list.forEach(item => {
                     data.category_product_title_list.push({title:item.title,count:Number(item.item_count),items:[]});
                 });

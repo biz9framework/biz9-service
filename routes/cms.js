@@ -316,7 +316,6 @@ router.post('/demo_post', function(req, res, next) {
                 error=Log.append(error,biz_error);
             }else{
                 data =  biz_data;
-                Log.w('biz_data',biz_data);
             }
         },
     ],
