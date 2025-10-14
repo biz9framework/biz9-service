@@ -129,7 +129,7 @@ router.post('/login', function(req, res, next) {
     let post_user = DataItem.get_new(DataType.USER,0,req.body.data.user);
     let post_stat = DataItem.get_new(DataType.STAT,0,{type:Type.STAT_LOGIN});
     let post_device = req.body.data.device;
-    let option = {post_stat:true,post_ip_address:false,post_device:false};
+    let option = {post_stat:true,post_ip_address:true,post_device:true};
     let post_geo_key = GEO_KEY;
     let post_ip_address = IP_ADDRESS;
     async.series([
@@ -163,7 +163,7 @@ router.post('/login', function(req, res, next) {
         */
     ],
         function(err, result){
-            Log.w('i am here',data);
+            Log.w('11_data',data);
             res.send({error:error,data:data});
             res.end();
         });

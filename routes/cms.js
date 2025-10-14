@@ -235,7 +235,8 @@ router.post('/item_parent_top_type_category',function(req,res,next){
 router.post('/search_item_type_category', function(req, res, next) {
     let error = null;
     let database,data = {};
-    data.search = req.body.data.search;
+    let post_search = req.body.data.search;
+    let post_option = req.body.data.option ? req.body.data.option : {};
     data.data_type = req.body.data.data_type;
     data.type_list = [];
     data.category_list = [];
@@ -274,8 +275,8 @@ router.post('/search_item_type_category', function(req, res, next) {
         },
         //item
         async function(call){
-            let search = App_Logic.get_search(data.search.data_type,data.search.filter,data.search.sort_by,data.search.page_current,data.search.page_size);
-            const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size);
+            let search = App_Logic.get_search(post_search.data_type,post_search.filter,post_search.sort_by,post_search.page_current,post_search.page_size);
+            const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,post_option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
