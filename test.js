@@ -716,7 +716,7 @@ describe('post_data', function(){ this.timeout(25000);
 			let data_type = DataType.PRODUCT;
 			let id = 0;
 			//let cloud_url = Url.url(DATA_CONFIG,'main/crud/update_item_photo_list/'+data_type+"/"+0);
-			let cloud_url =  App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PRODUCT_DETAIL);
+			//let cloud_url =  App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PRODUCT_DETAIL);
 			Log.w('cloud_url',cloud_url);
 			let data = {key:'admin_panel_product_9'};
 			Log.w('data',data);
@@ -724,7 +724,7 @@ describe('post_data', function(){ this.timeout(25000);
 			//let cloud_url = Item_Url.post_cdn_photo(DATA_CONFIG.APP_ID,DATA_CONFIG.URL);
 			//let data = [];
 			//let cloud_url = "http://localhost:1904/item/activity?app_id=test-stage";
-			//let user = DataItem.get_new(DataType.USER,0,{email:"ceo@bossappz.com",password:"1234567"});
+			let user = DataItem.get_new(DataType.USER,0,{email:"ceo@bossappz.com",password:"1234567"});
 			//super_admin - add - end
 			//DEMO-POST-END
 			//super_admin - add - start
@@ -752,6 +752,49 @@ describe('post_data', function(){ this.timeout(25000);
 					Log.error("POST-ERROR-DONE",cloud_error);
 				}else{
 					console.log('POST-SUCCESS-DONE');
+				}
+				done();
+			});
+	});
+});
+
+//9_post_user
+describe('post_user_data', function(){ this.timeout(25000);
+	it("_post_user_data", function(done){
+		let cloud_error=null;
+		console.log('POST-USER-START');
+		async.series([ function(call){
+			let biz9_config = Scriptz.get_biz9_config();
+			//super_admin - add - start
+			let data_type = DataType.PRODUCT;
+			let id = 0;
+			let data = DataItem.get_new(DataType.USER,0,{title:'ceo',title_url:'ceo',email:"ceo@bossappz.com",password:"1234567",role:Type.USER_ROLE_SUPER_ADMIN});
+			let cloud_url =  App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST);
+			Log.w('cloud_url',cloud_url);
+			Log.w('data',data);
+			axios.post(cloud_url, {
+				data: data
+			})
+				.then(function (response) {
+					if(response.data.cloud_error){
+						cloud_error=Log.append(cloud_error,response.data.error);
+					}else{
+						Log.w('cloud',response.data);
+						console.log('POST-USER-SUCCESS');
+					}
+					call();
+				})
+				.catch(function (error) {
+					cloud_error=Log.append(cloud_error,error);
+					call();
+				});
+		}
+		],
+			function(error, result){
+				if(cloud_error){
+					Log.error("POST-USER-ERROR-DONE",cloud_error);
+				}else{
+					console.log('POST-USER-SUCCESS-DONE');
 				}
 				done();
 			});

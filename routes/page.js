@@ -585,7 +585,7 @@ router.post('/blog_post_search', function(req, res, next) {
             res.end();
         });
 });
-//9_product
+//9_product_detail
 // - required_form_data = key
 router.post('/product', function(req, res, next) {
     let error = null;
@@ -629,7 +629,7 @@ router.post('/product', function(req, res, next) {
         //product_hosting
         async function(call){
             let key = "Hosting";
-            let search = App_Logic.get_search(DataType.PRODUCT,{type:key},{title:-1},1,0);
+            let search = App_Logic.get_search(DataType.PRODUCT,{type:key},{title:-1},1,3);
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -640,7 +640,7 @@ router.post('/product', function(req, res, next) {
         //product_cms
         async function(call){
             let key = "Content Management System";
-            let search = App_Logic.get_search(DataType.PRODUCT,{type:key},{title:-1},1,0);
+            let search = App_Logic.get_search(DataType.PRODUCT,{type:key},{title:-1},1,3);
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
                 error=Log.append(error,biz_error);

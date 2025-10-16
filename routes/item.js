@@ -146,11 +146,10 @@ router.post('/cart', function(req, res, next) {
 router.post('/cart_post', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {};
+    let option = req.body.data.option ? req.body.data.option : {stat_post:false};
     data.cart = req.body.data.cart;
     async.series([
         async function(call){
-            console.log('11111111111111');
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
             const [biz_error,biz_data] = await Database.get(biz9_config);
             if(biz_error){
@@ -171,7 +170,6 @@ router.post('/cart_post', function(req, res, next) {
                 error=Log.append(error,biz_error);
             }
             data.cart = biz_data;
-            Log.w('333_cart_post',data.cart);
         },
     ],
         function(err, result){
@@ -186,7 +184,7 @@ router.post('/order_post', function(req, res, next) {
     let database,data = {};
     let post_order = req.body.data.order;
     let post_order_payment_list = req.body.data.order_payment_list;
-    let option = req.body.data.option ? req.body.data.option : {};
+    let option = req.body.data.option ? req.body.data.option : {stat_post:false};
     data.order = DataItem.get_new(DataType.ORDER,0);
     data.order_payment_list = [];
     async.series([
