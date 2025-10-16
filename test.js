@@ -768,7 +768,7 @@ describe('post_user_data', function(){ this.timeout(25000);
 			//super_admin - add - start
 			let data_type = DataType.PRODUCT;
 			let id = 0;
-			let data = DataItem.get_new(DataType.USER,0,{title:'ceo',title_url:'ceo',email:"ceo@bossappz.com",password:"1234567",role:Type.USER_ROLE_SUPER_ADMIN});
+			let data = DataItem.get_new(DataType.USER,0,{title:'ceo',title_url:'ceo',email:"ceo@bossappz.com",password:"123456789Ab!",role:Type.USER_ROLE_SUPER_ADMIN});
 			let cloud_url =  App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST);
 			Log.w('cloud_url',cloud_url);
 			Log.w('data',data);
