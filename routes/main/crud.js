@@ -128,7 +128,7 @@ router.post('/delete',function(req,res,next){
     let database = {};
     let post_data = DataItem.get_new(req.body.data.data_type,req.body.data.id);
     let data = DataItem.get_new(req.body.data.data_type,req.body.data.id);
-    let option = {delete_item:true,delete_item_query:{parent_id:id},delete_image:true,delete_image_query:{parent_id:id}};
+    let option = {delete_item:true,delete_item_query:{parent_id:post_data.id},delete_image:true,delete_image_query:{parent_id:post_data.id}};
     async.series([
         async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));

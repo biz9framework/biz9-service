@@ -19,7 +19,7 @@ router.post('/home', function(req, res, next) {
     let error = null;
     let database,data = {};
     let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter();
-    let app_dev_search_option = {get_field:true,fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count'};
+    let app_dev_search_option = {get_field:true,fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count',get_favorite:true,favorite_user_id:req.body.data.user_id};
 
     //
     data.user = req.body.data.user_id ? DataItem.get_new(DataType.USER,req.body.data.user_id): User_Logic.get_guest();
@@ -28,7 +28,6 @@ router.post('/home', function(req, res, next) {
     //
     data.favorite_list = [];
     //
-
     data.product_popular_list = [];
     data.product_latest_list = [];
     data.product_top_list = [];
@@ -68,17 +67,6 @@ router.post('/home', function(req, res, next) {
                 data.page = biz_data;
             }
         },
-        //favorite_list
-        async function(call){
-                let option = {get_parent:false,get_field:true,fields:'id,parent_id,data_type,user_id',get_user:false};
-                let search = App_Logic.get_search(DataType.FAVORITE,{user_id:data.user.id},{},0,1);
-                const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
-                if(biz_error){
-                    error=Log.append(error,biz_error);
-                }else{
-                    data.favorite_list = biz_data.data_list;
-                }
-        },
         //product_list - popular
         async function(call){
             let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{view_count:1},1,12);
@@ -88,9 +76,6 @@ router.post('/home', function(req, res, next) {
                 error=Log.append(error,biz_error);
             }else{
                 data.product_popular_list = biz_data.product_list;
-                    if(data.favorite_list.length>0){
-                        data.product_popular_list = Favorite_Logic.get_favorite_by_list(data.favorite_list,data.product_popular_list);
-                    }
             }
         },
         //product_list - latest
@@ -102,9 +87,6 @@ router.post('/home', function(req, res, next) {
                 error=Log.append(error,biz_error);
             }else{
                 data.product_latest_list =  biz_data.product_list;
-                    if(data.favorite_list.length>0){
-                        data.product_latest_list = Favorite_Logic.get_favorite_by_list(data.favorite_list,data.product_latest_list);
-                    }
             }
         },
         //product_list - rating_avg
@@ -116,9 +98,6 @@ router.post('/home', function(req, res, next) {
                 error=Log.append(error,biz_error);
             }else{
                 data.product_top_list =  biz_data.product_list;
-                    if(data.favorite_list.length>0){
-                        data.product_top_list = Favorite_Logic.get_favorite_by_list(data.favorite_list,data.product_top_list);
-                    }
             }
         },
         //product_list - trending
@@ -130,9 +109,6 @@ router.post('/home', function(req, res, next) {
                 error=Log.append(error,biz_error);
             }else{
                 data.product_trending_list = biz_data.product_list;
-                    if(data.favorite_list.length>0){
-                        data.product_trending_list = Favorite_Logic.get_favorite_by_list(data.favorite_list,data.product_trending_list);
-                    }
             }
         },
         //category_list
@@ -253,7 +229,6 @@ router.post('/home', function(req, res, next) {
                 error=Log.append(error,biz_error);
             }else{
                 data.product_explore_list_1 = biz_data.product_list;
-
             }
         },
         //product_explore_list_2cloud
@@ -590,7 +565,7 @@ router.post('/blog_post_search', function(req, res, next) {
 router.post('/product', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {get_favorite:false};
+    let option = req.body.data.option ? req.body.data.option : {get_favorite:false,get_image:true,get_item:true};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.PRODUCT,{},{},1,6);
     data.product = DataItem.get_new(DataType.PRODUCT,0,{key:req.body.data.key,items:[],images:[]});
     data.product_list = [];
@@ -619,7 +594,8 @@ router.post('/product', function(req, res, next) {
         },
         //product
         async function(call){
-            const [biz_error,biz_data] = await Product_Data.get(database,data.product.key,{get_image:true,get_item:true});
+            Log.w('11_option',option);
+            const [biz_error,biz_data] = await Product_Data.get(database,data.product.key,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
