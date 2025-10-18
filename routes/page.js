@@ -635,11 +635,19 @@ router.post('/product', function(req, res, next) {
                 error=Log.append(error,biz_error);
             }else{
                 data.product_list = biz_data.product_list;
+                data.product_list.filter(item=>item.id!==data.product.id);
             }
         },
+        //review_list
         async function(call){
-            data.product_list.filter(item=>item.id!==data.product.id);
-        },
+            let query = {};
+            const [biz_error,biz_data] = await Review_Data.get(database,data.product.data_type,data.product.id,{date_create:-1},1,0);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.review_list = biz_data.review_list;
+            }
+        }
     ],
         function(err, result){
             res.send({error:error,data:data});

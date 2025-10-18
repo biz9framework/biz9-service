@@ -160,13 +160,6 @@ describe('connect', function(){ this.timeout(25000);
 		async.series([
 			function(call){
 				console.log('CONNECT-START');
-				//let biz9_config = Scriptz.get_biz9_config();
-				//Log.w('biz9_config',biz9_config);
-				//let cloud_url = Url.connect(Scriptz.get_biz9_config({app_id:dynamic_app_id})); //dynamic
-				//
-				//let cloud_url = Url.get_connect(biz9_config); //single
-				//let cloud_url = Url.get_connect(Scriptz.get_biz9_config({app_id:''})); //blank
-				//let item_test = Item_Logic.get_test_item(DATA_TYPE,0);
 				/*
 				//-- SEARCH START --//
 				let key = 'item_5350';
@@ -176,6 +169,16 @@ describe('connect', function(){ this.timeout(25000);
 				Log.w('url_22',url);
 				//-- SEARCH END --//
 				*/
+
+				//-- URL START --//
+				let key = 'admin_panel_product_14';
+				let search = App_Logic.get_search(DataType.SERVICE,{},{},1,0);
+				let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PAGE_PRODUCT);
+				let data = {key:key,search:search};
+				Log.w('url_22',url);
+				//-- URL END --//
+
+				/*
 				//-- REVIEW START --//
 				console.log('REVIEW-START');
 				let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.REVIEW_POST);
@@ -185,7 +188,6 @@ describe('connect', function(){ this.timeout(25000);
                 let review = Review_Logic.get_new(parent_data_type,parent_id,user_id,Num.get_id()+"_My_Title",Num.get_id()+"_Comment_",Num.get_id(5));
                 let option = {post_stat:true,user_id:user_id};
 				let data = {parent_data_type:parent_data_type,parent_id:parent_id,parent_id:parent_id,review:review,option:option};
-				console.log('REVIEW-END');
 				/*
 				let key = 'item_5350';
 				let search = App_Logic.get_search(DataType.SERVICE,{},{},1,0);
@@ -195,21 +197,19 @@ describe('connect', function(){ this.timeout(25000);
 				//-- REVIEW END --//
 				*/
 
-
 				axios.post(url, {
 					data: data
 				})
 					.then(function (response) {
 						Log.w('RESPONSE_DATA',response.data);
 						Log.w('URL',url);
-						console.log('CONNECT-REMOTE-SUCCESS');
+						console.log('CONNECT-SUCCESS');
 						call();
 					})
 					.catch(function (error) {
-						Log.w('CONNECT-REMOTE-ERROR',error);
+						console.log('CONNECT-END');
 					});
 			}
-
 		],
 			function(error, result){
 				if(error){
