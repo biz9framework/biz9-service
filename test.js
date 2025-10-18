@@ -672,18 +672,18 @@ describe('get_data', function(){ this.timeout(25000);
 			//let cloud_url = "http://localhost:1904/cms/item_parent_top_type_category?app_id=test-stage";
 			//let data = {data_type:DataType.PRODUCT,id:0};
 			//let cloud_url = Product_Url.home(DATA_CONFIG.APP_ID,DATA_CONFIG.URL);
-			let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PRODUCT_DETAIL);
-			//let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.HOME);
+			//let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PRODUCT_DETAIL);
+			let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PAGE_HOME);
 			//let cloud_url = Url.get(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,DataType.BLOG_POST,'blog_post_6');
 			Log.w('cloud_url',cloud_url);
 			axios.post(cloud_url, {
-				data: {key: "sports_admin_panel_17"}
+				data: {user_id: "2a545946-3330-43b2-8ffa-99e40e201e99"}
 			})
 				.then(function (response) {
 					if(response.data.cloud_error){
 						cloud_error=Log.append(cloud_error,response.data.cloud_error);
 					}
-					Log.w('cloud_response',response.data);
+					//Log.w('cloud_response',response.data);
 					//Log.w('error',response.data.cloud_error);
 					//Log.w('cloud_url_get',cloud_url);
 					console.log('GET-SUCCESS');

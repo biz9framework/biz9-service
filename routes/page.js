@@ -19,7 +19,7 @@ router.post('/home', function(req, res, next) {
     let error = null;
     let database,data = {};
     let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter();
-    let app_dev_search_option = {get_field:true,fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count',get_favorite:true,favorite_user_id:req.body.data.user_id};
+    let app_dev_search_option = {get_field:true,fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count,is_favorite',get_favorite:true,user_id:req.body.data.user_id};
 
     //
     data.user = req.body.data.user_id ? DataItem.get_new(DataType.USER,req.body.data.user_id): User_Logic.get_guest();
@@ -565,7 +565,7 @@ router.post('/blog_post_search', function(req, res, next) {
 router.post('/product', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {get_favorite:false,get_image:true,get_item:true};
+    let option = req.body.data.option ? req.body.data.option : {get_favorite:false,get_image:true,get_item:true,post_stat:false,user_id:0};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.PRODUCT,{},{},1,6);
     data.product = DataItem.get_new(DataType.PRODUCT,0,{key:req.body.data.key,items:[],images:[]});
     data.product_list = [];

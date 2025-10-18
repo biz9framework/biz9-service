@@ -308,8 +308,13 @@ router.post('/review_post', function(req, res, next) {
     let error = null;
     let database = {};
     let data = {};
-    cloud.review = Form.set_item(DataType.REVIEW,0,req.body.data,{parent_data_type:req.body.data.parent_data_type,item_id:req.body.data.item_id,user_id:cloud.user.id});
+    data.review = DataItem.get_new(DataType.REVIEW,0,req.body.data);
+    let option = req.body.data.option ? req.body.data.option : {post_stat:false,user_id:0};
     async.series([
+        async function(call){
+            Log.w('22_review',data.review);
+            Log.w('33_option',option);
+        },
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
             const [biz_error,biz_data] = await Database.get(biz9_config);
@@ -320,11 +325,11 @@ router.post('/review_post', function(req, res, next) {
             }
         },
         async function(call){
-            const [biz_error,biz_data] = await Review_Data.post(database,cloud.review.parent_data_type,cloud.review.item_id,cloud.review.user_id,cloud.review);
+            const [biz_error,biz_data] = await Review_Data.post(database,data.review.parent_data_type,data.review.item_id,data.review.user_id,data.review,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                cloud = data;
+                data = biz_data;
             }
         },
     ],
@@ -339,7 +344,7 @@ router.post('/review_delete', function(req, res, next) {
     let error = null;
     let database = {};
     let data = {};
-    cloud.review = Form.set_item(DataType.REVIEW,0,req.body.data,{parent_data_type:req.body.data.parent_data_type,item_id:req.body.data.item_id,user_id:cloud.user.id});
+    data.review = Form.set_item(DataType.REVIEW,0,req.body.data,{parent_data_type:req.body.data.parent_data_type,item_id:req.body.data.item_id,user_id:req.body.data.user_id});
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -351,11 +356,11 @@ router.post('/review_delete', function(req, res, next) {
             }
         },
         async function(call){
-            const [biz_error,biz_data] = await Review_Data.post(database,cloud.review.parent_data_type,cloud.review.item_id,cloud.review.user_id,cloud.review);
+            const [biz_error,biz_data] = await Review_Data.post(database,data.review.parent_data_type,data.review.item_id,data.review.user_id,data.review);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                cloud = data;
+                data = biz_data;
             }
         },
     ],
@@ -369,7 +374,7 @@ router.post('/review_search/:parent_data_type/:page_current/:page_size', functio
     let error = null;
     let database,data = {};
     data.review_list = [];
-    cloud.review = DataItem.get_new(DataType.REVIEW,0,{parent_data_type:req.body.data.parent_data_type,user_id:cloud.user.id});
+    data.review = DataItem.get_new(DataType.REVIEW,0,{parent_data_type:req.body.data.parent_data_type,user_id:data.user.id});
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -382,11 +387,11 @@ router.post('/review_search/:parent_data_type/:page_current/:page_size', functio
         },
         //review_list
         async function(call){
-            const [biz_error,biz_data] = await Review_Data.get(database,cloud.review.parent_data_type,cloud.user.id,{},req.body.data.page_current,req.body.data.page_size);
+            const [biz_error,biz_data] = await Review_Data.get(database,data.review.parent_data_type,data.user.id,{},req.body.data.page_current,req.body.data.page_size);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                cloud = data;
+                data = biz_data;
             }
         },
     ],
