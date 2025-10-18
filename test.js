@@ -2,7 +2,7 @@ async = require('async')
 const axios = require('axios');
 const {Data} = require("biz9-data");
 const {Scriptz} = require("biz9-scriptz");
-const {DataType,DataItem,Page_Logic,App_Logic,Url,Type,Demo_Logic} = require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
+const {DataType,DataItem,Page_Logic,App_Logic,Url,Type,Demo_Logic,Review_Logic} = require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
 const assert = require('node:assert');
 const {Log,Num,Str} = require("biz9-utility");
 /*
@@ -167,11 +167,34 @@ describe('connect', function(){ this.timeout(25000);
 				//let cloud_url = Url.get_connect(biz9_config); //single
 				//let cloud_url = Url.get_connect(Scriptz.get_biz9_config({app_id:''})); //blank
 				//let item_test = Item_Logic.get_test_item(DATA_TYPE,0);
+				/*
+				//-- SEARCH START --//
 				let key = 'item_5350';
 				let search = App_Logic.get_search(DataType.SERVICE,{},{},1,0);
 				let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PAGE_SERVICE_SEARCH);
 				let data = {key:key,search:search};
 				Log.w('url_22',url);
+				//-- SEARCH END --//
+				*/
+				//-- REVIEW START --//
+				console.log('REVIEW-START');
+				let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.REVIEW_POST);
+                let parent_data_type = DataType.PRODUCT;
+                let parent_id = "604f0e31-816e-47f4-a411-0c507b859460";
+                let user_id = "80009d4a-1df4-421a-9105-d9450ebc5e01";
+                let review = Review_Logic.get_new(parent_data_type,parent_id,user_id,Num.get_id()+"_My_Title",Num.get_id()+"_Comment_",Num.get_id(5));
+                let option = {post_stat:true,user_id:user_id};
+				let data = {parent_data_type:parent_data_type,parent_id:parent_id,parent_id:parent_id,review:review,option:option};
+				console.log('REVIEW-END');
+				/*
+				let key = 'item_5350';
+				let search = App_Logic.get_search(DataType.SERVICE,{},{},1,0);
+				let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PAGE_SERVICE_SEARCH);
+				let data = {key:key,search:search};
+				Log.w('url_22',url);
+				//-- REVIEW END --//
+				*/
+
 
 				axios.post(url, {
 					data: data
@@ -186,6 +209,7 @@ describe('connect', function(){ this.timeout(25000);
 						Log.w('CONNECT-REMOTE-ERROR',error);
 					});
 			}
+
 		],
 			function(error, result){
 				if(error){

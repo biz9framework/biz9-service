@@ -303,18 +303,14 @@ router.post('/favorite_post', function(req, res, next) {
         });
 });
 //9_review_post
-// - required form_data = parent_data_type, parent_id, item_data
+// - required form_data = parent_data_type, parent_id, review_obj
 router.post('/review_post', function(req, res, next) {
     let error = null;
     let database = {};
     let data = {};
-    data.review = DataItem.get_new(DataType.REVIEW,0,req.body.data);
+    data.review = DataItem.get_new(DataType.REVIEW,0,req.body.data.review);
     let option = req.body.data.option ? req.body.data.option : {post_stat:false,user_id:0};
     async.series([
-        async function(call){
-            Log.w('22_review',data.review);
-            Log.w('33_option',option);
-        },
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
             const [biz_error,biz_data] = await Database.get(biz9_config);
@@ -325,7 +321,10 @@ router.post('/review_post', function(req, res, next) {
             }
         },
         async function(call){
-            const [biz_error,biz_data] = await Review_Data.post(database,data.review.parent_data_type,data.review.item_id,data.review.user_id,data.review,option);
+            Log.w('review',data.review);
+            Log.w('option',option);
+            const [biz_error,biz_data] = await Review_Data.post(database,data.review.parent_data_type,data.review.parent_id,data.review.user_id,data.review,option);
+            Log.w('33_biz_data',biz_data);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
