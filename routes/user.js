@@ -163,7 +163,6 @@ router.post('/login', function(req, res, next) {
         */
     ],
         function(err, result){
-            Log.w('11_data',data);
             res.send({error:error,data:data});
             res.end();
         });

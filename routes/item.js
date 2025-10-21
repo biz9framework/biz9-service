@@ -321,8 +321,6 @@ router.post('/review_post', function(req, res, next) {
             }
         },
         async function(call){
-            Log.w('review',data.review);
-            Log.w('option',option);
             const [biz_error,biz_data] = await Review_Data.post(database,data.review.parent_data_type,data.review.parent_id,data.review.user_id,data.review,option);
             Log.w('33_biz_data',biz_data);
             if(biz_error){

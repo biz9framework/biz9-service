@@ -881,11 +881,13 @@ router.post('/search', function(req, res, next) {
                 data.product_list=data.item_list;
                 data.product_count=data.item_count;
                 data.product_page_count=data.page_count;
+                /*
                 if(!user.is_guest){
                     if(data.favorite_list.length>0){
                         data.product_list = Favorite_Logic.get_favorite_by_list(data.favorite_list,data.product_list);
                     }
                 }
+                */
             }
         },
     ],
