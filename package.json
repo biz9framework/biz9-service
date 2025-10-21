@@ -1,6 +1,6 @@
 {
   "name": "biz9-service",
-  "version": "5.6.291",
+  "version": "5.6.292",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
@@ -18,6 +18,7 @@
     "express": "~4.16.1",
     "express-session": "^1.18.1",
     "http-errors": "~1.6.3",
+    "nodemon": "^3.1.10",
     "path": "^0.12.7",
     "session": "^0.1.0",
     "sharp": "^0.34.3",
