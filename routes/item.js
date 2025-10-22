@@ -146,8 +146,9 @@ router.post('/cart', function(req, res, next) {
 router.post('/cart_post', function(req, res, next) {
     let error = null;
     let database,data = {};
+    let post_cart = req.body.data.cart;
     let option = req.body.data.option ? req.body.data.option : {stat_post:false};
-    data.cart = req.body.data.cart;
+    data = DataItem.get_new(DataType.CART,0);
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -159,17 +160,12 @@ router.post('/cart_post', function(req, res, next) {
             }
         },
         async function(call){
-            const [biz_error,biz_data] = await Cart_Data.post(database,data.cart,option);
+            const [biz_error,biz_data] = await Cart_Data.post(database,post_cart,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
+            }else{
+            data = biz_data;
             }
-        },
-        async function(call){
-            const [biz_error,biz_data] = await Cart_Data.get(database,data.cart.cart_number,option);
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }
-            data.cart = biz_data;
         },
     ],
         function(err, result){
@@ -185,8 +181,7 @@ router.post('/order_post', function(req, res, next) {
     let post_order = req.body.data.order;
     let post_order_payment_list = req.body.data.order_payment_list;
     let option = req.body.data.option ? req.body.data.option : {stat_post:false};
-    data.order = DataItem.get_new(DataType.ORDER,0);
-    data.order_payment_list = [];
+    data = DataItem.get_new(DataType.ORDER,0);
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -201,8 +196,9 @@ router.post('/order_post', function(req, res, next) {
             const [biz_error,biz_data] = await Order_Data.post(database,post_order,post_order_payment_list,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
+            }else{
+                data = biz_data;
             }
-            data = biz_data;
         },
     ],
         function(err, result){
@@ -322,7 +318,6 @@ router.post('/review_post', function(req, res, next) {
         },
         async function(call){
             const [biz_error,biz_data] = await Review_Data.post(database,data.review.parent_data_type,data.review.parent_id,data.review.user_id,data.review,option);
-            Log.w('33_biz_data',biz_data);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
