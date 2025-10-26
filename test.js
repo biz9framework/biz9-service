@@ -161,6 +161,7 @@ describe('connect', function(){ this.timeout(25000);
 			function(call){
 				console.log('CONNECT-START');
 				//-- FAVORITE START --//
+				/*
 				console.log('FAVORITE-START');
                 let parent_data_type = DataType.PRODUCT;
                 let parent_id = "604f0e31-816e-47f4-a411-0c507b859460";
@@ -170,6 +171,7 @@ describe('connect', function(){ this.timeout(25000);
 				let data = {parent_data_type:parent_data_type,parent_id:parent_id,user_id:user_id,option:option};
 				let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.FAVORITE_POST);
 				Log.w('url_22',url);
+				*/
 				//-- REVIEW END --//
 
 				/*
@@ -182,15 +184,13 @@ describe('connect', function(){ this.timeout(25000);
 				//-- SEARCH END --//
 				*/
 
-				/*
 				//-- URL START --//
 				let key = 'admin_panel_product_14';
-				let search = App_Logic.get_search(DataType.SERVICE,{},{},1,0);
+				let search = App_Logic.get_search(DataType.PRODUCT,{},{},1,0);
 				let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PAGE_HOME);
 				let data = {key:key,search:search,user_id:123};
 				Log.w('url_22',url);
 				//-- URL END --//
-				*/
 
 				/*
 				//-- REVIEW START --//

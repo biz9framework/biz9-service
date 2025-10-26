@@ -19,7 +19,7 @@ router.post('/home', function(req, res, next) {
     let error = null;
     let database,data = {};
     let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter();
-    let app_dev_search_option = {get_field:true,fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count,is_favorite',get_favorite:true,user_id:req.body.data.user_id};
+    let app_dev_search_option = {fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count,is_favorite',get_favorite:true,user_id:req.body.data.user_id};
 
     //
     data.user = req.body.data.user_id ? DataItem.get_new(DataType.USER,req.body.data.user_id): User_Logic.get_guest();
@@ -594,7 +594,6 @@ router.post('/product', function(req, res, next) {
         },
         //product
         async function(call){
-            Log.w('11_option',option);
             const [biz_error,biz_data] = await Product_Data.get(database,data.product.key,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
