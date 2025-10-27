@@ -200,37 +200,6 @@ router.post('/order_post', function(req, res, next) {
                 data = biz_data;
             }
         },
-        async function(call){
-            Log.w('33_order',data);
-            Log.w('44_order',data.order_item_list);
-            Log.w('55_order_item',data.order_item_list[0]);
-            Log.w('66_order_item',data.order_item_list[0].order_sub_item_list[0].parent_item.title);
-            Log.w('77_order_item',data.order_item_list[0].order_sub_item_list[1].parent_item.title);
-                if(data.order_number){
-                        console.log('11111111');
-                        let app_num = data.order_number.replace('OR-','');
-                        let app = DataItem.get_new(DataType.APP,0,{
-                            app_id:app_num,
-                            title:"App " + app_num,
-                            order_number:data.order_number
-                            //app_note:data.order_item_list[0].order_sub_item_list[0].parent_item.title,
-                            //hosting_note:data.order_item_list[0].order_sub_item_list[1].parent_item.title
-                        });
-                        Log.w('99_app_new',app);
-                    }else{
-                        console.log('2222222222222');
-                    }
-
-            /*
-            const [biz_error,biz_data] = await Order_Data.post(database,post_order,post_order_payment_list,option);
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }else{
-                data = biz_data;
-            }
-            */
-        },
-
     ],
         function(err, result){
             res.send({error:error,data:data});

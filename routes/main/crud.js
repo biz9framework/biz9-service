@@ -48,7 +48,7 @@ router.post('/get',function(req,res,next){
 router.post('/post',function(req,res,next){
     let error = null;
     let database = {};
-    let post_data = DataItem.get_new(req.body.data.data_type,req.body.data.id,req.body.data);
+    let post_data = DataItem.get_new(req.body.data.data_type,req.body.data.id,req.body.data.data);
     let data = DataItem.get_new(req.body.data.data_type,0);
     let option = req.body.data.option ? req.body.data.option : {};
     let delete_cache = false;

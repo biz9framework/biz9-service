@@ -174,16 +174,19 @@ describe('connect', function(){ this.timeout(25000);
 				*/
 				//-- REVIEW END --//
 
-				/*
 				//-- SEARCH START --//
 				let key = 'item_5350';
-				let search = App_Logic.get_search(DataType.SERVICE,{},{},1,0);
-				let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PAGE_SERVICE_SEARCH);
-				let data = {key:key,search:search};
+				            let search = App_Logic.get_search(DataType.APP,{},{title:1},1,0);
+                let option = {get_join:true,field_key_list:[
+                    {primary_data_type:DataType.PRODUCT,primary_field:'id',item_field:'product_id',title:'product'},
+                    {primary_data_type:DataType.PRODUCT,primary_field:'id',item_field:'cms_id',title:'cms'}
+                ]};
+				let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.SEARCH);
+				let data = {key:key,search:search,option:option};
 				Log.w('url_22',url);
 				//-- SEARCH END --//
-				*/
 
+				/*
 				//-- URL START --//
 				let key = 'admin_panel_product_14';
 				let search = App_Logic.get_search(DataType.PRODUCT,{},{},1,0);
@@ -192,6 +195,7 @@ describe('connect', function(){ this.timeout(25000);
 				let data = {key:key,option:option};
 				Log.w('url_22',url);
 				//-- URL END --//
+				*/
 
 				/*
 				//-- REVIEW START --//
@@ -216,7 +220,7 @@ describe('connect', function(){ this.timeout(25000);
 					data: data
 				})
 					.then(function (response) {
-						Log.w('RESPONSE_DATA',response.data);
+						Log.w('RESPONSE_DATA',response.data.data);
 						Log.w('URL',url);
 						console.log('CONNECT-SUCCESS');
 						call();
