@@ -187,8 +187,9 @@ describe('connect', function(){ this.timeout(25000);
 				//-- URL START --//
 				let key = 'admin_panel_product_14';
 				let search = App_Logic.get_search(DataType.PRODUCT,{},{},1,0);
-				let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PAGE_HOME);
-				let data = {key:key,search:search,user_id:123};
+				let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PAGE_PRODUCT);
+				let option = {get_image:true,get_item:true,get_favorite:true,user_id:"63e7b9ea-7bf8-4780-bf90-5050e501f44c",post_stat:true,post_unique:true};
+				let data = {key:key,option:option};
 				Log.w('url_22',url);
 				//-- URL END --//
 
