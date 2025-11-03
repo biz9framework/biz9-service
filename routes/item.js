@@ -83,7 +83,7 @@ router.post('/custom_field', function(req, res, next) {
 });
 //9_delete_cart - 9_cart
 // - required form_data = id
-router.delete('/cart_delete', function(req, res, next) {
+router.post('/cart_delete', function(req, res, next) {
     let error = null;
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
@@ -208,7 +208,7 @@ router.post('/order_post', function(req, res, next) {
 });
 //9_order_delete - 9_order
 // - required form_data = id
-router.delete('/order_delete', function(req, res, next) {
+router.post('/order_delete', function(req, res, next) {
     let error = null;
     let database,data = {};
     let delete_order = DataItem.get_new(DataType.ORDER,req.body.data.id);
@@ -224,7 +224,7 @@ router.delete('/order_delete', function(req, res, next) {
             }
         },
         async function(call){
-            const [biz_error,biz_data] = await Cart_Data.delete(database,delete_order.id,option);
+            const [biz_error,biz_data] = await Order_Data.delete(database,delete_order.id,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }
@@ -361,12 +361,13 @@ router.post('/review_delete', function(req, res, next) {
             res.end();
         });
 });
-
-router.post('/review_search/:parent_data_type/:page_current/:page_size', function(req, res, next) {
+//9_review_search
+router.post('/review_search', function(req, res, next) {
     let error = null;
     let database,data = {};
+    let search = req.body.data.search;
+    let option = req.body.data.option ? req.body.data.option : {};
     data.review_list = [];
-    data.review = DataItem.get_new(DataType.REVIEW,0,{parent_data_type:req.body.data.parent_data_type,user_id:data.user.id});
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -379,7 +380,7 @@ router.post('/review_search/:parent_data_type/:page_current/:page_size', functio
         },
         //review_list
         async function(call){
-            const [biz_error,biz_data] = await Review_Data.get(database,data.review.parent_data_type,data.user.id,{},req.body.data.page_current,req.body.data.page_size);
+            const [biz_error,biz_data] = await Review_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{

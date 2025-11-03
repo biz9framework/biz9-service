@@ -74,7 +74,6 @@ router.post('/cdn_post',function(req,res,next){
         async function(call){
             for (const item of data.image_list) {
                 let image_process_list = Image_Logic.get_process_list(upload_dir,item.image_filename);
-                console.log(item);
                 for (const image of image_process_list) {
                     const [biz_error,biz_data] = await Image_Cloud_Flare.post_batch_image(CLOUD_FLARE_API_TOKEN,cloud_flare_batch_token,image.image_filename,image.path_filename);
                     if(biz_error){

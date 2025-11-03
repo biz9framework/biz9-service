@@ -20,9 +20,7 @@ router.get('/ping', function(req, res, next) {
 router.post('/dashboard', function(req, res, next) {
     let error = null;
     let database = {};
-    let data = {};
-    data.active_app_count = 0;
-    data.active_app_pending = 0;
+    let data = {app_list:[]};
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -31,15 +29,6 @@ router.post('/dashboard', function(req, res, next) {
                 error=Log.append(error,biz_error);
             }else{
                 database = data;
-            }
-        },
-        async function(call){
-            const [biz_error,biz_data] = await User_Data.login(database,data.user.email,data.user.password);
-            if(error){
-                error=Log.append(error,biz_error);
-            }else{
-                data.user_resultOK = data.user_resultOK;
-                data.user = data.user;
             }
         },
     ],
@@ -55,7 +44,7 @@ router.post('/post', function(req, res, next) {
     let database = {};
     let data = {user:DataItem.get_new(DataType.USER,req.body.data.id),email_resultOK:false,title_resultOK:false};
     let post_user = DataItem.get_new(DataType.USER,req.body.data.id,req.body.data.data);
-   async.series([
+    async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
             const [biz_error,biz_data] = await Database.get(biz9_config);
@@ -93,7 +82,7 @@ router.post('/register', function(req, res, next) {
     let option = {post_stat:true,post_ip_address:true,post_device:true};
     let post_geo_key = GEO_KEY;
     let post_ip_address = IP_ADDRESS;
-   async.series([
+    async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
             const [biz_error,biz_data] = await Database.get(biz9_config);
