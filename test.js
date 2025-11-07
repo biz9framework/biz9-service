@@ -160,7 +160,16 @@ describe('connect', function(){ this.timeout(25000);
 		async.series([
 			function(call){
 				console.log('CONNECT-START');
+				//-- Database Info START --//
+				let key = 'item_5350';
+                let option = {};
+				let data = {};
+				let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.DATABASE_INFO);
+				Log.w('url_22',url);
+				//-- Database Info END --//
+
 				//-- FAVORITE START --//
+				//
 				/*
 				console.log('FAVORITE-START');
                 let parent_data_type = DataType.PRODUCT;
@@ -174,6 +183,7 @@ describe('connect', function(){ this.timeout(25000);
 				*/
 				//-- REVIEW END --//
 
+				/*
 				//-- SEARCH START --//
 				let key = 'item_5350';
 				            let search = App_Logic.get_search(DataType.APP,{},{title:1},1,0);
@@ -185,6 +195,7 @@ describe('connect', function(){ this.timeout(25000);
 				let data = {key:key,search:search,option:option};
 				Log.w('url_22',url);
 				//-- SEARCH END --//
+				*/
 
 				/*
 				//-- URL START --//

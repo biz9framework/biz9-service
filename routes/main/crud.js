@@ -91,7 +91,7 @@ router.post('/search',function(req,res,next){
     let error = null;
     let database = {};
     let search = req.body.data.search;
-    let data = {data_type:DataType.BLANK,data_count:0,page_count:1,filter:{},data_list:[],app_id:null};
+    let data = {data_type:search.data_type,data_count:0,page_count:1,filter:{},data_list:[],app_id:null};
     let option = req.body.data.option ? req.body.data.option : {};
     async.series([
         async function(call){
@@ -107,6 +107,7 @@ router.post('/search',function(req,res,next){
             if(biz_error){
                  error=Log.append(error,biz_error);
             }else{
+                data.data_type=biz_data.data_type;
                 data.search=biz_data.search;
                 data.data_count=biz_data.data_count;
                 data.page_count=biz_data.page_count;
@@ -245,4 +246,36 @@ router.post('/delete_search',function(req,res,next){
             res.end();
         });
 });
+//9_database_info
+//required = data : app_id
+router.post('/database_info',function(req,res,next){
+    let error = null;
+    let database = {};
+    let data = [];
+    let app_id = req.body.data.app_id;
+    let option = req.body.data.option ? req.body.data.option : {};
+    async.series([
+        async function(call){
+            const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:app_id}));
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                database = biz_data;
+            }
+        },
+        async function(call){
+            const [biz_error,biz_data] = await Database.info(database,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data = biz_data;
+            }
+        },
+    ],
+        function(err, result){
+            res.send({error:error,data:data});
+            res.end();
+        });
+});
+
 module.exports = router;
