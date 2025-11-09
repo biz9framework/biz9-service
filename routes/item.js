@@ -420,7 +420,7 @@ router.post('/field_value_post',function(req,res,next){
                 if(biz_error){
                     error=Log.append(error,biz_error);
                 }else{
-                    data.delete_cache_item = data;
+                    data.delete_cache_item = biz_data;
                 }
             }
         },
@@ -431,7 +431,7 @@ router.post('/field_value_post',function(req,res,next){
                 if(biz_error){
                     error=Log.append(error,biz_error);
                 }else{
-                    data.src_item = data;
+                    data.src_item = biz_data;
                 }
             }
         },
@@ -448,7 +448,7 @@ router.post('/field_value_post',function(req,res,next){
                 if(biz_error){
                     error=Log.append(error,biz_error);
                 }else{
-                    data.src_item = data;
+                    data.src_item = biz_data;
                 }
             }
         },
@@ -476,7 +476,6 @@ router.post('/field_value_post',function(req,res,next){
         },
         //get_item
         async function(call){
-            Log.w('my_item',data.item);
             const [biz_error,biz_data] = await Portal.get(database,data.item.data_type,data.item.id);
                 if(biz_error){
                     error=Log.append(error,biz_error);

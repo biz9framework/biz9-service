@@ -69,12 +69,15 @@ router.post('/home', function(req, res, next) {
         },
         //product_list - popular
         async function(call){
-            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{view_count:1},1,12);
+            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{view_count:-1},1,12);
             let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,app_dev_search_option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
+                for(let a = 0;a<biz_data.product_list.length;a++){
+                    Log.w(biz_data.product_list[a].title,biz_data.product_list[a].view_count);
+                }
                 data.product_popular_list = biz_data.product_list;
             }
         },
