@@ -1,4 +1,4 @@
-VERSION='8.6.6'
+VERSION='8.6.7'
 BIZ9_PRODUCT_TITLE='biz9-service';
 TITLE='BiZ9-Service';
 APP_ID='biz9-service';
@@ -6,7 +6,7 @@ PROJECT_ID='19';
 PORT_ID="1904";
 URL='http://localhost:1904';
 REPO="git@github.com:biz9framework/biz9-service.git";
-BRANCH="main";
+BRANCH='8.6.7'
 HAS_MONGO_DB='true';
 MONGO_IP="0.0.0.0";
 MONGO_USERNAME_PASSWORD="";

@@ -474,6 +474,16 @@ router.post('/field_value_post',function(req,res,next){
                 }
             }
         },
+        //get_item
+        async function(call){
+            Log.w('my_item',data.item);
+            const [biz_error,biz_data] = await Portal.get(database,data.item.data_type,data.item.id);
+                if(biz_error){
+                    error=Log.append(error,biz_error);
+                }else{
+                    data.item = biz_data;
+                }
+        },
     ],
         function(err,result){
             res.send({error:error,data:data});
