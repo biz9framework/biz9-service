@@ -20,6 +20,7 @@ router.post('/home', function(req, res, next) {
     let database,data = {};
     let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter();
     let app_dev_search_option = {fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count,view_count,is_favorite',get_favorite:true,user_id:req.body.data.user_id};
+    let app_dev_search_explore_option = {get_field:true,fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count,view_count'};
     //
     data.user = req.body.data.user_id ? DataItem.get_new(DataType.USER,req.body.data.user_id): User_Logic.get_guest();
     //
@@ -74,9 +75,6 @@ router.post('/home', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                for(let a = 0;a<biz_data.product_list.length;a++){
-                    Log.w(biz_data.product_list[a].title,biz_data.product_list[a].view_count);
-                }
                 data.product_popular_list = biz_data.product_list;
             }
         },
@@ -132,9 +130,8 @@ router.post('/home', function(req, res, next) {
         },
         //category_product_title_list - 0
         async function(call){
-            let query = {};
-            query.category = data.category_product_title_list[0].title;
-            let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,12);
+            let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_title_list[0].title);
+            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
             let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,app_dev_search_option);
             if(biz_error){
@@ -145,10 +142,9 @@ router.post('/home', function(req, res, next) {
         },
         //category_product_title_list - 1
         async function(call){
-            let query = {};
-            query.category = data.category_product_title_list[1].title;
-            let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,12);
-            let option = {get_field:true,fields:'id,title,title_url'};
+            let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_title_list[1].title);
+            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -158,10 +154,9 @@ router.post('/home', function(req, res, next) {
         },
         //category_product_title_list - 2
         async function(call){
-            let query = {};
-            query.category = data.category_product_title_list[2].title;
-            let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,12);
-            let option = {get_field:true,fields:'id,title,title_url'};
+            let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_title_list[2].title);
+            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -171,10 +166,9 @@ router.post('/home', function(req, res, next) {
         },
         //category_product_title_list - 3
         async function(call){
-            let query = {};
-            query.category = data.category_product_title_list[3].title;
-            let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,12);
-            let option = {get_field:true,fields:'id,title,title_url'};
+            let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_title_list[3].title);
+            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -184,10 +178,9 @@ router.post('/home', function(req, res, next) {
         },
         //category_product_title_list - 4
         async function(call){
-            let query = {};
-            query.category = data.category_product_title_list[4].title;
-            let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,12);
-            let option = {get_field:true,fields:'id,title,title_url'};
+            let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_title_list[4].title);
+            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -197,10 +190,9 @@ router.post('/home', function(req, res, next) {
         },
         //category_product_title_list - 5
         async function(call){
-            let query = {};
-            query.category = data.category_product_title_list[5].title;
-            let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,12);
-            let option = {get_field:true,fields:'id,title,title_url'};
+            let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_title_list[5].title);
+            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -212,7 +204,7 @@ router.post('/home', function(req, res, next) {
         async function(call){
             let query = {};
             let search = App_Logic.get_search(DataType.BLOG_POST,query,{},1,12);
-            let option = {get_field:true,fields:'id,title,title_url,image_filename,description,author'};
+            let option = {get_field:true,fields:'id,title,title_url,category,date_create,image_filename,description,author'};
             const [biz_error,biz_data] = await Blog_Post_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -225,7 +217,7 @@ router.post('/home', function(req, res, next) {
             let query = {};
             query.category = data.category_product_title_list[6].title;
             let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,6);
-            let option = {get_field:true,fields:'id,title,title_url'};
+            let option = app_dev_search_explore_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -233,12 +225,12 @@ router.post('/home', function(req, res, next) {
                 data.product_explore_list_1 = biz_data.product_list;
             }
         },
-        //product_explore_list_2cloud
+        //product_explore_list_2
         async function(call){
             let query = {};
             query.category = data.category_product_title_list[7].title;
             let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,6);
-            let option = {get_field:true,fields:'id,title,title_url'};
+            let option = app_dev_search_explore_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -251,7 +243,7 @@ router.post('/home', function(req, res, next) {
             let query = {};
             query.category = data.category_product_title_list[8].title;
             let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,6);
-            let option = {get_field:true,fields:'id,title,title_url'};
+            let option = app_dev_search_explore_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -264,7 +256,7 @@ router.post('/home', function(req, res, next) {
             let query = {};
             query.category = data.category_product_title_list[9].title;
             let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,6);
-            let option = {get_field:true,fields:'id,title,title_url'};
+            let option = app_dev_search_explore_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -277,7 +269,7 @@ router.post('/home', function(req, res, next) {
             let query = {};
             query.category = data.category_product_title_list[10].title;
             let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,6);
-            let option = {get_field:true,fields:'id,title,title_url'};
+            let option = app_dev_search_explore_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -285,6 +277,17 @@ router.post('/home', function(req, res, next) {
                 data.product_explore_list_5 = biz_data.product_list;
             }
         },
+        //partner_list
+        async function(call){
+            let key = 'partners';
+            const [biz_error,biz_data] = await Content_Data.get(database,key,{get_item:true});
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.partner_list = biz_data.items;
+            }
+        },
+
         /*
         //business review list
         //async function(call){
@@ -308,17 +311,7 @@ router.post('/home', function(req, res, next) {
                 data.faq_list = biz_data;
             }
         },
-        //partner_list
-        //async function(call){
-            //let key = 'partners';
-            //const [biz_error,biz_data] = await Content_Data.get(database,key,{get_item:true});
-            //if(biz_error){
-                //error=Log.append(error,biz_error);
-            //}else{
-                //data.partner_list = data.items;
-            //}
-        //},
-        */
+       */
     ],
         function(err, result){
             res.send({error:error,data:data});
