@@ -512,7 +512,7 @@ router.post('/template', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.template = biz_data;
+                data = biz_data;
             }
         },
     ],

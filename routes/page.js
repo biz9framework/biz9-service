@@ -60,7 +60,8 @@ router.post('/home', function(req, res, next) {
         },
         //page
         async function(call){
-            const [biz_error,biz_data] = await Page_Data.get(database,data.page.key);
+            let page_option = {get_field_value_list:true};
+            const [biz_error,biz_data] = await Page_Data.get(database,data.page.key,page_option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
