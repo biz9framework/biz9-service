@@ -727,7 +727,7 @@ describe('get_data', function(){ this.timeout(25000);
 			//let data = {data_type:DataType.PRODUCT,id:0};
 			//let cloud_url = Product_Url.home(DATA_CONFIG.APP_ID,DATA_CONFIG.URL);
 			//let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PRODUCT_DETAIL);
-			let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PAGE_HOME);
+			let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PAGE_PRODUCT_HOME);
 			//let cloud_url = Url.get(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,DataType.BLOG_POST,'blog_post_6');
 			Log.w('cloud_url',cloud_url);
 			axios.post(cloud_url, {
@@ -737,7 +737,7 @@ describe('get_data', function(){ this.timeout(25000);
 					if(response.data.cloud_error){
 						cloud_error=Log.append(cloud_error,response.data.cloud_error);
 					}
-					//Log.w('cloud_response',response.data);
+					Log.w('cloud_response',response.data);
 					//Log.w('error',response.data.cloud_error);
 					//Log.w('cloud_url_get',cloud_url);
 					console.log('GET-SUCCESS');

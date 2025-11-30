@@ -115,7 +115,7 @@ router.post('/home', function(req, res, next) {
         //category_list
         async function(call){
             let search = App_Logic.get_search(DataType.CATEGORY,{},{title:1},1,0);
-            let option = {get_distinct:true,distinct_field:'title',distinct_sort:'asc',get_join:true,field_key_list:[{primary_data_type:DataType.PRODUCT,primary_field:'category',item_field:'title',title:'product_count',type:Type.COUNT}]};
+            let option = {get_distinct:true,distinct_field:'title',distinct_sort:'asc',get_join:true,field_key_list:[{foreign_data_type:DataType.PRODUCT,foreign_field:'category',item_field:'title',title:'product_count',type:Type.COUNT}]};
             const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -656,6 +656,13 @@ router.post('/product_home', function(req, res, next) {
     let option = req.body.data.option ? req.body.data.option : {};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.PRODUCT,{},{},1,6);
     data.page  = DataItem.get_new(DataType.PAGE,0);
+    data.type_list = [];
+    /*
+    data.category_list = [];
+    data.product_list = [];
+    data.budget_list = [];
+    */
+
     data.product_list = [];
     async.series([
         async function(call){
@@ -676,6 +683,28 @@ router.post('/product_home', function(req, res, next) {
                 data.page = biz_data;
             }
         },
+        //type_list
+        async function(call){
+            let query = {};
+            let app_dev_search_query_filter = Project_Logic.get_query_application_development_type_product_query_filter();
+            let search = App_Logic.get_search(DataType.TYPE,app_dev_search_query_filter,{date_create:-1},1,4);
+            let option = {get_join:true,field_key_list:[{foreign_data_type:DataType.PRODUCT,foreign_field:'type',item_field:'title',title:'product_count',type:Type.COUNT}]};
+            const [biz_error,biz_data] = await  Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.type_list = biz_data.data_list;
+            }
+        },
+        //budget_list
+        async function(call){
+            data.budget_list.push(DataItem.get_new(DataType.BLANK,1,{title:'Any',sub_title:'',description:''}));
+            data.budget_list.push(DataItem.get_new(DataType.BLANK,1,{title:'500',sub_title:'Value',description:'Under',}));
+            data.budget_list.push(DataItem.get_new(DataType.BLANK,1,{title:'1500',sub_title:'Mid-Range',description:'Under',}));
+            data.budget_list.push(DataItem.get_new(DataType.BLANK,1,{title:'3500',sub_title:'High-End',description:'Under',}));
+        },
+
+        /*
        //product_list
         async function(call){
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
@@ -685,8 +714,10 @@ router.post('/product_home', function(req, res, next) {
                 data.product_list = biz_data.product_list;
             }
         },
+        */
      ],
         function(err, result){
+            Log.w('page_home',data);
             res.send({error:error,data:data});
             res.end();
         });
