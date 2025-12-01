@@ -317,21 +317,13 @@ router.post('/review_post', function(req, res, next) {
             }
         },
         async function(call){
-            Log.w('my_req.body',req.body.data);
-            Log.w('my_data_22',data);
-            Log.w('parent_data_type',data.review.parent_data_type);
-            Log.w('parent_id',data.review.parent_id);
-            Log.w('user_id',data.review.user_id);
-            Log.w('review',data.review);
-            Log.w('my_option',option);
-            /*
             const [biz_error,biz_data] = await Review_Data.post(database,data.review.parent_data_type,data.review.parent_id,data.review.user_id,data.review,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
                 data = biz_data;
             }
-            */
+            Log.w('done',data);
         },
     ],
         function(err, result){

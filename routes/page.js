@@ -1060,6 +1060,49 @@ router.post('/event_search', function(req, res, next) {
             res.end();
         });
 });
+//9_review_home
+router.post('/review_home',function(req, res, next) {
+    let error = null;
+    let database,data = {};
+    let option = req.body.data.option ? req.body.data.option : {};
+    data.page  = DataItem.get_new(DataType.PAGE,0);
+    data.testimonial_list = [];
+    async.series([
+        async function(call){
+            let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
+            const [biz_error,biz_data] = await Database.get(biz9_config);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                database = biz_data;
+            }
+        },
+        //page
+        async function(call){
+            const [biz_error,biz_data] = await Page_Data.get(database,Type.PAGE_REVIEW_HOME);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.page = biz_data;
+            }
+        },
+       //gallery_list
+        async function(call){
+            const [biz_error,biz_data] = await Gallery_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.gallery_list = biz_data.gallery_list;
+            }
+        },
+     ],
+        function(err, result){
+            res.send({error:error,data:data});
+            res.end();
+        });
+});
+
+
 //9_gallery
 // - required_form_data = key
 router.post('/gallery', function(req, res, next) {
@@ -1158,6 +1201,7 @@ router.post('/gallery_home', function(req, res, next) {
             res.end();
         });
 });
+
 //9_gallery_search
 // - required_form_data = search
 router.post('/gallery_search', function(req, res, next) {
