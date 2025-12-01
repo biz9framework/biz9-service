@@ -1064,10 +1064,10 @@ router.post('/event_search', function(req, res, next) {
 router.post('/review_home',function(req, res, next) {
     let error = null;
     let database,data = {};
+    let search = req.body.data.search;
     let option = req.body.data.option ? req.body.data.option : {};
-    data.page  = DataItem.get_new(DataType.PAGE,0);
-    data.testimonial_list = [];
-    async.series([
+    data.review_list = [];
+   async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
             const [biz_error,biz_data] = await Database.get(biz9_config);
@@ -1086,16 +1086,16 @@ router.post('/review_home',function(req, res, next) {
                 data.page = biz_data;
             }
         },
-       //gallery_list
+        //review_list
         async function(call){
-            const [biz_error,biz_data] = await Gallery_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
+            const [biz_error,biz_data] = await Review_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.gallery_list = biz_data.gallery_list;
+                data.review_list = biz_data.review_list;
             }
         },
-     ],
+   ],
         function(err, result){
             res.send({error:error,data:data});
             res.end();

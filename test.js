@@ -186,7 +186,7 @@ describe('connect', function(){ this.timeout(25000);
 				/*
 				//-- SEARCH START --//
 				let key = 'item_5350';
-				            let search = App_Logic.get_search(DataType.APP,{},{title:1},1,0);
+				let search = App_Logic.get_search(DataType.APP,{},{title:1},1,0);
                 let option = {get_join:true,field_key_list:[
                     {primary_data_type:DataType.PRODUCT,primary_field:'id',item_field:'product_id',title:'product'},
                     {primary_data_type:DataType.PRODUCT,primary_field:'id',item_field:'cms_id',title:'cms'}
@@ -727,11 +727,15 @@ describe('get_data', function(){ this.timeout(25000);
 			//let data = {data_type:DataType.PRODUCT,id:0};
 			//let cloud_url = Product_Url.home(DATA_CONFIG.APP_ID,DATA_CONFIG.URL);
 			//let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PRODUCT_DETAIL);
-			let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.REVIEW_SEARCH);
+			//let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.REVIEW_SEARCH);
+			let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PAGE_REVIEW_HOME);
 			//let cloud_url = Url.get(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,DataType.BLOG_POST,'blog_post_6');
+			let search = App_Logic.get_search(DataType.REVIEW,{},{title:1},1,0);
+
 			Log.w('cloud_url',cloud_url);
 			axios.post(cloud_url, {
 				data: {
+					search: search,
 					user_id: user_id,
 					key: "web_gallery_1",
 					option:{get_field_value_list:true}
