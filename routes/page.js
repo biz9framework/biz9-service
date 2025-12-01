@@ -21,6 +21,7 @@ router.post('/home', function(req, res, next) {
     let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter();
     let app_dev_search_option = {fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count,view_count,is_favorite',get_favorite:true,user_id:req.body.data.user_id};
     let app_dev_search_explore_option = {get_field:true,fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count,view_count'};
+    let option = req.body.data.option ? req.body.data.option : {get_field_value_list:true};
     //
     data.user = req.body.data.user_id ? DataItem.get_new(DataType.USER,req.body.data.user_id): User_Logic.get_guest();
     //
@@ -60,8 +61,7 @@ router.post('/home', function(req, res, next) {
         },
         //page
         async function(call){
-            let page_option = {get_field_value_list:true};
-            const [biz_error,biz_data] = await Page_Data.get(database,data.page.key,page_option);
+            const [biz_error,biz_data] = await Page_Data.get(database,data.page.key,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
@@ -325,6 +325,7 @@ router.post('/faq', function(req, res, next) {
     let error = null;
     let database,data = {};
     data.page = DataItem.get_new(DataType.PAGE,0);
+    let option = req.body.data.option ? req.body.data.option : {get_field_value_list:true};
     data.faq_list = [];
     async.series([
         async function(call){
@@ -338,11 +339,11 @@ router.post('/faq', function(req, res, next) {
         },
         //page
         async function(call){
-            const [biz_error,biz_data] = await Page_Data.get(database,Type.PAGE_FAQ,{get_item:true});
+            const [biz_error,biz_data] = await Page_Data.get(database,Type.PAGE_FAQ,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.page = data.item;
+                data.page = biz_data;
             }
         },
         //faq_list
@@ -353,7 +354,7 @@ router.post('/faq', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.faq_list = data.item.questions;
+                data.faq_list = biz_data;
             }
         },
     ],
@@ -561,7 +562,7 @@ router.post('/blog_post_search', function(req, res, next) {
 router.post('/product', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {get_favorite:false,get_image:true,get_item:true,post_stat:false,user_id:0};
+    let option = req.body.data.option ? req.body.data.option : {get_favorite:false,get_image:true,get_item:true,post_stat:false,user_id:0,get_field_value_list:true};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.PRODUCT,{},{},1,6);
     data.product = DataItem.get_new(DataType.PRODUCT,0,{key:req.body.data.key,items:[],images:[]});
     data.product_list = [];
@@ -696,14 +697,19 @@ router.post('/product_home', function(req, res, next) {
                 data.type_list = biz_data.data_list;
             }
         },
-        //budget_list
+        //category_list
         async function(call){
-            data.budget_list.push(DataItem.get_new(DataType.BLANK,1,{title:'Any',sub_title:'',description:''}));
-            data.budget_list.push(DataItem.get_new(DataType.BLANK,1,{title:'500',sub_title:'Value',description:'Under',}));
-            data.budget_list.push(DataItem.get_new(DataType.BLANK,1,{title:'1500',sub_title:'Mid-Range',description:'Under',}));
-            data.budget_list.push(DataItem.get_new(DataType.BLANK,1,{title:'3500',sub_title:'High-End',description:'Under',}));
+            let query = {};
+            let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter();
+            let search = App_Logic.get_search(DataType.CATEGORY,app_dev_search_query_filter,{date_create:-1},1,0);
+            let option = {get_join:true,get_distinct:true,distinct_field:'title',field_key_list:[{foreign_data_type:DataType.PRODUCT,foreign_field:'category',item_field:'title',title:'product_count',type:Type.COUNT}]};
+            const [biz_error,biz_data] = await  Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.category_list = biz_data.data_list;
+            }
         },
-
         /*
        //product_list
         async function(call){
@@ -717,7 +723,7 @@ router.post('/product_home', function(req, res, next) {
         */
      ],
         function(err, result){
-            Log.w('page_home',data);
+            //Log.w('page_home',data);
             res.send({error:error,data:data});
             res.end();
         });
@@ -1075,14 +1081,18 @@ router.post('/gallery', function(req, res, next) {
             }
         },
         //page
+
         async function(call){
+            console.log('aaaaaaa');
             const [biz_error,biz_data] = await Page_Data.get(database,Type.PAGE_GALLERY);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
                 data.page = biz_data;
             }
+            console.log('bbbbbbb');
         },
+        /*
         //gallery
         async function(call){
             const [biz_error,biz_data] = await Gallery_Data.get(database,data.gallery.key);
@@ -1104,6 +1114,7 @@ router.post('/gallery', function(req, res, next) {
         async function(call){
             data.gallery_list.filter(item=>item.id!==data.gallery.id);
         },
+        */
     ],
         function(err, result){
             res.send({error:error,data:data});

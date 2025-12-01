@@ -1,6 +1,6 @@
 {
   "name": "biz9-service",
-  "version": "5.6.310",
+  "version": "5.6.311",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
