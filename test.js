@@ -727,11 +727,15 @@ describe('get_data', function(){ this.timeout(25000);
 			//let data = {data_type:DataType.PRODUCT,id:0};
 			//let cloud_url = Product_Url.home(DATA_CONFIG.APP_ID,DATA_CONFIG.URL);
 			//let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PRODUCT_DETAIL);
-			let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PAGE_GALLERY_HOME);
+			let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PAGE_GALLERY);
 			//let cloud_url = Url.get(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,DataType.BLOG_POST,'blog_post_6');
 			Log.w('cloud_url',cloud_url);
 			axios.post(cloud_url, {
-				data: {user_id: "2a545946-3330-43b2-8ffa-99e40e201e99"}
+				data: {
+					user_id: "2a545946-3330-43b2-8ffa-99e40e201e99",
+					key: "web_gallery_1",
+					option:{get_field_value_list:true}
+				}
 			})
 				.then(function (response) {
 					if(response.data.cloud_error){
@@ -769,20 +773,22 @@ describe('post_data', function(){ this.timeout(25000);
 
 			let data_type = DataType.PRODUCT;
 			let id = 0;
+			let user_id = "b01f49f3-d8e8-4161-8d6e-c467c330f8a9";
 			//let cloud_url = Url.url(DATA_CONFIG,'main/crud/update_item_photo_list/'+data_type+"/"+0);
 			//let cloud_url =  App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PRODUCT_DETAIL);
+			let cloud_url =  App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.REVIEW_POST);
 			Log.w('cloud_url',cloud_url);
-			let data = {key:'admin_panel_product_9'};
-			Log.w('data',data);
+			//let data = {key:'admin_panel_product_9'};
+			//Log.w('data',data);
 			//let cloud_url = User_Url.login(DATA_CONFIG.APP_ID,DATA_CONFIG.URL);
 			//let cloud_url = Item_Url.post_cdn_photo(DATA_CONFIG.APP_ID,DATA_CONFIG.URL);
 			//let data = [];
 			//let cloud_url = "http://localhost:1904/item/activity?app_id=test-stage";
-			let user = DataItem.get_new(DataType.USER,0,{email:"ceo@bossappz.com",password:"1234567"});
+			//let user = DataItem.get_new(DataType.USER,0,{email:"ceo@bossappz.com",password:"1234567"});
+			let data = Review_Logic.get_new(DataType.PRODUCT,1,user_id,'val_review_title','val_review_comment',4);
 			//super_admin - add - end
 			//DEMO-POST-END
 			//super_admin - add - start
-
 			axios.post(cloud_url, {
 				data: data
 			})

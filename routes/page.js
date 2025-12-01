@@ -1081,18 +1081,14 @@ router.post('/gallery', function(req, res, next) {
             }
         },
         //page
-
         async function(call){
-            console.log('aaaaaaa');
             const [biz_error,biz_data] = await Page_Data.get(database,Type.PAGE_GALLERY);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
                 data.page = biz_data;
             }
-            console.log('bbbbbbb');
         },
-        /*
         //gallery
         async function(call){
             const [biz_error,biz_data] = await Gallery_Data.get(database,data.gallery.key);
@@ -1114,7 +1110,6 @@ router.post('/gallery', function(req, res, next) {
         async function(call){
             data.gallery_list.filter(item=>item.id!==data.gallery.id);
         },
-        */
     ],
         function(err, result){
             res.send({error:error,data:data});
