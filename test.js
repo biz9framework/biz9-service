@@ -728,16 +728,16 @@ describe('get_data', function(){ this.timeout(25000);
 			//let cloud_url = Product_Url.home(DATA_CONFIG.APP_ID,DATA_CONFIG.URL);
 			//let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PRODUCT_DETAIL);
 			//let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.REVIEW_SEARCH);
-			let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PAGE_REVIEW_HOME);
+			let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PAGE_CONTACT);
 			//let cloud_url = Url.get(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,DataType.BLOG_POST,'blog_post_6');
-			let search = App_Logic.get_search(DataType.REVIEW,{},{title:1},1,0);
+			let search = App_Logic.get_search(DataType.BLOG_POST,{},{title:1},1,0);
 
 			Log.w('cloud_url',cloud_url);
 			axios.post(cloud_url, {
 				data: {
 					search: search,
 					user_id: user_id,
-					key: "web_gallery_1",
+					key: "item_25344dddaaa",
 					option:{get_field_value_list:true}
 				}
 			})
