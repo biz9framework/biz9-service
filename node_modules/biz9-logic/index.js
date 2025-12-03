@@ -1979,6 +1979,7 @@ class Image_Logic {
 				size:0,
 				type_resize:Type.IMAGE_RESIZE_NONE,
 			},
+			/*
 			{
 				image_filename:Type.IMAGE_SIZE_THUMB+"_"+image_filename,
 				path_filename:upload_dir+"/"+Type.IMAGE_SIZE_THUMB+"_"+image_filename,
@@ -1991,6 +1992,7 @@ class Image_Logic {
 				size:720,
 				type_resize:Type.IMAGE_RESIZE_NORMAL,
 			},
+			*/
 			{
 				image_filename:Type.IMAGE_SIZE_LARGE+"_"+image_filename,
 				path_filename:upload_dir+"/"+Type.IMAGE_SIZE_LARGE+"_"+image_filename,
@@ -2009,12 +2011,14 @@ class Image_Logic {
 				size:720,
 				type_resize:Type.IMAGE_RESIZE_SQUARE,
 			},
+			/*
 			{
 				image_filename:Type.IMAGE_SIZE_SQUARE_LARGE+"_"+image_filename,
 				path_filename:upload_dir+"/"+Type.IMAGE_SIZE_SQUARE_LARGE+"_"+image_filename,
 				size:1000,
 				type_resize:Type.IMAGE_RESIZE_SQUARE,
 			},
+			*/
 		];
 	}
 }
@@ -2036,7 +2040,9 @@ class Url {
 	static DELETE_CHECK_PROTECTION="main/crud/delete_item_check_protection";
 	static DELETE_SEARCH="main/crud/delete_search";
 	static GET="main/crud/get";
+	static LOGIN="user/login";
 	static PARENT_TOP="main/crud/parent_top";
+	static PING="ping";
 	static POST="main/crud/post";
 	static POST_LIST="main/crud/post_list";
 	static SEARCH="main/crud/search";

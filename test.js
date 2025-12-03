@@ -2,7 +2,7 @@ async = require('async')
 const axios = require('axios');
 const {Data} = require("biz9-data");
 const {Scriptz} = require("biz9-scriptz");
-const {DataType,DataItem,Page_Logic,App_Logic,Url,Type,Demo_Logic,Review_Logic,Favorite_Logic} = require("biz9-logic");
+const {DataType,DataItem,Page_Logic,App_Logic,Url,Type,Demo_Logic,Review_Logic,Favorite_Logic} = require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
 const assert = require('node:assert');
 const {Log,Num,Str} = require("biz9-utility");
 /*
@@ -15,6 +15,7 @@ const {Log,Num,Str} = require("biz9-utility");
 - item_list_get
 - item_list_delete
 - get_data
+- ping
 - post_data
 - post_user_data
 - admin_add
@@ -30,8 +31,8 @@ const PARENT_ID='86-49b3-8770-3d1c984dc0d3';
 const PARENT_DATA_TYPE=DataType.BLANK;
 
 /* --- TEST START --- */
-const APP_ID='test-stage';
-//const APP_ID='500-prod';
+//const APP_ID='test-stage';
+const APP_ID='500-prod';
 const EMAIL='ceo@bossappz.com';
 const PASSWORD='1234567';
 /* --- STAGE END --- */
@@ -140,8 +141,8 @@ const CLOUD_URL="http://localhost:"+PORT_ID;
 DATA_CONFIG = {
 	APP_ID:APP_ID,
 	PORT_ID:'1904',
-	URL:"http://localhost:1904",
-	/*URL:"http://service.bossappz.com",*/
+	/*URL:"http://localhost:1904",*/
+	URL:"http://service.bossappz.com",
 	HAS_MONGO_DB:'true',
 	MONGO_IP:"0.0.0.0",
 	MONGO_USERNAME_PASSWORD:"",
@@ -783,8 +784,13 @@ describe('post_data', function(){ this.timeout(25000);
 			let user_id = "b01f49f3-d8e8-4161-8d6e-c467c330f8a9";
 			//let cloud_url = Url.url(DATA_CONFIG,'main/crud/update_item_photo_list/'+data_type+"/"+0);
 			//let cloud_url =  App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PRODUCT_DETAIL);
-			let cloud_url =  App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.REVIEW_POST);
-			Log.w('cloud_url',cloud_url);
+
+			/* -- login-start -- */
+			let cloud_url =  App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.LOGIN);
+			let user = DataItem.get_new(DataType.USER,0,{email:'ceo@bossappz.com',password:'123456789Ab!',last_login:Date.now()});
+			let data = {user:user};
+			/* -- login-end -- */
+
 			//let data = {key:'admin_panel_product_9'};
 			//Log.w('data',data);
 			//let cloud_url = User_Url.login(DATA_CONFIG.APP_ID,DATA_CONFIG.URL);
@@ -792,12 +798,13 @@ describe('post_data', function(){ this.timeout(25000);
 			//let data = [];
 			//let cloud_url = "http://localhost:1904/item/activity?app_id=test-stage";
 			//let user = DataItem.get_new(DataType.USER,0,{email:"ceo@bossappz.com",password:"1234567"});
-			let data = Review_Logic.get_new(DataType.PRODUCT,1,user_id,'val_review_title','val_review_comment',4);
+			//let data = Review_Logic.get_new(DataType.PRODUCT,1,user_id,'val_review_title','val_review_comment',4);
 			//super_admin - add - end
 			//DEMO-POST-END
 			//super_admin - add - start
+			Log.w('cloud_url',cloud_url);
 			axios.post(cloud_url, {
-				data: {review:data}
+				data: data
 			})
 				.then(function (response) {
 					if(response.data.cloud_error){
@@ -825,6 +832,50 @@ describe('post_data', function(){ this.timeout(25000);
 	});
 });
 
+//9_ping
+describe('ping', function(){ this.timeout(25000);
+	it("_ping", function(done){
+		let cloud_error=null;
+		console.log('PING-START');
+		async.series([ function(call){
+			let biz9_config = Scriptz.get_biz9_config();
+			//super_admin - add - start
+			let data_type = DataType.PRODUCT;
+			let id = 0;
+			let data = DataItem.get_new(DataType.BLANK,0);
+			let cloud_url =  App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PING);
+			Log.w('cloud_url',cloud_url);
+			Log.w('data',data);
+			axios.get(cloud_url, {
+				data: data
+			})
+				.then(function (response) {
+					if(response.data.cloud_error){
+						cloud_error=Log.append(cloud_error,response.data.error);
+					}else{
+						Log.w('cloud',response.data);
+						console.log('POST-USER-SUCCESS');
+					}
+					call();
+				})
+				.catch(function (error) {
+					cloud_error=Log.append(cloud_error,error);
+					call();
+				});
+		}
+		],
+			function(error, result){
+				if(cloud_error){
+					Log.error("POST-USER-ERROR-DONE",cloud_error);
+				}else{
+					console.log('POST-USER-SUCCESS-DONE');
+				}
+				done();
+			});
+	});
+});
+
+
 //9_post_user
 describe('post_user_data', function(){ this.timeout(25000);
 	it("_post_user_data", function(done){
@@ -840,7 +891,7 @@ describe('post_user_data', function(){ this.timeout(25000);
 			Log.w('cloud_url',cloud_url);
 			Log.w('data',data);
 			axios.post(cloud_url, {
-				data: data
+				data: {data:data}
 			})
 				.then(function (response) {
 					if(response.data.cloud_error){

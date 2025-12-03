@@ -110,7 +110,7 @@ router.post('/register', function(req, res, next) {
         });
 });
 //9_login
-// - required data = {data:form_user_data};
+// required data = {user:user,device:{}};
 router.post('/login', function(req, res, next) {
     let error = null;
     let database = {};
@@ -118,7 +118,7 @@ router.post('/login', function(req, res, next) {
     let post_user = DataItem.get_new(DataType.USER,0,req.body.data.user);
     let post_stat = DataItem.get_new(DataType.STAT,0,{type:Type.STAT_LOGIN});
     let post_device = req.body.data.device;
-    let option = {post_stat:true,post_ip_address:true,post_device:true};
+    let option = req.body.data.option ? req.body.data.option : {};
     let post_geo_key = GEO_KEY;
     let post_ip_address = IP_ADDRESS;
     async.series([
