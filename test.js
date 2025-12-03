@@ -2,7 +2,7 @@ async = require('async')
 const axios = require('axios');
 const {Data} = require("biz9-data");
 const {Scriptz} = require("biz9-scriptz");
-const {DataType,DataItem,Page_Logic,App_Logic,Url,Type,Demo_Logic,Review_Logic,Favorite_Logic} = require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
+const {DataType,DataItem,Page_Logic,App_Logic,Url,Type,Demo_Logic,Review_Logic,Favorite_Logic} = require("biz9-logic");
 const assert = require('node:assert');
 const {Log,Num,Str} = require("biz9-utility");
 /*
@@ -16,6 +16,7 @@ const {Log,Num,Str} = require("biz9-utility");
 - item_list_delete
 - get_data
 - post_data
+- post_user_data
 - admin_add
 - admin_update
 */
@@ -30,6 +31,7 @@ const PARENT_DATA_TYPE=DataType.BLANK;
 
 /* --- TEST START --- */
 const APP_ID='test-stage';
+//const APP_ID='500-prod';
 const EMAIL='ceo@bossappz.com';
 const PASSWORD='1234567';
 /* --- STAGE END --- */
@@ -139,6 +141,7 @@ DATA_CONFIG = {
 	APP_ID:APP_ID,
 	PORT_ID:'1904',
 	URL:"http://localhost:1904",
+	/*URL:"http://service.bossappz.com",*/
 	HAS_MONGO_DB:'true',
 	MONGO_IP:"0.0.0.0",
 	MONGO_USERNAME_PASSWORD:"",

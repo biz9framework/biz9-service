@@ -1,9 +1,9 @@
 var express=require('express');
 var router=express.Router();
 /* -- biz9_start -- */
-const {Portal,Database,Product_Data}=require("/home/think2/www/doqbox/biz9-framework/biz9-data/code");
+const {Portal,Database,Product_Data}=require("biz9-data");
 const {Scriptz}=require("biz9-scriptz");
-const {DataType,Type,DataItem,Business_Logic,Template_Logic,Field_Logic,Item_Logic,Sub_Item_Logic,Page_Logic,Product_Logic,Service_Logic,Event_Logic,Blog_Post_Logic,Team_Logic,Faq_Logic,Category_Logic,Content_Logic,Review_Logic}=require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
+const {DataType,Type,DataItem,Business_Logic,Template_Logic,Field_Logic,Item_Logic,Sub_Item_Logic,Page_Logic,Product_Logic,Service_Logic,Event_Logic,Blog_Post_Logic,Team_Logic,Faq_Logic,Category_Logic,Content_Logic,Review_Logic}=require("biz9-logic");
 const {Error,Log,Form,Str,Num}=require("biz9-utility");
 const assert = require('assert');
 /* -- biz9_end -- */

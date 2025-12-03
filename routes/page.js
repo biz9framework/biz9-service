@@ -1,11 +1,11 @@
 let express=require('express');
 let router=express.Router();
 /* -- biz9_start -- */
-const {Admin,Business,Data,Database,Portal,Product_Data,Gallery_Data,Page_Data,Category_Data,Blog_Post_Data,Content_Data,Template_Data,Business_Data,Review_Data,Faq_Data,Favorite_Data,Service_Data,Event_Data}=require("/home/think2/www/doqbox/biz9-framework/biz9-data/code");
-const {DataType,DataItem,User_Logic,Favorite_Logic,App_Logic,Type}=require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
+const {Admin,Business,Data,Database,Portal,Product_Data,Gallery_Data,Page_Data,Category_Data,Blog_Post_Data,Content_Data,Template_Data,Business_Data,Review_Data,Faq_Data,Favorite_Data,Service_Data,Event_Data}=require("biz9-data");
+const {DataType,DataItem,User_Logic,Favorite_Logic,App_Logic,Type}=require("biz9-logic");
 const {Scriptz}=require("biz9-scriptz");
 const {Project_Logic}=require("../project_logic");
-const {Error,Log,Form,Str}=require("/home/think2/www/doqbox/biz9-framework/biz9-utility/code");
+const {Error,Log,Form,Str}=require("biz9-utility");
 /* -- biz9-end -- */
 router.get('/ping', function(req, res, next) {
     let error={};
