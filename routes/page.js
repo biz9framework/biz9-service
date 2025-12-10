@@ -235,7 +235,7 @@ router.post('/home', function(req, res, next) {
                 error=Log.append(error,biz_error);
             }else{
                 data.product_explore_list_2 = biz_data.product_list;
-           }
+            }
         },
         //product_explore_list_3
         async function(call){
@@ -279,14 +279,14 @@ router.post('/home', function(req, res, next) {
         /*
         //business review list
         //async function(call){
-            //let query = {};
-            //let search = App_Logic.get_search(DataType.REVIEW,query,{date_create:-1,date_create:-1},1,6);
-            //const [biz_error,biz_data] = await Review_Data.get(database,DataType.PRODUCT,data.business.id,{date_create:-1},1,12);
-            //if(biz_error){
-                //error=Log.append(error,biz_error);
-            //}else{
-                //data.review_list = data.item_list;
-            //}
+        //let query = {};
+        //let search = App_Logic.get_search(DataType.REVIEW,query,{date_create:-1,date_create:-1},1,6);
+        //const [biz_error,biz_data] = await Review_Data.get(database,DataType.PRODUCT,data.business.id,{date_create:-1},1,12);
+        //if(biz_error){
+        //error=Log.append(error,biz_error);
+        //}else{
+        //data.review_list = data.item_list;
+        //}
         //},
         //faq_list
         async function(call){
@@ -299,7 +299,7 @@ router.post('/home', function(req, res, next) {
                 data.faq_list = biz_data;
             }
         },
-       */
+        */
     ],
         function(err, result){
             res.send({error:error,data:data});
@@ -376,7 +376,7 @@ router.post('/about', function(req, res, next) {
                 data.page = biz_data;
             }
         },
-        ],
+    ],
         function(err, result){
             res.send({error:error,data:data});
             res.end();
@@ -408,7 +408,7 @@ router.post('/contact', function(req, res, next) {
                 data.page = biz_data;
             }
         },
-     ],
+    ],
         function(err, result){
             res.send({error:error,data:data});
             res.end();
@@ -462,7 +462,7 @@ router.post('/blog_post', function(req, res, next) {
             }
         },
         async function(call){
-               data.blog_post_list = data.blog_post_list.filter(item=>item.id!==data.blog_post.id);
+            data.blog_post_list = data.blog_post_list.filter(item=>item.id!==data.blog_post.id);
         },
     ],
         function(err, result){
@@ -497,7 +497,7 @@ router.post('/blog_post_home', function(req, res, next) {
                 data.page = biz_data;
             }
         },
-       //blog_post_list
+        //blog_post_list
         async function(call){
             const [biz_error,biz_data] = await Blog_Post_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
@@ -506,7 +506,7 @@ router.post('/blog_post_home', function(req, res, next) {
                 data.blog_post_list = biz_data.blog_post_list;
             }
         },
-     ],
+    ],
         function(err, result){
             res.send({error:error,data:data});
             res.end();
@@ -519,7 +519,7 @@ router.post('/blog_post_search', function(req, res, next) {
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.BLOG_POST,{},{},1,6);
-   data.blog_post_list = [];
+    data.blog_post_list = [];
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -699,7 +699,7 @@ router.post('/product_home', function(req, res, next) {
             }
         },
         /*
-       //product_list
+        //product_list
         async function(call){
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
@@ -709,7 +709,7 @@ router.post('/product_home', function(req, res, next) {
             }
         },
         */
-     ],
+    ],
         function(err, result){
             //Log.w('page_home',data);
             res.send({error:error,data:data});
@@ -723,7 +723,7 @@ router.post('/product_search', function(req, res, next) {
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.PRODUCT,{},{},1,6);
-   data.product_list = [];
+    data.product_list = [];
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -894,7 +894,7 @@ router.post('/event_home', function(req, res, next) {
                 data.page = biz_data;
             }
         },
-       //event_list
+        //event_list
         async function(call){
             const [biz_error,biz_data] = await Event_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
@@ -903,7 +903,7 @@ router.post('/event_home', function(req, res, next) {
                 data.event_list = biz_data.event_list;
             }
         },
-     ],
+    ],
         function(err, result){
             res.send({error:error,data:data});
             res.end();
@@ -916,7 +916,7 @@ router.post('/event_search', function(req, res, next) {
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.EVENT,{},{},1,6);
-   data.event_list = [];
+    data.event_list = [];
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -949,7 +949,7 @@ router.post('/review_home',function(req, res, next) {
     let search = req.body.data.search;
     let option = req.body.data.option ? req.body.data.option : {};
     data.review_list = [];
-   async.series([
+    async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
             const [biz_error,biz_data] = await Database.get(biz9_config);
@@ -977,7 +977,7 @@ router.post('/review_home',function(req, res, next) {
                 data.review_list = biz_data.review_list;
             }
         },
-   ],
+    ],
         function(err, result){
             res.send({error:error,data:data});
             res.end();
@@ -1068,7 +1068,7 @@ router.post('/gallery_home', function(req, res, next) {
                 data.page = biz_data;
             }
         },
-       //gallery_list
+        //gallery_list
         async function(call){
             const [biz_error,biz_data] = await Gallery_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
@@ -1077,7 +1077,7 @@ router.post('/gallery_home', function(req, res, next) {
                 data.gallery_list = biz_data.gallery_list;
             }
         },
-     ],
+    ],
         function(err, result){
             res.send({error:error,data:data});
             res.end();
@@ -1091,7 +1091,7 @@ router.post('/gallery_search', function(req, res, next) {
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.GALLERY,{},{},1,6);
-   data.gallery_list = [];
+    data.gallery_list = [];
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -1200,7 +1200,7 @@ router.post('/service_home', function(req, res, next) {
                 data.page = biz_data;
             }
         },
-       //service_list
+        //service_list
         async function(call){
             const [biz_error,biz_data] = await Service_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
@@ -1209,7 +1209,7 @@ router.post('/service_home', function(req, res, next) {
                 data.service_list = biz_data.service_list;
             }
         },
-     ],
+    ],
         function(err, result){
             res.send({error:error,data:data});
             res.end();
@@ -1222,7 +1222,7 @@ router.post('/service_search', function(req, res, next) {
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.SERVICE,{},{},1,6);
-   data.service_list = [];
+    data.service_list = [];
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -1248,10 +1248,71 @@ router.post('/service_search', function(req, res, next) {
             res.end();
         });
 });
+//9_login
+// - required_form_data = n/a
+router.post('/login', function(req, res, next) {
+    let error = null;
+    let database,data = {};
+    data.page = DataItem.get_new(DataType.PAGE,0);
+    let option = req.body.data.option ? req.body.data.option : {get_field_value_list:true};
+    async.series([
+        async function(call){
+            let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
+            const [biz_error,biz_data] = await Database.get(biz9_config);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                database = biz_data;
+            }
+        },
+        //page
+        async function(call){
+            const [biz_error,biz_data] = await Page_Data.get(database,Type.PAGE_LOGIN,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.page = biz_data;
+            }
+        },
+    ],
+        function(err, result){
+            res.send({error:error,data:data});
+            res.end();
+        });
+});
 
 
-
-
-
+//9_blank
+// - required_form_data = n/a
+router.post('/blank', function(req, res, next) {
+    let error = null;
+    let database,data = {};
+    data.page = DataItem.get_new(DataType.PAGE,0);
+    let option = req.body.data.option ? req.body.data.option : {get_field_value_list:true};
+    async.series([
+        async function(call){
+            let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
+            const [biz_error,biz_data] = await Database.get(biz9_config);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                database = biz_data;
+            }
+        },
+        //page
+        async function(call){
+            const [biz_error,biz_data] = await Page_Data.get(database,Type.PAGE_BLANK,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.page = biz_data;
+            }
+        },
+    ],
+        function(err, result){
+            res.send({error:error,data:data});
+            res.end();
+        });
+});
 
 module.exports = router;

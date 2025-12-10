@@ -32,7 +32,8 @@ const PARENT_DATA_TYPE=DataType.BLANK;
 
 /* --- TEST START --- */
 //const APP_ID='test-stage';
-const APP_ID='500-prod';
+const APP_ID='test-stage-dec8';
+//const APP_ID='500-prod-dec4';
 const EMAIL='ceo@bossappz.com';
 const PASSWORD='1234567';
 /* --- STAGE END --- */
@@ -141,8 +142,8 @@ const CLOUD_URL="http://localhost:"+PORT_ID;
 DATA_CONFIG = {
 	APP_ID:APP_ID,
 	PORT_ID:'1904',
-	/*URL:"http://localhost:1904",*/
-	URL:"http://service.bossappz.com",
+	URL:"http://localhost:1904",
+	/*URL:"http://service.bossappz.com",*/
 	HAS_MONGO_DB:'true',
 	MONGO_IP:"0.0.0.0",
 	MONGO_USERNAME_PASSWORD:"",
@@ -874,8 +875,6 @@ describe('ping', function(){ this.timeout(25000);
 			});
 	});
 });
-
-
 //9_post_user
 describe('post_user_data', function(){ this.timeout(25000);
 	it("_post_user_data", function(done){

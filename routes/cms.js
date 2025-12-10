@@ -52,9 +52,7 @@ router.post('/post',function(req,res,next){
     let post_image_list=req.body.data.image_list ? req.body.data.image_list : [];
     let option = req.body.data.option ? req.body.data.option : {};
     data.item = DataItem.get_new(req.body.data.data_type,req.body.data.id);
-    data.src_item = DataItem.get_new(req.body.data.data_type,req.body.data.id);
     data.delete_cache_item=DataItem.get_new(req.body.data.data_type,req.body.data.id);
-    data.field_value_list=req.body.data.field_value_list ? req.body.data.field_value_list : [];
     data.image_list=[];
     async.series([
         async function(call){
@@ -72,41 +70,6 @@ router.post('/post',function(req,res,next){
                 error=Log.append(error,biz_error);
             }else{
                 data.delete_cache_item = biz_data;
-            }
-        },
-        //src_item
-        async function(call){
-            const [biz_error,biz_data] = await Portal.get(database,post_data.data_type,post_data.id);
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }else{
-                data.src_item = biz_data;
-            }
-        },
-        //clear_src_old_field_value_items
-        async function(call){
-            for(let a = 0; a <= 20; a++){
-                if(!Str.check_is_null(data.src_item['field_'+a]))   {
-                    delete data.src_item['field_'+a];
-                    delete data.src_item['value_'+a];
-                    delete data.src_item[Str.get_title_url(data.src_item['field_'+a])];
-                }
-            }
-            //overwrite orignal data item
-            const [biz_error,biz_data] = await Portal.post(database,data.src_item.data_type,data.src_item,{overwrite_obj:true});
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }else{
-                data.src_item = biz_data;
-            }
-        },
-        //post field_value_list
-        async function(call){
-            for(let a=0;a<data.field_value_list.length;a++){
-                if(!Str.check_is_null(data.field_value_list[a].title) && !Str.check_is_null(data.field_value_list[a].value)){
-                    post_data[Str.get_title_url(data.field_value_list[a].title).toLowerCase()] = data.field_value_list[a].value;
-                    post_data['field_'+a] = data.field_value_list[a].title;
-                }
             }
         },
         //post image_list
