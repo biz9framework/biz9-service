@@ -88,7 +88,7 @@ router.post('/post',function(req,res,next){
         },
         //post item
         async function(call){
-            const [biz_error,biz_data] = await Portal.post(database,post_data.data_type,post_data);
+            const [biz_error,biz_data] = await Portal.post(database,post_data.data_type,post_data,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
