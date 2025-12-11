@@ -45,6 +45,8 @@ router.post('/home', function(req, res, next) {
     data.product_explore_list_3 = [];
     data.product_explore_list_4 = [];
     //
+    data.review_list = [];
+    //
     data.faq_list = [];
     //
     async.series([
@@ -112,7 +114,7 @@ router.post('/home', function(req, res, next) {
         },
         //category_list
         async function(call){
-            let search = App_Logic.get_search(DataType.CATEGORY,{},{title:1},1,0);
+            let search = App_Logic.get_search(DataType.CATEGORY,{category:DataType.PRODUCT},{title:1},1,0);
             let option = {get_distinct:true,distinct_field:'title',distinct_sort:'asc',get_join:true,field_key_list:[{foreign_data_type:DataType.PRODUCT,foreign_field:'category',item_field:'title',title:'product_count',type:Type.COUNT}]};
             const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
@@ -276,18 +278,18 @@ router.post('/home', function(req, res, next) {
                 data.product_explore_list_5 = biz_data.product_list;
             }
         },
-        /*
         //business review list
-        //async function(call){
-        //let query = {};
-        //let search = App_Logic.get_search(DataType.REVIEW,query,{date_create:-1,date_create:-1},1,6);
-        //const [biz_error,biz_data] = await Review_Data.get(database,DataType.PRODUCT,data.business.id,{date_create:-1},1,12);
-        //if(biz_error){
-        //error=Log.append(error,biz_error);
-        //}else{
-        //data.review_list = data.item_list;
-        //}
-        //},
+        async function(call){
+            let query = {};
+            let search = App_Logic.get_search(DataType.REVIEW,query,{date_create:-1,date_create:-1},1,20);
+            const [biz_error,biz_data] = await Review_Data.get(database,DataType.PRODUCT,1,{date_create:-1},1,12);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data.review_list = data.item_list;
+            }
+        },
+        /*
         //faq_list
         async function(call){
             let query = {};
