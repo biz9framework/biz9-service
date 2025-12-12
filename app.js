@@ -33,7 +33,6 @@ const page=require("./routes/page");
 const user=require("./routes/user");
 /* --- APP URL-CUSTOM END  -- */
 /* --- APP URL START  -- */
-const admin=require("./routes/main/admin");
 const crud=require("./routes/main/crud");
 const image=require("./routes/main/image");
 /* --- APP URL END  -- */
@@ -65,7 +64,6 @@ app.use("/user",user);
 /* --- APP ROUTES-CUSTOM START --- */
 /* --- APP ROUTES START --- */
 app.use("/",index);
-app.use("/admin",admin);
 app.use("/main/crud",crud);
 app.use("/main/image",image);
 /* --- APP ROUTES END --- */

@@ -282,14 +282,13 @@ router.post('/home', function(req, res, next) {
         async function(call){
             let query = {};
             let search = App_Logic.get_search(DataType.REVIEW,query,{date_create:-1,date_create:-1},1,20);
-            const [biz_error,biz_data] = await Review_Data.get(database,DataType.PRODUCT,1,{date_create:-1},1,12);
+            const [biz_error,biz_data] = await Review_Data.get(database,DataType.PRODUCT,'1',{date_create:-1},1,12);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.review_list = data.item_list;
+                data.review_list = biz_data.review_list;
             }
         },
-        /*
         //faq_list
         async function(call){
             let query = {};
@@ -301,7 +300,6 @@ router.post('/home', function(req, res, next) {
                 data.faq_list = biz_data;
             }
         },
-        */
     ],
         function(err, result){
             res.send({error:error,data:data});
