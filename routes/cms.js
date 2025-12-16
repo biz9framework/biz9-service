@@ -50,6 +50,7 @@ router.post('/post',function(req,res,next){
     let database,data={};
     let post_data=DataItem.get_new(req.body.data.item.data_type,req.body.data.item.id,req.body.data.item);
     let post_image_list=req.body.data.image_list ? req.body.data.image_list : [];
+    let post_group_list=req.body.data.group_list ? req.body.data.group_list : [];
     let option = req.body.data.option ? req.body.data.option : {};
     data.item = DataItem.get_new(req.body.data.data_type,req.body.data.id);
     data.delete_cache_item=DataItem.get_new(req.body.data.data_type,req.body.data.id);
@@ -83,6 +84,17 @@ router.post('/post',function(req,res,next){
                     error=Log.append(error,biz_error);
                 }else{
                     data.image_list = biz_data;
+                }
+            }
+        },
+        //post group_list
+        async function(call){
+            if(data.group_list.length>0){
+                const [biz_error,biz_data] = await Portal.post_list(database,data.group_list);
+                if(biz_error){
+                    error=Log.append(error,biz_error);
+                }else{
+                    data.group_list = biz_data;
                 }
             }
         },
