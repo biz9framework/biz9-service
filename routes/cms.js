@@ -1,8 +1,8 @@
 let express=require('express');
 let router=express.Router();
 /* -- biz9_start -- */
-const {Portal,Database,Data_Logic,Search_Data,Content_Data,Review_Data,Business_Data}=require("biz9-data");
-const {DataType,DataItem,App_Logic}=require("biz9-logic");
+const {Portal,Database,Data_Logic,Search_Data,Content_Data,Review_Data,Business_Data}=require("/home/think2/www/doqbox/biz9-framework/biz9-data/code");
+const {DataType,DataItem,App_Logic}=require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
 const {Scriptz}=require("biz9-scriptz");
 const {Error,Log,Form,Str}=require("biz9-utility");
 /* -- biz9-end -- */
@@ -135,6 +135,8 @@ router.post('/item_parent_top_type_category',function(req,res,next){
         async function(call){
             if(!Str.check_is_null(data.item.id)){
                 const [biz_error,biz_data] = await Portal.get(database,data.item.data_type,data.item.id,option);
+                Log.w('aaaa',biz_data);
+                Log.w('bbbb',option);
                 if(biz_error){
                     error=Log.append(error,biz_error);
                 }else{
