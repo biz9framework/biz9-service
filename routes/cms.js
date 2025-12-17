@@ -43,7 +43,7 @@ router.get('/user_home', function(req, res, next) {
             res.end();
         });
 });
-//9_cms_post
+//9_cms_post - 9_post
 //required form_data = data_type, id
 router.post('/post',function(req,res,next){
     let error=null;
@@ -54,7 +54,6 @@ router.post('/post',function(req,res,next){
     let option = req.body.data.option ? req.body.data.option : {};
     data.item = DataItem.get_new(req.body.data.data_type,req.body.data.id);
     data.delete_cache_item=DataItem.get_new(req.body.data.data_type,req.body.data.id);
-    data.image_list=[];
     async.series([
         async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
@@ -75,26 +74,32 @@ router.post('/post',function(req,res,next){
         },
         //post image_list
         async function(call){
-            for(let a=0;a<post_image_list.length;a++){
-                data.image_list.push(DataItem.get_new(DataType.IMAGE,0,{parent_id:data.item.id,parent_data_type:data.item.data_type,image_filename:post_image_list[a].image_filename}));
-            }
-            if(data.image_list.length>0){
+            if(post_image_list.length>0){
+                data.post_image_list=[];
+                post_image_list.forEach(item =>{
+                    data.image_list.push(DataItem.get_new(DataType.IMAGE,0,{parent_id:data.item.id,parent_data_type:data.item.data_type,image_filename:item.image_filename}));
+                });
                 const [biz_error,biz_data] = await Portal.post_list(database,data.image_list);
                 if(biz_error){
                     error=Log.append(error,biz_error);
                 }else{
-                    data.image_list = biz_data;
+                    data.post_image_list = biz_data;
                 }
             }
         },
         //post group_list
         async function(call){
-            if(data.group_list.length>0){
-                const [biz_error,biz_data] = await Portal.post_list(database,data.group_list);
+            if(post_group_list.length>0){
+                data.group_list=[];
+                post_group_list.forEach(item =>{
+                    delete item.items;
+                    delete item.images;
+                });
+                const [biz_error,biz_data] = await Portal.post_list(database,post_group_list);
                 if(biz_error){
                     error=Log.append(error,biz_error);
                 }else{
-                    data.group_list = biz_data;
+                    data.post_group_list = biz_data;
                 }
             }
         },
@@ -119,14 +124,14 @@ router.post('/post',function(req,res,next){
 router.post('/item_parent_top_type_category',function(req,res,next){
     let error,database = null;
     let data =
-    {
-        item:DataItem.get_new(req.body.data.data_type,req.body.data.id),
-        parent_item:DataItem.get_new(req.body.data.data_type,req.body.data.id),
-        top_item:DataItem.get_new(req.body.data.data_type,req.body.data.id),
-        type_list:[],
-        category_list:[],
-        type_category_list:[]
-    };
+        {
+            item:DataItem.get_new(req.body.data.data_type,req.body.data.id),
+            parent_item:DataItem.get_new(req.body.data.data_type,req.body.data.id),
+            top_item:DataItem.get_new(req.body.data.data_type,req.body.data.id),
+            type_list:[],
+            category_list:[],
+            type_category_list:[]
+        };
     let post_data = DataItem.get_new(req.body.data.data_type,req.body.data.id);
     data.item = DataItem.get_new(post_data.data_type,post_data.id);
     data.parent_item = DataItem.get_new(post_data.data_type,post_data.id);
@@ -147,8 +152,6 @@ router.post('/item_parent_top_type_category',function(req,res,next){
         async function(call){
             if(!Str.check_is_null(data.item.id)){
                 const [biz_error,biz_data] = await Portal.get(database,data.item.data_type,data.item.id,option);
-                Log.w('aaaa',biz_data);
-                Log.w('bbbb',option);
                 if(biz_error){
                     error=Log.append(error,biz_error);
                 }else{
@@ -199,8 +202,8 @@ router.post('/item_parent_top_type_category',function(req,res,next){
             }else{
                 data.category_list =  biz_data.data_list;
             }
-       },
-         ],
+        },
+    ],
         function(err,result){
             res.send({error:error,data:data});
             res.end();
@@ -243,7 +246,7 @@ router.post('/search_item_type_category', function(req, res, next) {
         async function(call){
             let search = App_Logic.get_search(DataType.CATEGORY,{category:data.data_type},{},1,0);
             let option = {get_field:false,fields:'title,type,data_type',get_distinct:true,distinct_field:'title'};
-   const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
