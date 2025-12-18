@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 //const FormData = require('form-data');
 /* -- biz9_start -- */
-const {Image_Logic}=require("biz9-logic");
+const {Image_Logic,DataItem,DataType}=require("biz9-logic");
 const {Log,Str,Num,Obj}=require("biz9-utility");
 const {Image_Cloud_Flare,Image_File}=require("biz9-image");
 /* -- biz9-end -- */
@@ -26,12 +26,12 @@ router.post('/post',function(req,res,next){
         //get image_list
         async function(call){
             post_image_list.forEach(item => {
-                    data.image_list.push(Image_File.get_new_by_base64(item.image_data));
+                data.image_list.push(Image_Logic.get_new_by_base64(item));
             });
         },
         //write - image_list
         async function(call){
-            for (const item of data.image_list) {
+            for(const item of data.image_list) {
                 let image_process_list = Image_Logic.get_process_list(upload_dir,item.image_filename);
                 for (const image of image_process_list) {
                     const [biz_error,biz_data] = await Image_File.post_write(item.buffer,image.size,image.path_filename,image.type_resize);
@@ -45,6 +45,14 @@ router.post('/post',function(req,res,next){
             }
             if(!error){
                 data.resultOK=true;
+            }
+        },
+        //clean
+        async function(call){
+            for(const item of data.image_list) {
+                delete item.image_data;
+                delete item.buffer;
+                delete item.resultOK;
             }
         },
     ],
@@ -86,6 +94,12 @@ router.post('/cdn_post',function(req,res,next){
             }
             if(!error){
                 data.resultOK = true;
+            }
+        },
+        //clean
+        async function(call){
+            for(const item of data.image_list) {
+                delete item.resultOK;
             }
         },
     ],

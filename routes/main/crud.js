@@ -190,7 +190,7 @@ router.post('/post_list',function(req,res,next){
     let error = null;
     let database = {};
     let data_list = [];
-    let post_data_list = req.body.data.data;
+    let post_data_list = req.body.data.data?req.body.data.data : [];
     let option = req.body.data.option ? req.body.data.option : {};
     async.series([
         async function(call){
@@ -202,15 +202,20 @@ router.post('/post_list',function(req,res,next){
             }
         },
         async function(call){
+            Log.w('req_data',req.body.data);
+            Log.w('post_data_list',post_data_list);
+            if(post_data_list.length > 0){
             const [biz_error,biz_data] = await Portal.post_list(database,post_data_list,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
                 data_list = biz_data;
             }
+            }
         },
     ],
         function(err, result){
+            Log.w('aaaaaaa',data_list);
             res.send({error:error,data:data_list});
             res.end();
         });

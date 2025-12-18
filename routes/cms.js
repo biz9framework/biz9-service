@@ -49,7 +49,6 @@ router.post('/post',function(req,res,next){
     let error=null;
     let database,data={};
     let post_data=DataItem.get_new(req.body.data.item.data_type,req.body.data.item.id,req.body.data.item);
-    let post_image_list=req.body.data.image_list ? req.body.data.image_list : [];
     let post_group_list=req.body.data.group_list ? req.body.data.group_list : [];
     let option = req.body.data.option ? req.body.data.option : {};
     data.item = DataItem.get_new(req.body.data.data_type,req.body.data.id);
@@ -70,21 +69,6 @@ router.post('/post',function(req,res,next){
                 error=Log.append(error,biz_error);
             }else{
                 data.delete_cache_item = biz_data;
-            }
-        },
-        //post image_list
-        async function(call){
-            if(post_image_list.length>0){
-                data.post_image_list=[];
-                post_image_list.forEach(item =>{
-                    data.image_list.push(DataItem.get_new(DataType.IMAGE,0,{parent_id:data.item.id,parent_data_type:data.item.data_type,image_filename:item.image_filename}));
-                });
-                const [biz_error,biz_data] = await Portal.post_list(database,data.image_list);
-                if(biz_error){
-                    error=Log.append(error,biz_error);
-                }else{
-                    data.post_image_list = biz_data;
-                }
             }
         },
         //post group_list
