@@ -323,7 +323,6 @@ router.post('/review_post', function(req, res, next) {
             }else{
                 data = biz_data;
             }
-            Log.w('done',data);
         },
     ],
         function(err, result){

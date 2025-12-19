@@ -202,8 +202,6 @@ router.post('/post_list',function(req,res,next){
             }
         },
         async function(call){
-            Log.w('req_data',req.body.data);
-            Log.w('post_data_list',post_data_list);
             if(post_data_list.length > 0){
             const [biz_error,biz_data] = await Portal.post_list(database,post_data_list,option);
             if(biz_error){
@@ -215,7 +213,6 @@ router.post('/post_list',function(req,res,next){
         },
     ],
         function(err, result){
-            Log.w('aaaaaaa',data_list);
             res.send({error:error,data:data_list});
             res.end();
         });

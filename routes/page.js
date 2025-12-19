@@ -711,7 +711,6 @@ router.post('/product_home', function(req, res, next) {
         */
     ],
         function(err, result){
-            //Log.w('page_home',data);
             res.send({error:error,data:data});
             res.end();
         });
