@@ -475,10 +475,10 @@ describe('get_data', function(){ this.timeout(25000);
 		async.series([ function(call){
 			let biz9_config = Scriptz.get_biz9_config();
 			biz9_config.APP_ID = APP_ID;
-			let user_id = "b01f49f3-d8e8-4161-8d6e-c467c330f8a9";
+			//let user_id = "b01f49f3-d8e8-4161-8d6e-c467c330f8a9";
 			//let user_id = "8065d0f4-253d-444f-b46e-c50575691993";
 			//let item_data_type = DataType.BLOG_POST;
-			//let item_id = "9a9aaa2e-320a-4603-8f44-ef592e1f25ef";
+			let item_id = "561538f3-2a54-41cf-b324-e22025722db0";
 			//let cloud_url = Item_Url.template(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,'primary',"&get_item=true");
 			//let cloud_url = "http://localhost:1904/product/detail?app_id=test-stage";
 			//let cloud_url = "http://localhost:1904/cms/item_parent_top_type_category?app_id=test-stage";
@@ -487,17 +487,18 @@ describe('get_data', function(){ this.timeout(25000);
 			//let cloud_url = Product_Url.home(DATA_CONFIG.APP_ID,DATA_CONFIG.URL);
 			//let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PRODUCT_DETAIL);
 			//let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.REVIEW_SEARCH);
-			let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PAGE_HOME);
+			let search_type = App_Logic.get_search(DataType.TYPE,{},{title:1},1,0);
+			let search_category = App_Logic.get_search(DataType.CATEGORY,{},{title:1},1,0);
+			let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.GET);
+  			let option = {get_parent:true,get_type:true,get_group:true,get_image:true,type_search:search_type,get_category:true,category_search:search_category};
+			let data = {data_type:DataType.PRODUCT,id:item_id};
 			//let cloud_url = Url.get(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,DataType.BLOG_POST,'blog_post_6');
-			let search = App_Logic.get_search(DataType.BLOG_POST,{},{title:1},1,0);
-
+			//let search = App_Logic.get_search(DataType.BLOG_POST,{},{title:1},1,0);
 			Log.w('cloud_url',cloud_url);
 			axios.post(cloud_url, {
 				data: {
-					search: search,
-					user_id: user_id,
-					key: "item_25344dddaaa",
-					option:{get_field_value_list:true}
+					data_type:DataType.PRODUCT,id:item_id,
+					option:option
 				}
 			})
 				.then(function (response) {

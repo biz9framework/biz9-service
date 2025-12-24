@@ -3,7 +3,7 @@ let router=express.Router();
 const os = require('os');
 /* -- biz9-start -- */
 const {Scriptz}=require("biz9-scriptz");
-const {Portal,Database,Review_Data,User_Data,Stat_Data}=require("biz9-data");
+const {Portal,Database,Review_Data,User_Data,Stat_Data}=require("/home/think2/www/doqbox/biz9-framework/biz9-data/code");
 const {DataType,DataItem,User_Logic,Stat_Logic,App_Logic,Type}=require("biz9-logic");
 const {Log,Form,Str,Num,Obj}=require("biz9-utility");
 const stripe = require('stripe')('sk_test_51RkvILBLx49RFzHwqq12TwN0zYMBUbQEbmpVsNapnyIlkgtLL4TUCKSqI6lTx4IGdHRxggScXRyg9pzZu8tJPxEQ00s7YEtaQt');

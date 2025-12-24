@@ -62,15 +62,7 @@ router.post('/post',function(req,res,next){
                 database = biz_data;
             }
         },
-        //delete cache item
-        async function(call){
-            const [biz_error,biz_data] = await Portal.delete_cache(database,post_data.data_type,post_data.id,option);
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }else{
-                data.delete_cache_item = biz_data;
-            }
-        },
+        /*
         //post group_list
         async function(call){
             if(post_group_list.length>0){
@@ -86,6 +78,14 @@ router.post('/post',function(req,res,next){
                     data.post_group_list = biz_data;
                 }
             }
+        },
+        */
+        //clean
+        async function(call){
+            delete post_data.images;
+            delete post_data.items;
+            delete post_data.photos;
+            delete post_data.groups;
         },
         //post item
         async function(call){
