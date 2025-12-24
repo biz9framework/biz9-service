@@ -92,37 +92,35 @@ router.post('/get',function(req,res,next){
         },
         async function(call){
             if(option.get_custom_field){
-            for(let a=0;a<org_custom_field_list.length;a++){
-                let custom_field = {
-                    key: Num.get_id(333),
-                    title:org_custom_field_list[a].title,
-                    selected:data[Str.get_title_url(org_custom_field_list[a].title.toLowerCase())] ? !Str.check_is_null(data[Str.get_title_url(org_custom_field_list[a])]) : false,
-                    items:[],
-                };
-                for(let b=0;b<19;b++){
-                    if(!Str.check_is_null(org_custom_field_list[a]['field_'+b]))   {
-                        custom_field.items.push(
-                            {
-                                label:org_custom_field_list[a]['field_'+b],
-                                value:JSON.stringify({
-                                    key:custom_field.key,
-                                    field: Str.get_title_url(org_custom_field_list[a].title.toLowerCase()),
-                                    title:org_custom_field_list[a].title,
-                                    value:org_custom_field_list[a]['field_'+String(b)]
-                                })
-                            });
+                for(let a=0;a<org_custom_field_list.length;a++){
+                    let custom_field = {
+                        key: Num.get_id(333),
+                        title:org_custom_field_list[a].title,
+                        selected:data[Str.get_title_url(org_custom_field_list[a].title.toLowerCase())] ? !Str.check_is_null(data[Str.get_title_url(org_custom_field_list[a])]) : false,
+                        items:[],
+                    };
+                    for(let b=0;b<19;b++){
+                        if(!Str.check_is_null(org_custom_field_list[a]['field_'+b]))   {
+                            custom_field.items.push(
+                                {
+                                    label:org_custom_field_list[a]['field_'+b],
+                                    value:JSON.stringify({
+                                        key:custom_field.key,
+                                        field: Str.get_title_url(org_custom_field_list[a].title.toLowerCase()),
+                                        title:org_custom_field_list[a].title,
+                                        value:org_custom_field_list[a]['field_'+String(b)]
+                                    })
+                                });
+                        }
                     }
+                    data.custom_fields.push(custom_field);
                 }
-                data.custom_fields.push(custom_field);
-            }
             }
         },
     ],
         function(err, result){
-            Log.w('aaaaaaaaa',data.custom_fields);
-            //Log.w('bbbb',option);
-            //res.send({error:error,data:data});
-            //res.end();
+            res.send({error:error,data:data});
+            res.end();
         });
 });
 //9_post
