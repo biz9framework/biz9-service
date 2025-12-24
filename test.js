@@ -478,7 +478,7 @@ describe('get_data', function(){ this.timeout(25000);
 			//let user_id = "b01f49f3-d8e8-4161-8d6e-c467c330f8a9";
 			//let user_id = "8065d0f4-253d-444f-b46e-c50575691993";
 			//let item_data_type = DataType.BLOG_POST;
-			let item_id = "561538f3-2a54-41cf-b324-e22025722db0";
+			let item_id = "c697b8bc-6357-44db-9d71-cf54c55101b1";
 			//let cloud_url = Item_Url.template(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,'primary',"&get_item=true");
 			//let cloud_url = "http://localhost:1904/product/detail?app_id=test-stage";
 			//let cloud_url = "http://localhost:1904/cms/item_parent_top_type_category?app_id=test-stage";
@@ -490,7 +490,7 @@ describe('get_data', function(){ this.timeout(25000);
 			let search_type = App_Logic.get_search(DataType.TYPE,{},{title:1},1,0);
 			let search_category = App_Logic.get_search(DataType.CATEGORY,{},{title:1},1,0);
 			let cloud_url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.GET);
-  			let option = {get_parent:true,get_type:true,get_group:true,get_image:true,type_search:search_type,get_category:true,category_search:search_category};
+  			let option = {get_parent:true,get_type:true,get_group:true,get_image:true,type_search:search_type,get_category:true,category_search:search_category,get_custom_field:true};
 			let data = {data_type:DataType.PRODUCT,id:item_id};
 			//let cloud_url = Url.get(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,DataType.BLOG_POST,'blog_post_6');
 			//let search = App_Logic.get_search(DataType.BLOG_POST,{},{title:1},1,0);
@@ -505,7 +505,9 @@ describe('get_data', function(){ this.timeout(25000);
 					if(response.data.cloud_error){
 						cloud_error=Log.append(cloud_error,response.data.cloud_error);
 					}
-					Log.w('cloud_response',response.data);
+					Log.w('11_cloud_response',response.data);
+					Log.w('33_cloud_response',response.data.data.types);
+					Log.w('44_cloud_response',response.data.data.categorys);
 					//Log.w('error',response.data.cloud_error);
 					//Log.w('cloud_url_get',cloud_url);
 					console.log('GET-SUCCESS');

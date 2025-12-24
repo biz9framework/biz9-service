@@ -4,7 +4,7 @@ let router=express.Router();
 const {Portal,Database,Page_Data,Stat_Data,Data_Logic,Search_Data,Content_Data,Review_Data}=require("/home/think2/www/doqbox/biz9-framework/biz9-data/code");
 const {DataType,DataItem,App_Logic,}=require("biz9-logic");
 const {Scriptz}=require("biz9-scriptz");
-const {Error,Log,Str}=require("biz9-utility");
+const {Error,Log,Str,Num}=require("biz9-utility");
 /* -- biz9_end -- */
 router.get('/ping',function(req,res,next){
     let error = null;
@@ -19,7 +19,8 @@ router.post('/get',function(req,res,next){
     let database = {};
     let post_data = DataItem.get_new(req.body.data.data_type,req.body.data.id,{key:req.body.data.key?req.body.data.key:null});
     let data = DataItem.get_new(req.body.data.data_type,req.body.data.id,{key:req.body.data.key?req.body.data.key:null});
-    let option = req.body.data.option ? req.body.data.option : {get_parent:false,get_type:false,type_search:{},get_category:false,category_search:{}};
+    let option = req.body.data.option ? req.body.data.option : {get_parent:false,get_type:false,type_search:{},get_category:false,category_search:{},get_custom_field:false};
+    let org_custom_field_list = [];
     async.series([
         async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
@@ -76,10 +77,52 @@ router.post('/get',function(req,res,next){
                 }
             }
         },
+        //custom_field
+        async function(call){
+            if(option.get_custom_field){
+                data.custom_fields = [];
+                let search = App_Logic.get_search(DataType.CUSTOM_FIELD,{category_type:data.data_type},{},1,0);
+                const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
+                if(biz_error){
+                    error=Log.append(error,biz_error);
+                }else{
+                    org_custom_field_list = biz_data.data_list;
+                }
+            }
+        },
+        async function(call){
+            if(option.get_custom_field){
+            for(let a=0;a<org_custom_field_list.length;a++){
+                let custom_field = {
+                    key: Num.get_id(333),
+                    title:org_custom_field_list[a].title,
+                    selected:data[Str.get_title_url(org_custom_field_list[a].title.toLowerCase())] ? !Str.check_is_null(data[Str.get_title_url(org_custom_field_list[a])]) : false,
+                    items:[],
+                };
+                for(let b=0;b<19;b++){
+                    if(!Str.check_is_null(org_custom_field_list[a]['field_'+b]))   {
+                        custom_field.items.push(
+                            {
+                                label:org_custom_field_list[a]['field_'+b],
+                                value:JSON.stringify({
+                                    key:custom_field.key,
+                                    field: Str.get_title_url(org_custom_field_list[a].title.toLowerCase()),
+                                    title:org_custom_field_list[a].title,
+                                    value:org_custom_field_list[a]['field_'+String(b)]
+                                })
+                            });
+                    }
+                }
+                data.custom_fields.push(custom_field);
+            }
+            }
+        },
     ],
         function(err, result){
-            res.send({error:error,data:data});
-            res.end();
+            Log.w('aaaaaaaaa',data.custom_fields);
+            //Log.w('bbbb',option);
+            //res.send({error:error,data:data});
+            //res.end();
         });
 });
 //9_post
