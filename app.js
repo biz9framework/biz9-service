@@ -34,6 +34,7 @@ const user=require("./routes/user");
 /* --- APP URL-CUSTOM END  -- */
 /* --- APP URL START  -- */
 const crud=require("./routes/main/crud");
+const file=require("./routes/main/file");
 const image=require("./routes/main/image");
 /* --- APP URL END  -- */
 /* --- APP EXPRESS START --- */
@@ -65,6 +66,7 @@ app.use("/user",user);
 /* --- APP ROUTES START --- */
 app.use("/",index);
 app.use("/main/crud",crud);
+app.use("/main/file",file);
 app.use("/main/image",image);
 /* --- APP ROUTES END --- */
 /* --- APP ERROR START --- */

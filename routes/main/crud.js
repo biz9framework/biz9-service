@@ -60,7 +60,9 @@ router.post('/get',function(req,res,next){
         },
         //category
         async function(call){
+            console.log('aaaaaaaa');
             if(option.get_category){
+                console.log('bbbbbbb');
                 data.categorys = [];
                 let search = App_Logic.get_search(
                     option.category_search.data_type,
@@ -68,6 +70,7 @@ router.post('/get',function(req,res,next){
                     option.category_search.sort_by,
                     option.category_search.page_current,
                     option.category_search.page_size);
+                Log.w('category_search',option.category_search);
                 let option_category = {get_field:false,fields:'title,type,data_type',get_distinct:true,distinct_field:'title'};
                 const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option_category);
                 if(biz_error){
@@ -359,4 +362,52 @@ router.post('/database_info',function(req,res,next){
             res.end();
         });
 });
+//9_write_file
+// - required_form_data = file_list[file_data]
+router.post('/file',function(req,res,next){
+    let error = null;
+    let post_file_list = req.body.data.file_list;
+    let data = {image_list:[],resultOK:false};
+    let upload_dir = path.join('public', 'uploads');
+    var item = {};
+    async.series([
+        //get image_list
+        async function(call){
+            post_file_list.forEach(item => {
+                data.file_list.push(Image_Logic.get_new_by_base64(item));
+            });
+        },
+        //write - image_list
+        async function(call){
+            for(const item of data.image_list) {
+                let image_process_list = Image_Logic.get_process_list(upload_dir,item.image_filename);
+                for (const image of image_process_list) {
+                    const [biz_error,biz_data] = await Image_File.post_write(item.buffer,image.size,image.path_filename,image.type_resize);
+                    if(biz_error){
+                        error=Log.append(error,biz_error);
+                    }
+                }
+                if(!error){
+                    item.resultOK = true;
+                }
+            }
+            if(!error){
+                data.resultOK=true;
+            }
+        },
+        //clean
+        async function(call){
+            for(const item of data.image_list) {
+                delete item.image_data;
+                delete item.buffer;
+                delete item.resultOK;
+            }
+        },
+    ],
+        function(err, result){
+            res.send({error:error,data:data});
+            res.end();
+        });
+});
+
 module.exports = router;
