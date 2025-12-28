@@ -20,8 +20,8 @@ router.post('/custom_field', function(req, res, next) {
     let error = null;
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
-    data.org_custom_field_list = [];
-    data.custom_field_list = [];
+    data.org_custom_fields = [];
+    data.custom_fields = [];
     data.item=DataItem.get_new(req.body.data.data_type,req.body.data.id);
     async.series([
         async function(call){
@@ -47,32 +47,32 @@ router.post('/custom_field', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.org_custom_field_list = biz_data.data_list;
+                data.org_custom_fields = biz_data.items;
             }
         },
         async function(call){
-            for(let a=0;a<data.org_custom_field_list.length;a++){
+            for(let a=0;a<data.org_custom_fields.length;a++){
                 let custom_field = {
                     key: Num.get_id(333),
-                    title:data.org_custom_field_list[a].title,
-                    selected:data.item[Str.get_title_url(data.org_custom_field_list[a].title.toLowerCase())],
+                    title:data.org_custom_fields[a].title,
+                    selected:data.item[Str.get_title_url(data.org_custom_fields[a].title.toLowerCase())],
                     items:[],
                 };
                 for(let b=0;b<19;b++){
-                    if(!Str.check_is_null(data.org_custom_field_list[a]['field_'+b]))   {
+                    if(!Str.check_is_null(data.org_custom_fields[a]['field_'+b]))   {
                         custom_field.items.push(
                             {
-                                label:data.org_custom_field_list[a]['field_'+b],
+                                label:data.org_custom_fields[a]['field_'+b],
                                 value:JSON.stringify({
                                     key:custom_field.key,
-                                    field: Str.get_title_url(data.org_custom_field_list[a].title.toLowerCase()),
-                                    title:data.org_custom_field_list[a].title,
-                                    value:data.org_custom_field_list[a]['field_'+String(b)]
+                                    field: Str.get_title_url(data.org_custom_fields[a].title.toLowerCase()),
+                                    title:data.org_custom_fields[a].title,
+                                    value:data.org_custom_fields[a]['field_'+String(b)]
                                 })
                             });
                     }
                 }
-                data.custom_field_list.push(custom_field);
+                data.custom_fields.push(custom_field);
             }
         },
     ],
@@ -179,7 +179,7 @@ router.post('/order_post', function(req, res, next) {
     let error = null;
     let database,data = {};
     let post_order = req.body.data.order;
-    let post_order_payment_list = req.body.data.order_payment_list;
+    let post_order_payments = req.body.data.order_payments;
     let option = req.body.data.option ? req.body.data.option : {stat_post:false};
     data = DataItem.get_new(DataType.ORDER,0);
     async.series([
@@ -193,7 +193,7 @@ router.post('/order_post', function(req, res, next) {
             }
         },
         async function(call){
-            const [biz_error,biz_data] = await Order_Data.post(database,post_order,post_order_payment_list,option);
+            const [biz_error,biz_data] = await Order_Data.post(database,post_order,post_order_payments,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
@@ -367,7 +367,7 @@ router.post('/review_search', function(req, res, next) {
     let database,data = {};
     let search = req.body.data.search;
     let option = req.body.data.option ? req.body.data.option : {};
-    data.review_list = [];
+    data.reviews = [];
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -378,7 +378,7 @@ router.post('/review_search', function(req, res, next) {
                 database = biz_data;
             }
         },
-        //review_list
+        //reviews
         async function(call){
             const [biz_error,biz_data] = await Review_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
@@ -394,7 +394,7 @@ router.post('/review_search', function(req, res, next) {
         });
 });
 //9_post_field_value
-// - required form_data = item_data_type,item_id,item_field_value,value_list
+// - required form_data = item_data_type,item_id,item_field_value,value_items
 router.post('/field_value_post',function(req,res,next){
     let error=null;
     let database,data={};
@@ -403,7 +403,7 @@ router.post('/field_value_post',function(req,res,next){
     data.item_field_value = req.body.data.item_field_value;
     data.src_item = DataItem.get_new(req.body.data.item_data_type,req.body.data.item_id);
     data.delete_cache_item=DataItem.get_new(req.body.data.item_data_type,req.body.data.item_id);
-    data.field_value_list=req.body.data.field_value_list ? req.body.data.field_value_list : [];
+    data.field_value_items=req.body.data.field_value_items ? req.body.data.field_value_items : [];
     async.series([
         async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
@@ -415,7 +415,7 @@ router.post('/field_value_post',function(req,res,next){
         },
         //delete cache item
         async function(call){
-            if(data.item_field_value.value_type == Type.FIELD_VALUE_LIST){
+            if(data.item_field_value.value_type == Type.FIELD_VALUE_ITEMS){
                 const [biz_error,biz_data] = await Portal.delete_cache(database,data.delete_cache_item.data_type,data.delete_cache_item.id);
                 if(biz_error){
                     error=Log.append(error,biz_error);
@@ -426,7 +426,7 @@ router.post('/field_value_post',function(req,res,next){
         },
         //src_item
         async function(call){
-            if(data.item_field_value.value_type == Type.FIELD_VALUE_LIST){
+            if(data.item_field_value.value_type == Type.FIELD_VALUE_ITEMS){
                 const [biz_error,biz_data] = await Portal.get(database,data.src_item.data_type,data.src_item.id);
                 if(biz_error){
                     error=Log.append(error,biz_error);
@@ -437,10 +437,10 @@ router.post('/field_value_post',function(req,res,next){
         },
         //clear_src_old_field_value_items
         async function(call){
-            if(data.item_field_value.value_type == Type.FIELD_VALUE_LIST){
+            if(data.item_field_value.value_type == Type.FIELD_VALUE_ITEMS){
                 for(let a=1;a<30;a++){
-                    if(!Str.check_is_null(data.src_item[Field_Logic.get_field_value_title(Type.FIELD_VALUE_LIST,data.item_field_value.value_id,a+1)])){
-                        delete data.src_item[Field_Logic.get_field_value_title(Type.FIELD_VALUE_LIST,data.item_field_value.value_id,a+1)];
+                    if(!Str.check_is_null(data.src_item[Field_Logic.get_field_value_title(Type.FIELD_VALUE_ITEMS,data.item_field_value.value_id,a+1)])){
+                        delete data.src_item[Field_Logic.get_field_value_title(Type.FIELD_VALUE_ITEMS,data.item_field_value.value_id,a+1)];
                     }
                 }
                 //overwrite orignal data item
@@ -462,9 +462,9 @@ router.post('/field_value_post',function(req,res,next){
                 }else{
                     data.item = biz_data;
                 }
-            }else if(data.item_field_value.value_type == Type.FIELD_VALUE_LIST){
-                for(let a=0;a<data.item_field_value.value_list.length;a++){
-                    data.item[Field_Logic.get_field_value_title(Type.FIELD_VALUE_LIST,data.item_field_value.value_id,a+1)] = data.item_field_value.value_list[a].value;
+            }else if(data.item_field_value.value_type == Type.FIELD_VALUE_ITEMS){
+                for(let a=0;a<data.item_field_value.value_items.length;a++){
+                    data.item[Field_Logic.get_field_value_title(Type.FIELD_VALUE_ITEMS,data.item_field_value.value_id,a+1)] = data.item_field_value.value_items[a].value;
                 }
                 const [biz_error,biz_data] = await Portal.post(database,data.item.data_type,data.item);
                 if(biz_error){
@@ -557,7 +557,7 @@ router.post('/content', function(req, res, next) {
 router.post('/stat_search', function(req, res, next) {
     let error = null;
     let database = {};
-    let data = {data_type:DataType.STAT,item_count:0,page_count:1,filter:{},stat_list:[],app_id:null};
+    let data = {data_type:DataType.STAT,item_count:0,page_count:1,filter:{},stats:[],app_id:null};
     let search = req.body.data.search;
     let option = req.body.data.option ? req.body.data.option : {};
     async.series([

@@ -20,7 +20,7 @@ router.post('/get',function(req,res,next){
     let post_data = DataItem.get_new(req.body.data.data_type,req.body.data.id,{key:req.body.data.key?req.body.data.key:null});
     let data = DataItem.get_new(req.body.data.data_type,req.body.data.id,{key:req.body.data.key?req.body.data.key:null});
     let option = req.body.data.option ? req.body.data.option : {get_parent:false,get_type:false,type_search:{},get_category:false,category_search:{},get_custom_field:false};
-    let org_custom_field_list = [];
+    let org_custom_fields = [];
     async.series([
         async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
@@ -54,7 +54,7 @@ router.post('/get',function(req,res,next){
                 if(biz_error){
                     error=Log.append(error,biz_error);
                 }else{
-                    data.types =  biz_data.data_list;
+                    data.types =  biz_data.items;
                 }
             }
         },
@@ -76,7 +76,7 @@ router.post('/get',function(req,res,next){
                 if(biz_error){
                     error=Log.append(error,biz_error);
                 }else{
-                    data.categorys =  biz_data.data_list;
+                    data.categorys =  biz_data.items;
                 }
             }
         },
@@ -89,29 +89,29 @@ router.post('/get',function(req,res,next){
                 if(biz_error){
                     error=Log.append(error,biz_error);
                 }else{
-                    org_custom_field_list = biz_data.data_list;
+                    org_custom_fields = biz_data.items;
                 }
             }
         },
         async function(call){
             if(option.get_custom_field){
-                for(let a=0;a<org_custom_field_list.length;a++){
+                for(let a=0;a<org_custom_fields.length;a++){
                     let custom_field = {
                         key: Num.get_id(333),
-                        title:org_custom_field_list[a].title,
-                        selected:data[Str.get_title_url(org_custom_field_list[a].title.toLowerCase())] ? !Str.check_is_null(data[Str.get_title_url(org_custom_field_list[a])]) : false,
+                        title:org_custom_fields[a].title,
+                        selected:data[Str.get_title_url(org_custom_fields[a].title.toLowerCase())] ? !Str.check_is_null(data[Str.get_title_url(org_custom_fields[a])]) : false,
                         items:[],
                     };
                     for(let b=0;b<19;b++){
-                        if(!Str.check_is_null(org_custom_field_list[a]['field_'+b]))   {
+                        if(!Str.check_is_null(org_custom_fields[a]['field_'+b]))   {
                             custom_field.items.push(
                                 {
-                                    label:org_custom_field_list[a]['field_'+b],
+                                    label:org_custom_fields[a]['field_'+b],
                                     value:JSON.stringify({
                                         key:custom_field.key,
-                                        field: Str.get_title_url(org_custom_field_list[a].title.toLowerCase()),
-                                        title:org_custom_field_list[a].title,
-                                        value:org_custom_field_list[a]['field_'+String(b)]
+                                        field: Str.get_title_url(org_custom_fields[a].title.toLowerCase()),
+                                        title:org_custom_fields[a].title,
+                                        value:org_custom_fields[a]['field_'+String(b)]
                                     })
                                 });
                         }
@@ -174,7 +174,7 @@ router.post('/search',function(req,res,next){
     let error = null;
     let database = {};
     let search = req.body.data.search;
-    let data = {data_type:search.data_type,data_count:0,page_count:1,filter:{},data_list:[],app_id:null};
+    let data = {data_type:search.data_type,data_count:0,page_count:1,filter:{},items:[],app_id:null};
     let option = req.body.data.option ? req.body.data.option : {};
     async.series([
         async function(call){
@@ -195,7 +195,7 @@ router.post('/search',function(req,res,next){
                 data.data_count=biz_data.data_count;
                 data.page_count=biz_data.page_count;
                 data.filter=biz_data.filter;
-                data.data_list=biz_data.data_list;
+                data.items=biz_data.items;
                 data.app_id = database.app_id;
             }
         },
@@ -267,13 +267,13 @@ router.post('/copy',function(req,res,next){
             res.end();
         });
 });
-//9_post_list
+//9_post_items
 //required = data = []
-router.post('/post_list',function(req,res,next){
+router.post('/post_items',function(req,res,next){
     let error = null;
     let database = {};
-    let data_list = [];
-    let post_data_list = req.body.data.data?req.body.data.data : [];
+    let items = [];
+    let post_items = req.body.data.data?req.body.data.data : [];
     let option = req.body.data.option ? req.body.data.option : {};
     async.series([
         async function(call){
@@ -285,18 +285,18 @@ router.post('/post_list',function(req,res,next){
             }
         },
         async function(call){
-            if(post_data_list.length > 0){
-                const [biz_error,biz_data] = await Portal.post_list(database,post_data_list,option);
+            if(post_items.length > 0){
+                const [biz_error,biz_data] = await Portal.post_items(database,post_items,option);
                 if(biz_error){
                     error=Log.append(error,biz_error);
                 }else{
-                    data_list = biz_data;
+                    items = biz_data;
                 }
             }
         },
     ],
         function(err, result){
-            res.send({error:error,data:data_list});
+            res.send({error:error,data:items});
             res.end();
         });
 });
@@ -362,52 +362,4 @@ router.post('/database_info',function(req,res,next){
             res.end();
         });
 });
-//9_write_file
-// - required_form_data = file_list[file_data]
-router.post('/file',function(req,res,next){
-    let error = null;
-    let post_file_list = req.body.data.file_list;
-    let data = {image_list:[],resultOK:false};
-    let upload_dir = path.join('public', 'uploads');
-    var item = {};
-    async.series([
-        //get image_list
-        async function(call){
-            post_file_list.forEach(item => {
-                data.file_list.push(Image_Logic.get_new_by_base64(item));
-            });
-        },
-        //write - image_list
-        async function(call){
-            for(const item of data.image_list) {
-                let image_process_list = Image_Logic.get_process_list(upload_dir,item.image_filename);
-                for (const image of image_process_list) {
-                    const [biz_error,biz_data] = await Image_File.post_write(item.buffer,image.size,image.path_filename,image.type_resize);
-                    if(biz_error){
-                        error=Log.append(error,biz_error);
-                    }
-                }
-                if(!error){
-                    item.resultOK = true;
-                }
-            }
-            if(!error){
-                data.resultOK=true;
-            }
-        },
-        //clean
-        async function(call){
-            for(const item of data.image_list) {
-                delete item.image_data;
-                delete item.buffer;
-                delete item.resultOK;
-            }
-        },
-    ],
-        function(err, result){
-            res.send({error:error,data:data});
-            res.end();
-        });
-});
-
 module.exports = router;

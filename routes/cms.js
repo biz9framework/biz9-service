@@ -49,7 +49,6 @@ router.post('/post',function(req,res,next){
     let error=null;
     let database,data={};
     let post_data=DataItem.get_new(req.body.data.item.data_type,req.body.data.item.id,req.body.data.item);
-    let post_group_list=req.body.data.group_list ? req.body.data.group_list : [];
     let option = req.body.data.option ? req.body.data.option : {};
     data.item = DataItem.get_new(req.body.data.data_type,req.body.data.id);
     data.delete_cache_item=DataItem.get_new(req.body.data.data_type,req.body.data.id);
@@ -62,24 +61,6 @@ router.post('/post',function(req,res,next){
                 database = biz_data;
             }
         },
-        /*
-        //post group_list
-        async function(call){
-            if(post_group_list.length>0){
-                data.group_list=[];
-                post_group_list.forEach(item =>{
-                    delete item.items;
-                    delete item.images;
-                });
-                const [biz_error,biz_data] = await Portal.post_list(database,post_group_list);
-                if(biz_error){
-                    error=Log.append(error,biz_error);
-                }else{
-                    data.post_group_list = biz_data;
-                }
-            }
-        },
-        */
         //clean
         async function(call){
             delete post_data.images;
@@ -112,16 +93,15 @@ router.post('/item_parent_top_type_category',function(req,res,next){
             item:DataItem.get_new(req.body.data.data_type,req.body.data.id),
             parent_item:DataItem.get_new(req.body.data.data_type,req.body.data.id),
             top_item:DataItem.get_new(req.body.data.data_type,req.body.data.id),
-            type_list:[],
-            category_list:[],
-            type_category_list:[]
+            types:[],
+            categorys:[],
         };
     let post_data = DataItem.get_new(req.body.data.data_type,req.body.data.id);
     data.item = DataItem.get_new(post_data.data_type,post_data.id);
     data.parent_item = DataItem.get_new(post_data.data_type,post_data.id);
     data.top_item = DataItem.get_new(post_data.data_type,post_data.id);
-    data.category_list = [];
-    data.item_list = [];
+    data.categorys = [];
+    data.items = [];
     let option = req.body.data.option ? req.body.data.option : {};
     async.series([
         async function(call){
@@ -173,7 +153,7 @@ router.post('/item_parent_top_type_category',function(req,res,next){
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.type_list =  biz_data.data_list;
+                data.types =  biz_data.items;
             }
         },
         //category
@@ -184,7 +164,7 @@ router.post('/item_parent_top_type_category',function(req,res,next){
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.category_list =  biz_data.data_list;
+                data.categorys =  biz_data.items;
             }
         },
     ],
@@ -202,9 +182,9 @@ router.post('/search_item_type_category', function(req, res, next) {
     let post_search = req.body.data.search;
     let post_option = req.body.data.option ? req.body.data.option : {};
     data.data_type = req.body.data.data_type;
-    data.type_list = [];
-    data.category_list = [];
-    data.item_list = [];
+    data.types = [];
+    data.categorys = [];
+    data.items = [];
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -223,7 +203,7 @@ router.post('/search_item_type_category', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.type_list =  biz_data.data_list;
+                data.types =  biz_data.items;
             }
         },
         //category
@@ -234,7 +214,7 @@ router.post('/search_item_type_category', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.category_list =  biz_data.data_list;
+                data.categorys =  biz_data.items;
             }
         },
         //item
@@ -244,7 +224,7 @@ router.post('/search_item_type_category', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.item_list =  biz_data.data_list;
+                data.items =  biz_data.items;
             }
         },
     ],
@@ -255,12 +235,12 @@ router.post('/search_item_type_category', function(req, res, next) {
 });
 
 //9_demo_post
-// - required_form_data = type_logic.type_list, data_type, option
+// - required_form_data = type_logic.types, data_type, option
 router.post('/demo_post', function(req, res, next) {
     let error = null;
     let database = {};
-    let data = {type_list:[]};
-    let post_type_list = req.body.data.type_list;
+    let data = {types:[]};
+    let post_types = req.body.data.types;
     let post_data_type = req.body.data.data_type;
     let option = req.body.data.option;
     async.series([
@@ -275,7 +255,7 @@ router.post('/demo_post', function(req, res, next) {
         },
         //demo_portal_post
         async function(call){
-            const [biz_error,biz_data] = await Portal.demo_post(database,post_data_type,post_type_list,option);
+            const [biz_error,biz_data] = await Portal.demo_post(database,post_data_type,post_types,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{

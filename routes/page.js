@@ -21,33 +21,34 @@ router.post('/home', function(req, res, next) {
     let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter();
     let app_dev_search_option = {fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count,view_count,is_favorite',get_favorite:true,user_id:req.body.data.user_id};
     let app_dev_search_explore_option = {get_field:true,fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count,view_count'};
-    let option = req.body.data.option ? req.body.data.option : {get_field_value_list:true};
+    let option = req.body.data.option ? req.body.data.option : {get_field_value_items:true};
     //
     data.user = req.body.data.user_id ? DataItem.get_new(DataType.USER,req.body.data.user_id): User_Logic.get_guest();
     //
     data.page = DataItem.get_new(DataType.PAGE,0,{key:Type.PAGE_HOME});
     //
-    data.favorite_list = [];
+    data.favorites = [];
     //
-    data.product_popular_list = [];
-    data.product_latest_list = [];
-    data.product_top_list = [];
-    data.product_trending_list = [];
+    data.popular_products = [];
+    data.latest_products = [];
+    data.top_products = [];
+    data.trending_products = [];
     //
-    data.category_list = [];
+    data.categorys = [];
     //
-    data.category_product_title_list = [];
+    data.category_product_titles = [];
     //
-    data.blog_post_list = [];
+    data.blog_posts = [];
     //
-    data.product_explore_list_1 = [];
-    data.product_explore_list_2 = [];
-    data.product_explore_list_3 = [];
-    data.product_explore_list_4 = [];
+    data.explore_products_1 = [];
+    data.explore_products_2 = [];
+    data.explore_products_3 = [];
+    data.explore_products_4 = [];
+    data.explore_products_5 = [];
     //
-    data.review_list = [];
+    data.reviews = [];
     //
-    data.faq_list = [];
+    data.faqs = [];
     //
     async.series([
         async function(call){
@@ -68,7 +69,7 @@ router.post('/home', function(req, res, next) {
                 data.page = biz_data;
             }
         },
-        //product_list - popular
+        //products - popular
         async function(call){
             let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{view_count:-1},1,12);
             let option = app_dev_search_option;
@@ -76,10 +77,10 @@ router.post('/home', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.product_popular_list = biz_data.product_list;
+                data.popular_products = biz_data.products;
             }
         },
-        //product_list - latest
+        //products - latest
         async function(call){
             let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
             let option = app_dev_search_option;
@@ -87,10 +88,10 @@ router.post('/home', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.product_latest_list =  biz_data.product_list;
+                data.latest_products =  biz_data.products;
             }
         },
-        //product_list - rating_avg
+        //products - rating_avg
         async function(call){
             let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter ,{rating_avg:-1},1,12);
             let option = app_dev_search_option;
@@ -98,10 +99,10 @@ router.post('/home', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.product_top_list =  biz_data.product_list;
+                data.top_products =  biz_data.products;
             }
         },
-        //product_list - trending
+        //products - trending
         async function(call){
             let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter ,{date_create:-1,view_count:-1},1,12);
             let option = app_dev_search_option;
@@ -109,99 +110,99 @@ router.post('/home', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.product_trending_list = biz_data.product_list;
+                data.trending_products = biz_data.products;
             }
         },
-        //category_list
+        //categorys
         async function(call){
             let search = App_Logic.get_search(DataType.CATEGORY,{category:DataType.PRODUCT},{title:1},1,0);
-            let option = {get_distinct:true,distinct_field:'title',distinct_sort:'asc',get_join:true,field_key_list:[{foreign_data_type:DataType.PRODUCT,foreign_field:'category',item_field:'title',title:'product_count',type:Type.COUNT}]};
+            let option = {get_distinct:true,distinct_field:'title',distinct_sort:'asc',get_join:true,field_keys:[{foreign_data_type:DataType.PRODUCT,foreign_field:'category',item_field:'title',title:'product_count',type:Type.COUNT}]};
             const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.category_list = biz_data.data_list;
-                biz_data.data_list.forEach(item => {
-                    data.category_product_title_list.push({title:item.title,count:Number(item.item_count),product_list:[]});
+                data.categorys = biz_data.items;
+                biz_data.items.forEach(item => {
+                    data.category_product_titles.push({title:item.title,count:Number(item.item_count),products:[]});
                 });
             }
         },
         async function(call){
-            data.category_product_title_list.sort((a, b) => b.count - a.count);
+            data.category_product_titles.sort((a, b) => b.count - a.count);
         },
-        //category_product_title_list - 0
+        //category_product_titles - 0
         async function(call){
-            let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_title_list[0].title);
+            let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_titles[0].title);
             let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
             let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,app_dev_search_option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.category_product_title_list[0].product_list = biz_data.product_list;
+                data.category_product_titles[0].products = biz_data.products;
             }
         },
-        //category_product_title_list - 1
+        //category_product_titles - 1
         async function(call){
-            let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_title_list[1].title);
+            let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_titles[1].title);
             let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
             let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.category_product_title_list[1].product_list = biz_data.product_list;
+                data.category_product_titles[1].products = biz_data.products;
             }
         },
-        //category_product_title_list - 2
+        //category_product_titles - 2
         async function(call){
-            let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_title_list[2].title);
+            let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_titles[2].title);
             let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
             let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.category_product_title_list[2].product_list = biz_data.product_list;
+                data.category_product_titles[2].products = biz_data.products;
             }
         },
-        //category_product_title_list - 3
+        //category_product_titles - 3
         async function(call){
-            let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_title_list[3].title);
+            let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_titles[3].title);
             let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
             let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.category_product_title_list[3].product_list = biz_data.product_list;
+                data.category_product_titles[3].products = biz_data.products;
             }
         },
-        //category_product_title_list - 4
+        //category_product_titles - 4
         async function(call){
-            let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_title_list[4].title);
+            let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_titles[4].title);
             let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
             let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.category_product_title_list[4].product_list = biz_data.product_list;
+                data.category_product_titles[4].products = biz_data.products;
             }
         },
-        //category_product_title_list - 5
+        //category_product_titles - 5
         async function(call){
-            let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_title_list[5].title);
+            let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_titles[5].title);
             let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
             let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.category_product_title_list[5].product_list = biz_data.product_list;
+                data.category_product_titles[5].products = biz_data.products;
             }
         },
-        //blog_post_list
+        //blog_posts
         async function(call){
             let query = {};
             let search = App_Logic.get_search(DataType.BLOG_POST,query,{},1,12);
@@ -210,75 +211,75 @@ router.post('/home', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.blog_post_list = biz_data.blog_post_list;
+                data.blog_posts = biz_data.blog_posts;
             }
         },
-        //product_explore_list_1
+        //explore_products_1
         async function(call){
             let query = {};
-            query.category = data.category_product_title_list[6].title;
+            query.category = data.category_product_titles[6].title;
             let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,6);
             let option = app_dev_search_explore_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.product_explore_list_1 = biz_data.product_list;
+                data.explore_products_1 = biz_data.products;
             }
         },
-        //product_explore_list_2
+        //explore_products_2
         async function(call){
             let query = {};
-            query.category = data.category_product_title_list[7].title;
+            query.category = data.category_product_titles[7].title;
             let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,6);
             let option = app_dev_search_explore_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.product_explore_list_2 = biz_data.product_list;
+                data.explore_products_2 = biz_data.products;
             }
         },
-        //product_explore_list_3
+        //explore_products_3
         async function(call){
             let query = {};
-            query.category = data.category_product_title_list[8].title;
+            query.category = data.category_product_titles[8].title;
             let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,6);
             let option = app_dev_search_explore_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.product_explore_list_3 = biz_data.product_list;
+                data.explore_products_3 = biz_data.products;
             }
         },
-        //product_explore_list_4
+        //explore_products_4
         async function(call){
             let query = {};
-            query.category = data.category_product_title_list[9].title;
+            query.category = data.category_product_titles[9].title;
             let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,6);
             let option = app_dev_search_explore_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.product_explore_list_4 = biz_data.product_list;
+                data.explore_products_4 = biz_data.products;
             }
         },
-        //product_explore_list_5
+        //explore_products_5
         async function(call){
             let query = {};
-            query.category = data.category_product_title_list[10].title;
+            query.category = data.category_product_titles[10].title;
             let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,6);
             let option = app_dev_search_explore_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.product_explore_list_5 = biz_data.product_list;
+                data.explore_products_5 = biz_data.products;
             }
         },
-        //business review list
+        //business reviews
         async function(call){
             let query = {};
             let search = App_Logic.get_search(DataType.REVIEW,query,{date_create:-1,date_create:-1},1,20);
@@ -286,10 +287,10 @@ router.post('/home', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.review_list = biz_data.review_list;
+                data.reviews = biz_data.reviews;
             }
         },
-        //faq_list
+        //faqs
         async function(call){
             let query = {};
             let key = 'primary';
@@ -297,7 +298,7 @@ router.post('/home', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.faq_list = biz_data;
+                data.faqs = biz_data;
             }
         },
     ],
@@ -312,8 +313,8 @@ router.post('/faq', function(req, res, next) {
     let error = null;
     let database,data = {};
     data.page = DataItem.get_new(DataType.PAGE,0);
-    let option = req.body.data.option ? req.body.data.option : {get_field_value_list:true};
-    data.faq_list = [];
+    let option = req.body.data.option ? req.body.data.option : {get_field_value_items:true};
+    data.faqs = [];
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -333,7 +334,7 @@ router.post('/faq', function(req, res, next) {
                 data.page = biz_data;
             }
         },
-        //faq_list
+        //faqs
         async function(call){
             let query = {};
             let key = 'primary';
@@ -341,7 +342,7 @@ router.post('/faq', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.faq_list = biz_data;
+                data.faqs = biz_data;
             }
         },
     ],
@@ -356,7 +357,7 @@ router.post('/about', function(req, res, next) {
     let error = null;
     let database,data = {};
     data.page = DataItem.get_new(DataType.PAGE,0);
-    let option = req.body.data.option ? req.body.data.option : {get_field_value_list:true};
+    let option = req.body.data.option ? req.body.data.option : {get_field_value_items:true};
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -388,7 +389,7 @@ router.post('/contact', function(req, res, next) {
     let error = null;
     let database,data = {};
     data.page = DataItem.get_new(DataType.PAGE,0);
-    let option = req.body.data.option ? req.body.data.option : {get_field_value_list:true};
+    let option = req.body.data.option ? req.body.data.option : {get_field_value_items:true};
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -422,7 +423,7 @@ router.post('/blog_post', function(req, res, next) {
     let option = req.body.data.option ? req.body.data.option : {};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.BLOG_POST,{},{},1,6);
     data.blog_post = DataItem.get_new(DataType.BLOG_POST,0,{key:req.body.data.key});
-    data.blog_post_list = [];
+    data.blog_posts = [];
     data.page = DataItem.get_new(DataType.BLOG_POST,0);
     async.series([
         async function(call){
@@ -452,17 +453,17 @@ router.post('/blog_post', function(req, res, next) {
                 data.blog_post = biz_data;
             }
         },
-        //blog_post_list
+        //blog_posts
         async function(call){
             const [biz_error,biz_data] = await Blog_Post_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.blog_post_list = biz_data.blog_post_list;
+                data.blog_posts = biz_data.blog_posts;
             }
         },
         async function(call){
-            data.blog_post_list = data.blog_post_list.filter(item=>item.id!==data.blog_post.id);
+            data.blog_posts = data.blog_posts.filter(item=>item.id!==data.blog_post.id);
         },
     ],
         function(err, result){
@@ -477,7 +478,7 @@ router.post('/blog_post_home', function(req, res, next) {
     let option = req.body.data.option ? req.body.data.option : {};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.BLOG_POST,{},{},1,6);
     data.page  = DataItem.get_new(DataType.PAGE,0);
-    data.blog_post_list = [];
+    data.blog_posts = [];
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -497,13 +498,13 @@ router.post('/blog_post_home', function(req, res, next) {
                 data.page = biz_data;
             }
         },
-        //blog_post_list
+        //blog_posts
         async function(call){
             const [biz_error,biz_data] = await Blog_Post_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.blog_post_list = biz_data.blog_post_list;
+                data.blog_posts = biz_data.blog_posts;
             }
         },
     ],
@@ -519,7 +520,7 @@ router.post('/blog_post_search', function(req, res, next) {
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.BLOG_POST,{},{},1,6);
-    data.blog_post_list = [];
+    data.blog_posts = [];
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -530,13 +531,13 @@ router.post('/blog_post_search', function(req, res, next) {
                 database = biz_data;
             }
         },
-        //data_list
+        //items
         async function(call){
             const [biz_error,biz_data] = await Blog_Post_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.blog_post_list=biz_data.blog_post_list;
+                data.blog_posts=biz_data.blog_posts;
             }
         },
     ],
@@ -550,13 +551,13 @@ router.post('/blog_post_search', function(req, res, next) {
 router.post('/product', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {get_favorite:false,get_image:true,get_item:true,post_stat:false,user_id:0,get_field_value_list:true};
+    let option = req.body.data.option ? req.body.data.option : {get_favorite:false,get_image:true,get_item:true,post_stat:false,user_id:0,get_field_value_items:true};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.PRODUCT,{},{},1,6);
     data.product = DataItem.get_new(DataType.PRODUCT,0,{key:req.body.data.key});
-    data.product_list = [];
-    data.product_hosting_list = [];
-    data.product_cms_list = [];
-    data.review_list = [];
+    data.products = [];
+    data.hosting_products = [];
+    data.cms_products = [];
+    data.reviews = [];
     data.page = DataItem.get_new(DataType.PRODUCT,0);
     async.series([
         async function(call){
@@ -594,7 +595,7 @@ router.post('/product', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.product_hosting_list = biz_data.product_list;
+                data.hosting_products = biz_data.products;
             }
         },
         //product_cms
@@ -605,10 +606,10 @@ router.post('/product', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.product_cms_list = biz_data.product_list;
+                data.cms_products = biz_data.products;
             }
         },
-        //product_list
+        //products
         async function(call){
             let query = {};
             let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.product.category?data.product.category :"");
@@ -618,18 +619,18 @@ router.post('/product', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.product_list = biz_data.product_list;
-                data.product_list.filter(item=>item.id!==data.product.id);
+                data.products = biz_data.products;
+                data.products.filter(item=>item.id!==data.product.id);
             }
         },
-        //review_list
+        //reviews
         async function(call){
             let query = {};
             const [biz_error,biz_data] = await Review_Data.get(database,data.product.data_type,data.product.id,{date_create:-1},1,0);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.review_list = biz_data.review_list;
+                data.reviews = biz_data.reviews;
             }
         }
     ],
@@ -645,14 +646,13 @@ router.post('/product_home', function(req, res, next) {
     let option = req.body.data.option ? req.body.data.option : {};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.PRODUCT,{},{},1,6);
     data.page  = DataItem.get_new(DataType.PAGE,0);
-    data.type_list = [];
+    data.types = [];
     /*
-    data.category_list = [];
-    data.product_list = [];
-    data.budget_list = [];
+    data.categorys = [];
+    data.products = [];
     */
 
-    data.product_list = [];
+    data.products = [];
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -672,40 +672,40 @@ router.post('/product_home', function(req, res, next) {
                 data.page = biz_data;
             }
         },
-        //type_list
+        //types
         async function(call){
             let query = {};
             let app_dev_search_query_filter = Project_Logic.get_query_application_development_type_product_query_filter();
             let search = App_Logic.get_search(DataType.TYPE,app_dev_search_query_filter,{date_create:-1},1,4);
-            let option = {get_join:true,field_key_list:[{foreign_data_type:DataType.PRODUCT,foreign_field:'type',item_field:'title',title:'product_count',type:Type.COUNT}]};
+            let option = {get_join:true,field_keys:[{foreign_data_type:DataType.PRODUCT,foreign_field:'type',item_field:'title',title:'product_count',type:Type.COUNT}]};
             const [biz_error,biz_data] = await  Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.type_list = biz_data.data_list;
+                data.types = biz_data.items;
             }
         },
-        //category_list
+        //categorys
         async function(call){
             let query = {};
             let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter();
             let search = App_Logic.get_search(DataType.CATEGORY,app_dev_search_query_filter,{date_create:-1},1,0);
-            let option = {get_join:true,get_distinct:true,distinct_field:'title',field_key_list:[{foreign_data_type:DataType.PRODUCT,foreign_field:'category',item_field:'title',title:'product_count',type:Type.COUNT}]};
+            let option = {get_join:true,get_distinct:true,distinct_field:'title',field_keys:[{foreign_data_type:DataType.PRODUCT,foreign_field:'category',item_field:'title',title:'product_count',type:Type.COUNT}]};
             const [biz_error,biz_data] = await  Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.category_list = biz_data.data_list;
+                data.categorys = biz_data.items;
             }
         },
         /*
-        //product_list
+        //products
         async function(call){
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.product_list = biz_data.product_list;
+                data.products = biz_data.products;
             }
         },
         */
@@ -722,7 +722,7 @@ router.post('/product_search', function(req, res, next) {
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.PRODUCT,{},{},1,6);
-    data.product_list = [];
+    data.products = [];
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -733,13 +733,13 @@ router.post('/product_search', function(req, res, next) {
                 database = biz_data;
             }
         },
-        //data_list
+        //items
         async function(call){
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.product_list=biz_data.product_list;
+                data.products=biz_data.products;
             }
         },
     ],
@@ -759,9 +759,9 @@ router.post('/search', function(req, res, next) {
     }else{
         let user = DataItem.get_new(DataType.USER,USER_ID);
     }
-    data.favorite_list = [];
+    data.favorites = [];
     data.product_search = req.body.data.search;
-    data.product_list = [];
+    data.products = [];
     data.product_count = 0;
     data.product_page_count = 0;
     async.series([
@@ -774,30 +774,30 @@ router.post('/search', function(req, res, next) {
                 database = biz_data;
             }
         },
-        //favorite_list
+        //favorites
         async function(call){
             if(!user.is_guest){
                 const [biz_error,biz_data] = await Favorite_Data.get(database,DataType.PRODUCT,user.id,{date_create:-1},1,0);
                 if(biz_error){
                     error=Log.append(error,biz_error);
                 }else{
-                    data.favorite_list = biz_data;
+                    data.favorites = biz_data;
                 }
             }
         },
-        //product_list
+        //products
         async function(call){
             const [biz_error,biz_data] = await Product_Data.search(database,data.product_search.filter,data.product_search.sort_by,data.product_search.page_current,data.product_search.page_size);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.product_list=data.item_list;
+                data.products=data.items;
                 data.product_count=data.item_count;
                 data.product_page_count=data.page_count;
                 /*
                 if(!user.is_guest){
-                    if(data.favorite_list.length>0){
-                        data.product_list = Favorite_Logic.get_favorite_by_list(data.favorite_list,data.product_list);
+                    if(data.favorites.length>0){
+                        data.products = Favorite_Logic.get_favorite_by_list(data.favorites,data.products);
                     }
                 }
                 */
@@ -818,7 +818,7 @@ router.post('/event', function(req, res, next) {
     let option = req.body.data.option ? req.body.data.option : {};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.EVENT,{},{},1,6);
     data.event = DataItem.get_new(DataType.EVENT,0,{key:req.body.data.key});
-    data.event_list = [];
+    data.events = [];
     data.page = DataItem.get_new(DataType.EVENT,0);
     async.series([
         async function(call){
@@ -848,17 +848,17 @@ router.post('/event', function(req, res, next) {
                 data.event = biz_data;
             }
         },
-        //event_list
+        //events
         async function(call){
             const [biz_error,biz_data] = await Event_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.event_list = biz_data.event_list;
+                data.events = biz_data.events;
             }
         },
         async function(call){
-            data.event_list.filter(item=>item.id!==data.event.id);
+            data.events.filter(item=>item.id!==data.event.id);
         },
     ],
         function(err, result){
@@ -873,7 +873,7 @@ router.post('/event_home', function(req, res, next) {
     let option = req.body.data.option ? req.body.data.option : {};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.EVENT,{},{},1,6);
     data.page  = DataItem.get_new(DataType.PAGE,0);
-    data.event_list = [];
+    data.events = [];
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -893,13 +893,13 @@ router.post('/event_home', function(req, res, next) {
                 data.page = biz_data;
             }
         },
-        //event_list
+        //events
         async function(call){
             const [biz_error,biz_data] = await Event_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.event_list = biz_data.event_list;
+                data.events = biz_data.events;
             }
         },
     ],
@@ -915,7 +915,7 @@ router.post('/event_search', function(req, res, next) {
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.EVENT,{},{},1,6);
-    data.event_list = [];
+    data.events = [];
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -926,13 +926,13 @@ router.post('/event_search', function(req, res, next) {
                 database = biz_data;
             }
         },
-        //data_list
+        //items
         async function(call){
             const [biz_error,biz_data] = await Event_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.event_list=biz_data.event_list;
+                data.events=biz_data.events;
             }
         },
     ],
@@ -947,7 +947,7 @@ router.post('/review_home',function(req, res, next) {
     let database,data = {};
     let search = req.body.data.search;
     let option = req.body.data.option ? req.body.data.option : {};
-    data.review_list = [];
+    data.reviews = [];
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -967,13 +967,13 @@ router.post('/review_home',function(req, res, next) {
                 data.page = biz_data;
             }
         },
-        //review_list
+        //reviews
         async function(call){
             const [biz_error,biz_data] = await Review_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.review_list = biz_data.review_list;
+                data.reviews = biz_data.reviews;
             }
         },
     ],
@@ -992,7 +992,7 @@ router.post('/gallery', function(req, res, next) {
     let option = req.body.data.option ? req.body.data.option : {};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.GALLERY,{},{},1,6);
     data.gallery = DataItem.get_new(DataType.GALLERY,0,{key:req.body.data.key});
-    data.gallery_list = [];
+    data.gallerys = [];
     data.page = DataItem.get_new(DataType.GALLERY,0);
     async.series([
         async function(call){
@@ -1022,17 +1022,17 @@ router.post('/gallery', function(req, res, next) {
                 data.gallery = biz_data;
             }
         },
-        //gallery_list
+        //gallerys
         async function(call){
             const [biz_error,biz_data] = await Gallery_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.gallery_list = biz_data.gallery_list;
+                data.gallerys = biz_data.gallerys;
             }
         },
         async function(call){
-            data.gallery_list.filter(item=>item.id!==data.gallery.id);
+            data.gallerys.filter(item=>item.id!==data.gallery.id);
         },
     ],
         function(err, result){
@@ -1047,7 +1047,7 @@ router.post('/gallery_home', function(req, res, next) {
     let option = req.body.data.option ? req.body.data.option : {};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.GALLERY,{},{},1,6);
     data.page  = DataItem.get_new(DataType.PAGE,0);
-    data.gallery_list = [];
+    data.gallerys = [];
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -1067,13 +1067,13 @@ router.post('/gallery_home', function(req, res, next) {
                 data.page = biz_data;
             }
         },
-        //gallery_list
+        //gallerys
         async function(call){
             const [biz_error,biz_data] = await Gallery_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.gallery_list = biz_data.gallery_list;
+                data.gallerys = biz_data.gallerys;
             }
         },
     ],
@@ -1090,7 +1090,7 @@ router.post('/gallery_search', function(req, res, next) {
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.GALLERY,{},{},1,6);
-    data.gallery_list = [];
+    data.gallerys = [];
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -1101,13 +1101,13 @@ router.post('/gallery_search', function(req, res, next) {
                 database = biz_data;
             }
         },
-        //data_list
+        //items
         async function(call){
             const [biz_error,biz_data] = await Gallery_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.gallery_list=biz_data.gallery_list;
+                data.gallerys=biz_data.gallerys;
             }
         },
     ],
@@ -1124,7 +1124,7 @@ router.post('/service', function(req, res, next) {
     let option = req.body.data.option ? req.body.data.option : {};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.SERVICE,{},{},1,6);
     data.service = DataItem.get_new(DataType.SERVICE,0,{key:req.body.data.key});
-    data.service_list = [];
+    data.services = [];
     data.page = DataItem.get_new(DataType.SERVICE,0);
     async.series([
         async function(call){
@@ -1154,17 +1154,17 @@ router.post('/service', function(req, res, next) {
                 data.service = biz_data;
             }
         },
-        //service_list
+        //services
         async function(call){
             const [biz_error,biz_data] = await Service_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.service_list = biz_data.service_list;
+                data.services = biz_data.services;
             }
         },
         async function(call){
-            data.service_list.filter(item=>item.id!==data.service.id);
+            data.services.filter(item=>item.id!==data.service.id);
         },
     ],
         function(err, result){
@@ -1179,7 +1179,7 @@ router.post('/service_home', function(req, res, next) {
     let option = req.body.data.option ? req.body.data.option : {};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.SERVICE,{},{},1,6);
     data.page  = DataItem.get_new(DataType.PAGE,0);
-    data.service_list = [];
+    data.services = [];
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -1199,13 +1199,13 @@ router.post('/service_home', function(req, res, next) {
                 data.page = biz_data;
             }
         },
-        //service_list
+        //services
         async function(call){
             const [biz_error,biz_data] = await Service_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.service_list = biz_data.service_list;
+                data.services = biz_data.services;
             }
         },
     ],
@@ -1221,7 +1221,7 @@ router.post('/service_search', function(req, res, next) {
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
     let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.SERVICE,{},{},1,6);
-    data.service_list = [];
+    data.services = [];
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -1232,13 +1232,13 @@ router.post('/service_search', function(req, res, next) {
                 database = biz_data;
             }
         },
-        //data_list
+        //items
         async function(call){
             const [biz_error,biz_data] = await Service_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.service_list=biz_data.service_list;
+                data.services=biz_data.services;
             }
         },
     ],
@@ -1253,7 +1253,7 @@ router.post('/login', function(req, res, next) {
     let error = null;
     let database,data = {};
     data.page = DataItem.get_new(DataType.PAGE,0);
-    let option = req.body.data.option ? req.body.data.option : {get_field_value_list:true};
+    let option = req.body.data.option ? req.body.data.option : {get_field_value_items:true};
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -1287,7 +1287,7 @@ router.post('/blank', function(req, res, next) {
     let error = null;
     let database,data = {};
     data.page = DataItem.get_new(DataType.PAGE,0);
-    let option = req.body.data.option ? req.body.data.option : {get_field_value_list:true};
+    let option = req.body.data.option ? req.body.data.option : {get_field_value_items:true};
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});

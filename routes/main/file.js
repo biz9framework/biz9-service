@@ -17,11 +17,7 @@ router.get('/ping', function(req, res, next) {
 //9_write_file
 // - required_form_data = file_list[file_data]
 router.post('/post',function(req,res,next){
-    console.log('aaaaaaaaaaaaa');
     let error = null;
-
-    Log.w('33abb_post_data',req.body);
-    Log.w('44abb_post_data',req.body.data);
     //Log.w('44b_post_file_list',post_file_list);
 
     let post_file_list = req.body.data.file_list;

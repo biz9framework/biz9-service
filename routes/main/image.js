@@ -15,25 +15,25 @@ router.get('/ping', function(req, res, next) {
     res.end();
 });
 //9_write_image
-// - required_form_data = image_list[image_data]
+// - required_form_data = images[image_data]
 router.post('/post',function(req,res,next){
     let error = null;
-    let post_image_list = req.body.data.image_list;
-    let data = {image_list:[],resultOK:false};
+    let post_image_items = req.body.data.images;
+    let data = {images:[],resultOK:false};
     let upload_dir = path.join('public', 'uploads');
     var item = {};
     async.series([
-        //get image_list
+        //get images
         async function(call){
-            post_image_list.forEach(item => {
-                data.image_list.push(Image_Logic.get_new_by_base64(item));
+            post_image_items.forEach(item => {
+                data.images.push(Image_Logic.get_new_by_base64(item));
             });
         },
-        //write - image_list
+        //write - images
         async function(call){
-            for(const item of data.image_list) {
-                let image_process_list = Image_Logic.get_process_list(upload_dir,item.image_filename);
-                for (const image of image_process_list) {
+            for(const item of data.images) {
+                let image_process_items = Image_Logic.get_process_items(upload_dir,item.image_filename);
+                for (const image of image_process_items) {
                     const [biz_error,biz_data] = await Image_File.post_write(item.buffer,image.size,image.path_filename,image.type_resize);
                     if(biz_error){
                         error=Log.append(error,biz_error);
@@ -49,7 +49,7 @@ router.post('/post',function(req,res,next){
         },
         //clean
         async function(call){
-            for(const item of data.image_list) {
+            for(const item of data.images) {
                 delete item.image_data;
                 delete item.buffer;
                 delete item.resultOK;
@@ -62,10 +62,10 @@ router.post('/post',function(req,res,next){
         });
 });
 //9_cdn_image
-// - required_form_data = image_list[image_filename]
+// - required_form_data = images[image_filename]
 router.post('/cdn_post',function(req,res,next){
     let error = null;
-    let data = {image_list:req.body.data.image_list,resultOK:false};
+    let data = {images:req.body.data.images,resultOK:false};
     let upload_dir = path.join('public', 'uploads');
     var item = {};
     let cloud_flare_batch_token = null;
@@ -78,11 +78,11 @@ router.post('/cdn_post',function(req,res,next){
                 cloud_flare_batch_token = biz_data;
             }
         },
-        //cdn - image_list
+        //cdn - images
         async function(call){
-            for (const item of data.image_list) {
-                let image_process_list = Image_Logic.get_process_list(upload_dir,item.image_filename);
-                for (const image of image_process_list) {
+            for (const item of data.images) {
+                let image_process_items = Image_Logic.get_process_items(upload_dir,item.image_filename);
+                for (const image of image_process_items) {
                     const [biz_error,biz_data] = await Image_Cloud_Flare.post_batch_image(CLOUD_FLARE_API_TOKEN,cloud_flare_batch_token,image.image_filename,image.path_filename);
                     if(biz_error){
                         error=Log.append(error,biz_error);
@@ -98,7 +98,7 @@ router.post('/cdn_post',function(req,res,next){
         },
         //clean
         async function(call){
-            for(const item of data.image_list) {
+            for(const item of data.images) {
                 delete item.resultOK;
             }
         },

@@ -20,7 +20,7 @@ router.get('/ping', function(req, res, next) {
 router.post('/dashboard', function(req, res, next) {
     let error = null;
     let database = {};
-    let data = {app_list:[]};
+    let data = {apps:[]};
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
