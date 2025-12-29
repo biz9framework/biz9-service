@@ -2,7 +2,7 @@ let express=require('express');
 let router=express.Router();
 /* -- biz9_start -- */
 const {Portal,Database,Page_Data,Stat_Data,Data_Logic,Search_Data,Content_Data,Review_Data}=require("/home/think2/www/doqbox/biz9-framework/biz9-data/code");
-const {DataType,DataItem,App_Logic,}=require("biz9-logic");
+const {DataType,DataItem,App_Logic,}=require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
 const {Scriptz}=require("biz9-scriptz");
 const {Error,Log,Str,Num}=require("biz9-utility");
 /* -- biz9_end -- */

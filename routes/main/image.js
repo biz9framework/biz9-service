@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 //const FormData = require('form-data');
 /* -- biz9_start -- */
-const {Image_Logic,DataItem,DataType}=require("biz9-logic");
+const {Image_Logic,DataItem,DataType,Type}=require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
 const {Log,Str,Num,Obj}=require("biz9-utility");
 const {Image_Cloud_Flare,Image_File}=require("biz9-image");
 /* -- biz9-end -- */
@@ -22,6 +22,60 @@ router.post('/post',function(req,res,next){
     let data = {images:[],resultOK:false};
     let upload_dir = path.join('public', 'uploads');
     var item = {};
+     function get_process_items(upload_dir,image_filename){
+         console.log('start-here');
+		upload_dir = upload_dir ? upload_dir : "";
+		image_filename = image_filename ? image_filename : "";
+		return [
+			{
+				image_filename:Type.IMAGE_SIZE_ORIGINAL+"_"+image_filename,
+				path_filename:upload_dir+"/"+Type.IMAGE_SIZE_ORIGINAL+"_"+image_filename,
+				size:0,
+				type_resize:Type.IMAGE_RESIZE_NONE,
+			},
+			/*
+			{
+				image_filename:Type.IMAGE_SIZE_THUMB+"_"+image_filename,
+				path_filename:upload_dir+"/"+Type.IMAGE_SIZE_THUMB+"_"+image_filename,
+				size:250,
+				type_resize:Type.IMAGE_RESIZE_NORMAL,
+			},
+			{
+				image_filename:Type.IMAGE_SIZE_MID+"_"+image_filename,
+				path_filename:upload_dir+"/"+Type.IMAGE_SIZE_MID+"_"+image_filename,
+				size:720,
+				type_resize:Type.IMAGE_RESIZE_NORMAL,
+			},
+			*/
+			{
+				image_filename:Type.IMAGE_SIZE_LARGE+"_"+image_filename,
+				path_filename:upload_dir+"/"+Type.IMAGE_SIZE_LARGE+"_"+image_filename,
+				size:1000,
+				type_resize:Type.IMAGE_RESIZE_NORMAL,
+			},
+			{
+				image_filename:Type.IMAGE_SIZE_SQUARE_THUMB+"_"+image_filename,
+				path_filename:upload_dir+"/"+Type.IMAGE_SIZE_SQUARE_THUMB+"_"+image_filename,
+				size:250,
+				type_resize:Type.IMAGE_RESIZE_SQUARE,
+			},
+			{
+				image_filename:Type.IMAGE_SIZE_SQUARE_MID+"_"+image_filename,
+				path_filename:upload_dir+"/"+Type.IMAGE_SIZE_SQUARE_MID+"_"+image_filename,
+				size:720,
+				type_resize:Type.IMAGE_RESIZE_SQUARE,
+			},
+			/*
+			{
+				image_filename:Type.IMAGE_SIZE_SQUARE_LARGE+"_"+image_filename,
+				path_filename:upload_dir+"/"+Type.IMAGE_SIZE_SQUARE_LARGE+"_"+image_filename,
+				size:1000,
+				type_resize:Type.IMAGE_RESIZE_SQUARE,
+			},
+			*/
+		];
+	}
+
     async.series([
         //get images
         async function(call){
@@ -32,7 +86,7 @@ router.post('/post',function(req,res,next){
         //write - images
         async function(call){
             for(const item of data.images) {
-                let image_process_items = Image_Logic.get_process_items(upload_dir,item.image_filename);
+                let image_process_items = get_process_items(upload_dir,item.image_filename);
                 for (const image of image_process_items) {
                     const [biz_error,biz_data] = await Image_File.post_write(item.buffer,image.size,image.path_filename,image.type_resize);
                     if(biz_error){

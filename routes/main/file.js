@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 //const FormData = require('form-data');
 /* -- biz9_start -- */
-const {File_Logic,DataItem,DataType}=require("biz9-logic");
+const {File_Logic,DataItem,DataType}=require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
 const {Log,Str,Num,Obj}=require("biz9-utility");
 //const {File_Cloud_Flare,File_File}=require("biz9-file");
 /* -- biz9-end -- */
