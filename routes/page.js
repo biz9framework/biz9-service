@@ -1,11 +1,11 @@
 let express=require('express');
 let router=express.Router();
 /* -- biz9_start -- */
-const {Admin,Business,Data,Database,Portal,Product_Data,Gallery_Data,Page_Data,Category_Data,Blog_Post_Data,Content_Data,Template_Data,Business_Data,Review_Data,Faq_Data,Favorite_Data,Service_Data,Event_Data}=require("/home/think2/www/doqbox/biz9-framework/biz9-data/code");
-const {DataType,DataItem,User_Logic,Favorite_Logic,App_Logic,Type}=require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
+const {Database}=require("/home/think2/www/doqbox/biz9-framework/biz9-data/code");
+const {Type}=require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
 const {Scriptz}=require("biz9-scriptz");
 const {Project_Logic}=require("../project_logic");
-const {Error,Log,Form,Str}=require("biz9-utility");
+const {Log}=require("biz9-utility");
 /* -- biz9-end -- */
 router.get('/ping', function(req, res, next) {
     let error={};
@@ -23,9 +23,9 @@ router.post('/home', function(req, res, next) {
     let app_dev_search_explore_option = {get_field:true,fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count,view_count'};
     let option = req.body.data.option ? req.body.data.option : {get_field_value_items:true};
     //
-    data.user = req.body.data.user_id ? DataItem.get_new(DataType.USER,req.body.data.user_id): User_Logic.get_guest();
+    data.user = req.body.data.user_id ? DataItem.get_new(Type.DATA_USER,req.body.data.user_id): User_Logic.get_guest();
     //
-    data.page = DataItem.get_new(DataType.PAGE,0,{key:Type.PAGE_HOME});
+    data.page = DataItem.get_new(Type.DATA_PAGE,0,{key:Type.PAGE_HOME});
     //
     data.favorites = [];
     //
@@ -71,7 +71,7 @@ router.post('/home', function(req, res, next) {
         },
         //products - popular
         async function(call){
-            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{view_count:-1},1,12);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{view_count:-1},1,12);
             let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,app_dev_search_option);
             if(biz_error){
@@ -82,7 +82,7 @@ router.post('/home', function(req, res, next) {
         },
         //products - latest
         async function(call){
-            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
             let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
@@ -93,7 +93,7 @@ router.post('/home', function(req, res, next) {
         },
         //products - rating_avg
         async function(call){
-            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter ,{rating_avg:-1},1,12);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter ,{rating_avg:-1},1,12);
             let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
@@ -104,7 +104,7 @@ router.post('/home', function(req, res, next) {
         },
         //products - trending
         async function(call){
-            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter ,{date_create:-1,view_count:-1},1,12);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter ,{date_create:-1,view_count:-1},1,12);
             let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
@@ -115,8 +115,8 @@ router.post('/home', function(req, res, next) {
         },
         //categorys
         async function(call){
-            let search = App_Logic.get_search(DataType.CATEGORY,{category:DataType.PRODUCT},{title:1},1,0);
-            let option = {get_distinct:true,distinct_field:'title',distinct_sort:'asc',get_join:true,field_keys:[{foreign_data_type:DataType.PRODUCT,foreign_field:'category',item_field:'title',title:'product_count',type:Type.COUNT}]};
+            let search = Data_Logic.get_search(Type.DATA_CATEGORY,{category:Type.DATA_PRODUCT},{title:1},1,0);
+            let option = {get_distinct:true,distinct_field:'title',distinct_sort:'asc',get_join:true,field_keys:[{foreign_data_type:Type.DATA_PRODUCT,foreign_field:'category',item_field:'title',title:'product_count',type:Type.COUNT}]};
             const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -133,7 +133,7 @@ router.post('/home', function(req, res, next) {
         //category_product_titles - 0
         async function(call){
             let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_titles[0].title);
-            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
             let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,app_dev_search_option);
             if(biz_error){
@@ -145,7 +145,7 @@ router.post('/home', function(req, res, next) {
         //category_product_titles - 1
         async function(call){
             let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_titles[1].title);
-            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
             let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
@@ -157,7 +157,7 @@ router.post('/home', function(req, res, next) {
         //category_product_titles - 2
         async function(call){
             let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_titles[2].title);
-            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
             let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
@@ -169,7 +169,7 @@ router.post('/home', function(req, res, next) {
         //category_product_titles - 3
         async function(call){
             let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_titles[3].title);
-            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
             let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
@@ -181,7 +181,7 @@ router.post('/home', function(req, res, next) {
         //category_product_titles - 4
         async function(call){
             let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_titles[4].title);
-            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
             let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
@@ -193,7 +193,7 @@ router.post('/home', function(req, res, next) {
         //category_product_titles - 5
         async function(call){
             let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_titles[5].title);
-            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
             let option = app_dev_search_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
@@ -205,7 +205,7 @@ router.post('/home', function(req, res, next) {
         //blog_posts
         async function(call){
             let query = {};
-            let search = App_Logic.get_search(DataType.BLOG_POST,query,{},1,12);
+            let search = Data_Logic.get_search(Type.DATA_BLOG_POST,query,{},1,12);
             let option = {get_field:true,fields:'id,title,title_url,category,date_create,image_filename,description,author'};
             const [biz_error,biz_data] = await Blog_Post_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
@@ -218,7 +218,7 @@ router.post('/home', function(req, res, next) {
         async function(call){
             let query = {};
             query.category = data.category_product_titles[6].title;
-            let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,6);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,query,{date_create:-1,date_create:-1},1,6);
             let option = app_dev_search_explore_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
@@ -231,7 +231,7 @@ router.post('/home', function(req, res, next) {
         async function(call){
             let query = {};
             query.category = data.category_product_titles[7].title;
-            let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,6);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,query,{date_create:-1,date_create:-1},1,6);
             let option = app_dev_search_explore_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
@@ -244,7 +244,7 @@ router.post('/home', function(req, res, next) {
         async function(call){
             let query = {};
             query.category = data.category_product_titles[8].title;
-            let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,6);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,query,{date_create:-1,date_create:-1},1,6);
             let option = app_dev_search_explore_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
@@ -257,7 +257,7 @@ router.post('/home', function(req, res, next) {
         async function(call){
             let query = {};
             query.category = data.category_product_titles[9].title;
-            let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,6);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,query,{date_create:-1,date_create:-1},1,6);
             let option = app_dev_search_explore_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
@@ -270,7 +270,7 @@ router.post('/home', function(req, res, next) {
         async function(call){
             let query = {};
             query.category = data.category_product_titles[10].title;
-            let search = App_Logic.get_search(DataType.PRODUCT,query,{date_create:-1,date_create:-1},1,6);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,query,{date_create:-1,date_create:-1},1,6);
             let option = app_dev_search_explore_option;
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
@@ -282,8 +282,8 @@ router.post('/home', function(req, res, next) {
         //business reviews
         async function(call){
             let query = {};
-            let search = App_Logic.get_search(DataType.REVIEW,query,{date_create:-1,date_create:-1},1,20);
-            const [biz_error,biz_data] = await Review_Data.get(database,DataType.PRODUCT,'1',{date_create:-1},1,12);
+            let search = Data_Logic.get_search(Type.DATA_REVIEW,query,{date_create:-1,date_create:-1},1,20);
+            const [biz_error,biz_data] = await Review_Data.get(database,Type.DATA_PRODUCT,'1',{date_create:-1},1,12);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
@@ -312,7 +312,7 @@ router.post('/home', function(req, res, next) {
 router.post('/faq', function(req, res, next) {
     let error = null;
     let database,data = {};
-    data.page = DataItem.get_new(DataType.PAGE,0);
+    data.page = DataItem.get_new(Type.DATA_PAGE,0);
     let option = req.body.data.option ? req.body.data.option : {get_field_value_items:true};
     data.faqs = [];
     async.series([
@@ -356,7 +356,7 @@ router.post('/faq', function(req, res, next) {
 router.post('/about', function(req, res, next) {
     let error = null;
     let database,data = {};
-    data.page = DataItem.get_new(DataType.PAGE,0);
+    data.page = DataItem.get_new(Type.DATA_PAGE,0);
     let option = req.body.data.option ? req.body.data.option : {get_field_value_items:true};
     async.series([
         async function(call){
@@ -388,7 +388,7 @@ router.post('/about', function(req, res, next) {
 router.post('/contact', function(req, res, next) {
     let error = null;
     let database,data = {};
-    data.page = DataItem.get_new(DataType.PAGE,0);
+    data.page = DataItem.get_new(Type.DATA_PAGE,0);
     let option = req.body.data.option ? req.body.data.option : {get_field_value_items:true};
     async.series([
         async function(call){
@@ -421,10 +421,10 @@ router.post('/blog_post', function(req, res, next) {
     let error = null;
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.BLOG_POST,{},{},1,6);
-    data.blog_post = DataItem.get_new(DataType.BLOG_POST,0,{key:req.body.data.key});
+    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_BLOG_POST,{},{},1,6);
+    data.blog_post = DataItem.get_new(Type.DATA_BLOG_POST,0,{key:req.body.data.key});
     data.blog_posts = [];
-    data.page = DataItem.get_new(DataType.BLOG_POST,0);
+    data.page = DataItem.get_new(Type.DATA_BLOG_POST,0);
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -476,8 +476,8 @@ router.post('/blog_post_home', function(req, res, next) {
     let error = null;
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.BLOG_POST,{},{},1,6);
-    data.page  = DataItem.get_new(DataType.PAGE,0);
+    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_BLOG_POST,{},{},1,6);
+    data.page  = DataItem.get_new(Type.DATA_PAGE,0);
     data.blog_posts = [];
     async.series([
         async function(call){
@@ -519,7 +519,7 @@ router.post('/blog_post_search', function(req, res, next) {
     let error = null;
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.BLOG_POST,{},{},1,6);
+    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_BLOG_POST,{},{},1,6);
     data.blog_posts = [];
     async.series([
         async function(call){
@@ -552,13 +552,13 @@ router.post('/product', function(req, res, next) {
     let error = null;
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {get_favorite:false,get_image:true,get_item:true,post_stat:false,user_id:0,get_field_value_items:true};
-    let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.PRODUCT,{},{},1,6);
-    data.product = DataItem.get_new(DataType.PRODUCT,0,{key:req.body.data.key});
+    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_PRODUCT,{},{},1,6);
+    data.product = DataItem.get_new(Type.DATA_PRODUCT,0,{key:req.body.data.key});
     data.products = [];
     data.hosting_products = [];
     data.cms_products = [];
     data.reviews = [];
-    data.page = DataItem.get_new(DataType.PRODUCT,0);
+    data.page = DataItem.get_new(Type.DATA_PRODUCT,0);
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -590,7 +590,7 @@ router.post('/product', function(req, res, next) {
         //product_hosting
         async function(call){
             let key = "Hosting";
-            let search = App_Logic.get_search(DataType.PRODUCT,{type:key},{title:-1},1,3);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,{type:key},{title:-1},1,3);
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -601,7 +601,7 @@ router.post('/product', function(req, res, next) {
         //product_cms
         async function(call){
             let key = "Content Management System";
-            let search = App_Logic.get_search(DataType.PRODUCT,{type:key},{title:-1},1,3);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,{type:key},{title:-1},1,3);
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -613,7 +613,7 @@ router.post('/product', function(req, res, next) {
         async function(call){
             let query = {};
             let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.product.category?data.product.category :"");
-            let search = App_Logic.get_search(DataType.PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
             let option = {get_field:true,fields:'id,title,title_url,image_filename'};
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size);
             if(biz_error){
@@ -644,8 +644,8 @@ router.post('/product_home', function(req, res, next) {
     let error = null;
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.PRODUCT,{},{},1,6);
-    data.page  = DataItem.get_new(DataType.PAGE,0);
+    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_PRODUCT,{},{},1,6);
+    data.page  = DataItem.get_new(Type.DATA_PAGE,0);
     data.types = [];
     /*
     data.categorys = [];
@@ -676,8 +676,8 @@ router.post('/product_home', function(req, res, next) {
         async function(call){
             let query = {};
             let app_dev_search_query_filter = Project_Logic.get_query_application_development_type_product_query_filter();
-            let search = App_Logic.get_search(DataType.TYPE,app_dev_search_query_filter,{date_create:-1},1,4);
-            let option = {get_join:true,field_keys:[{foreign_data_type:DataType.PRODUCT,foreign_field:'type',item_field:'title',title:'product_count',type:Type.COUNT}]};
+            let search = Data_Logic.get_search(Type.DATA_TYPE,app_dev_search_query_filter,{date_create:-1},1,4);
+            let option = {get_join:true,field_keys:[{foreign_data_type:Type.DATA_PRODUCT,foreign_field:'type',item_field:'title',title:'product_count',type:Type.COUNT}]};
             const [biz_error,biz_data] = await  Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -689,8 +689,8 @@ router.post('/product_home', function(req, res, next) {
         async function(call){
             let query = {};
             let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter();
-            let search = App_Logic.get_search(DataType.CATEGORY,app_dev_search_query_filter,{date_create:-1},1,0);
-            let option = {get_join:true,get_distinct:true,distinct_field:'title',field_keys:[{foreign_data_type:DataType.PRODUCT,foreign_field:'category',item_field:'title',title:'product_count',type:Type.COUNT}]};
+            let search = Data_Logic.get_search(Type.DATA_CATEGORY,app_dev_search_query_filter,{date_create:-1},1,0);
+            let option = {get_join:true,get_distinct:true,distinct_field:'title',field_keys:[{foreign_data_type:Type.DATA_PRODUCT,foreign_field:'category',item_field:'title',title:'product_count',type:Type.COUNT}]};
             const [biz_error,biz_data] = await  Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -721,7 +721,7 @@ router.post('/product_search', function(req, res, next) {
     let error = null;
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.PRODUCT,{},{},1,6);
+    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_PRODUCT,{},{},1,6);
     data.products = [];
     async.series([
         async function(call){
@@ -757,7 +757,7 @@ router.post('/search', function(req, res, next) {
     if(APP_ENV !=App_Logic.TYPE_ENV_TEST){
         let user = User_Logic.get_request_user(req);
     }else{
-        let user = DataItem.get_new(DataType.USER,USER_ID);
+        let user = DataItem.get_new(Type.DATA_USER,USER_ID);
     }
     data.favorites = [];
     data.product_search = req.body.data.search;
@@ -777,7 +777,7 @@ router.post('/search', function(req, res, next) {
         //favorites
         async function(call){
             if(!user.is_guest){
-                const [biz_error,biz_data] = await Favorite_Data.get(database,DataType.PRODUCT,user.id,{date_create:-1},1,0);
+                const [biz_error,biz_data] = await Favorite_Data.get(database,Type.DATA_PRODUCT,user.id,{date_create:-1},1,0);
                 if(biz_error){
                     error=Log.append(error,biz_error);
                 }else{
@@ -816,10 +816,10 @@ router.post('/event', function(req, res, next) {
     let error = null;
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.EVENT,{},{},1,6);
-    data.event = DataItem.get_new(DataType.EVENT,0,{key:req.body.data.key});
+    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_EVENT,{},{},1,6);
+    data.event = DataItem.get_new(Type.DATA_EVENT,0,{key:req.body.data.key});
     data.events = [];
-    data.page = DataItem.get_new(DataType.EVENT,0);
+    data.page = DataItem.get_new(Type.DATA_EVENT,0);
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -871,8 +871,8 @@ router.post('/event_home', function(req, res, next) {
     let error = null;
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.EVENT,{},{},1,6);
-    data.page  = DataItem.get_new(DataType.PAGE,0);
+    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_EVENT,{},{},1,6);
+    data.page  = DataItem.get_new(Type.DATA_PAGE,0);
     data.events = [];
     async.series([
         async function(call){
@@ -914,7 +914,7 @@ router.post('/event_search', function(req, res, next) {
     let error = null;
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.EVENT,{},{},1,6);
+    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_EVENT,{},{},1,6);
     data.events = [];
     async.series([
         async function(call){
@@ -990,10 +990,10 @@ router.post('/gallery', function(req, res, next) {
     let error = null;
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.GALLERY,{},{},1,6);
-    data.gallery = DataItem.get_new(DataType.GALLERY,0,{key:req.body.data.key});
+    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_GALLERY,{},{},1,6);
+    data.gallery = DataItem.get_new(Type.DATA_GALLERY,0,{key:req.body.data.key});
     data.gallerys = [];
-    data.page = DataItem.get_new(DataType.GALLERY,0);
+    data.page = DataItem.get_new(Type.DATA_GALLERY,0);
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -1045,8 +1045,8 @@ router.post('/gallery_home', function(req, res, next) {
     let error = null;
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.GALLERY,{},{},1,6);
-    data.page  = DataItem.get_new(DataType.PAGE,0);
+    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_GALLERY,{},{},1,6);
+    data.page  = DataItem.get_new(Type.DATA_PAGE,0);
     data.gallerys = [];
     async.series([
         async function(call){
@@ -1089,7 +1089,7 @@ router.post('/gallery_search', function(req, res, next) {
     let error = null;
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.GALLERY,{},{},1,6);
+    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_GALLERY,{},{},1,6);
     data.gallerys = [];
     async.series([
         async function(call){
@@ -1122,10 +1122,10 @@ router.post('/service', function(req, res, next) {
     let error = null;
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.SERVICE,{},{},1,6);
-    data.service = DataItem.get_new(DataType.SERVICE,0,{key:req.body.data.key});
+    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_SERVICE,{},{},1,6);
+    data.service = DataItem.get_new(Type.DATA_SERVICE,0,{key:req.body.data.key});
     data.services = [];
-    data.page = DataItem.get_new(DataType.SERVICE,0);
+    data.page = DataItem.get_new(Type.DATA_SERVICE,0);
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -1177,8 +1177,8 @@ router.post('/service_home', function(req, res, next) {
     let error = null;
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.SERVICE,{},{},1,6);
-    data.page  = DataItem.get_new(DataType.PAGE,0);
+    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_SERVICE,{},{},1,6);
+    data.page  = DataItem.get_new(Type.DATA_PAGE,0);
     data.services = [];
     async.series([
         async function(call){
@@ -1220,7 +1220,7 @@ router.post('/service_search', function(req, res, next) {
     let error = null;
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : App_Logic.get_search(DataType.SERVICE,{},{},1,6);
+    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_SERVICE,{},{},1,6);
     data.services = [];
     async.series([
         async function(call){
@@ -1252,7 +1252,7 @@ router.post('/service_search', function(req, res, next) {
 router.post('/login', function(req, res, next) {
     let error = null;
     let database,data = {};
-    data.page = DataItem.get_new(DataType.PAGE,0);
+    data.page = DataItem.get_new(Type.DATA_PAGE,0);
     let option = req.body.data.option ? req.body.data.option : {get_field_value_items:true};
     async.series([
         async function(call){
@@ -1286,7 +1286,7 @@ router.post('/login', function(req, res, next) {
 router.post('/blank', function(req, res, next) {
     let error = null;
     let database,data = {};
-    data.page = DataItem.get_new(DataType.PAGE,0);
+    data.page = DataItem.get_new(Type.DATA_PAGE,0);
     let option = req.body.data.option ? req.body.data.option : {get_field_value_items:true};
     async.series([
         async function(call){

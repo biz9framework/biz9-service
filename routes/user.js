@@ -3,10 +3,9 @@ let router=express.Router();
 const os = require('os');
 /* -- biz9-start -- */
 const {Scriptz}=require("biz9-scriptz");
-const {Portal,Database,Review_Data,User_Data,Stat_Data}=require("/home/think2/www/doqbox/biz9-framework/biz9-data/code");
-const {DataType,DataItem,User_Logic,Stat_Logic,App_Logic,Type}=require("biz9-logic");
-const {Log,Form,Str,Num,Obj}=require("biz9-utility");
-const stripe = require('stripe')('sk_test_51RkvILBLx49RFzHwqq12TwN0zYMBUbQEbmpVsNapnyIlkgtLL4TUCKSqI6lTx4IGdHRxggScXRyg9pzZu8tJPxEQ00s7YEtaQt');
+const {Portal,Database}=require("/home/think2/www/doqbox/biz9-framework/biz9-data/code");
+const {Type}=require("biz9-logic");
+const {Str,Obj}=require("biz9-utility");
 /* -- biz9-end -- */
 router.get('/ping', function(req, res, next) {
     let error=null;
@@ -42,8 +41,8 @@ router.post('/dashboard', function(req, res, next) {
 router.post('/post', function(req, res, next) {
     let error = null;
     let database = {};
-    let data = {user:DataItem.get_new(DataType.USER,req.body.data.id),email_resultOK:false,title_resultOK:false};
-    let post_user = DataItem.get_new(DataType.USER,req.body.data.id,req.body.data.data);
+    let data = {user:DataItem.get_new(Type.DATA_USER,req.body.data.id),email_resultOK:false,title_resultOK:false};
+    let post_user = DataItem.get_new(Type.DATA_USER,req.body.data.id,req.body.data.data);
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -75,9 +74,9 @@ router.post('/post', function(req, res, next) {
 router.post('/register', function(req, res, next) {
     let error = null;
     let database = {};
-    let data = {user:DataItem.get_new(DataType.USER,0),email_resultOK:false,title_resultOK:false,stat:DataItem.get_new(DataType.STAT,0)};
-    let post_user = DataItem.get_new(DataType.USER,0,req.body.data.user);
-    let post_stat = DataItem.get_new(DataType.STAT,0,{type:Type.STAT_REGISTER});
+    let data = {user:DataItem.get_new(Type.DATA_USER,0),email_resultOK:false,title_resultOK:false,stat:DataItem.get_new(Type.DATA_STAT,0)};
+    let post_user = DataItem.get_new(Type.DATA_USER,0,req.body.data.user);
+    let post_stat = DataItem.get_new(Type.DATA_STAT,0,{type:Type.STAT_REGISTER});
     let post_device = req.body.data.device;
     let option = {post_stat:true,post_ip_address:true,post_device:true};
     let post_geo_key = GEO_KEY;
@@ -114,9 +113,9 @@ router.post('/register', function(req, res, next) {
 router.post('/login', function(req, res, next) {
     let error = null;
     let database = {};
-    let data = {user:DataItem.get_new(DataType.USER,0),user_resultOK:false,stat:DataItem.get_new(DataType.STAT,0)};
-    let post_user = DataItem.get_new(DataType.USER,0,req.body.data.user);
-    let post_stat = DataItem.get_new(DataType.STAT,0,{type:Type.STAT_LOGIN});
+    let data = {user:DataItem.get_new(Type.DATA_USER,0),user_resultOK:false,stat:DataItem.get_new(Type.DATA_STAT,0)};
+    let post_user = DataItem.get_new(Type.DATA_USER,0,req.body.data.user);
+    let post_stat = DataItem.get_new(Type.DATA_STAT,0,{type:Type.STAT_LOGIN});
     let post_device = req.body.data.device;
     let option = req.body.data.option ? req.body.data.option : {};
     let post_geo_key = GEO_KEY;

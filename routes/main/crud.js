@@ -1,10 +1,10 @@
 let express=require('express');
 let router=express.Router();
 /* -- biz9_start -- */
-const {Portal,Database,Page_Data,Stat_Data,Data_Logic,Search_Data,Content_Data,Review_Data}=require("/home/think2/www/doqbox/biz9-framework/biz9-data/code");
-const {DataType,DataItem,App_Logic,}=require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
+const {Portal,Database}=require("/home/think2/www/doqbox/biz9-framework/biz9-data/code");
+const {Type,Data_Logic}=require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
 const {Scriptz}=require("biz9-scriptz");
-const {Error,Log,Str,Num}=require("biz9-utility");
+const {Log,Str,Num}=require("biz9-utility");
 /* -- biz9_end -- */
 router.get('/ping',function(req,res,next){
     let error = null;
@@ -13,14 +13,19 @@ router.get('/ping',function(req,res,next){
     res.end();
 });
 //9_get
-// - required_form_data = data_type, id and or key
+/*
+ * Required Form Data
+   - object / {data_type:string,key:string-num};
+   - ex. / {data_type:Type.DATA_PRODUCT,id:123};
+ * Option
+   - object / {};
+   - ex. / {image:{0}};
+*/
 router.post('/get',function(req,res,next){
     let error = null;
     let database = {};
-    let post_data = DataItem.get_new(req.body.data.data_type,req.body.data.id,{key:req.body.data.key?req.body.data.key:null});
-    let data = DataItem.get_new(req.body.data.data_type,req.body.data.id,{key:req.body.data.key?req.body.data.key:null});
-    let option = req.body.data.option ? req.body.data.option : {get_parent:false,get_type:false,type_search:{},get_category:false,category_search:{},get_custom_field:false};
-    let org_custom_fields = [];
+    let data = Data_Logic.get(req.body.data_type,req.body.id);
+    let option = req.body.option ? req.body.option : {};
     async.series([
         async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
@@ -30,94 +35,12 @@ router.post('/get',function(req,res,next){
                 database = biz_data;
             }
         },
-        //item
         async function(call){
-            const [biz_error,biz_data] = await Portal.get(database,post_data.data_type,post_data.id,option);
+            const [biz_error,biz_data] = await Portal.get(database,data.data_type,data.id,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
                 data = biz_data;
-            }
-        },
-        //type
-        async function(call){
-            if(option.get_type){
-                data.types = [];
-                let search = App_Logic.get_search(
-                    option.type_search.data_type,
-                    option.type_search.filter,
-                    option.type_search.sort_by,
-                    option.type_search.page_current,
-                    option.type_search.page_size);
-                let option_type ={get_field:true,fields:'title,type'};
-                const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option_type);
-                if(biz_error){
-                    error=Log.append(error,biz_error);
-                }else{
-                    data.types =  biz_data.items;
-                }
-            }
-        },
-        //category
-        async function(call){
-            console.log('aaaaaaaa');
-            if(option.get_category){
-                console.log('bbbbbbb');
-                data.categorys = [];
-                let search = App_Logic.get_search(
-                    option.category_search.data_type,
-                    option.category_search.filter,
-                    option.category_search.sort_by,
-                    option.category_search.page_current,
-                    option.category_search.page_size);
-                Log.w('category_search',option.category_search);
-                let option_category = {get_field:false,fields:'title,type,data_type',get_distinct:true,distinct_field:'title'};
-                const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option_category);
-                if(biz_error){
-                    error=Log.append(error,biz_error);
-                }else{
-                    data.categorys =  biz_data.items;
-                }
-            }
-        },
-        //custom_field
-        async function(call){
-            if(option.get_custom_field){
-                data.custom_fields = [];
-                let search = App_Logic.get_search(DataType.CUSTOM_FIELD,{category_type:data.data_type},{},1,0);
-                const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
-                if(biz_error){
-                    error=Log.append(error,biz_error);
-                }else{
-                    org_custom_fields = biz_data.items;
-                }
-            }
-        },
-        async function(call){
-            if(option.get_custom_field){
-                for(let a=0;a<org_custom_fields.length;a++){
-                    let custom_field = {
-                        key: Num.get_id(333),
-                        title:org_custom_fields[a].title,
-                        selected:data[Str.get_title_url(org_custom_fields[a].title.toLowerCase())] ? !Str.check_is_null(data[Str.get_title_url(org_custom_fields[a])]) : false,
-                        items:[],
-                    };
-                    for(let b=0;b<19;b++){
-                        if(!Str.check_is_null(org_custom_fields[a]['field_'+b]))   {
-                            custom_field.items.push(
-                                {
-                                    label:org_custom_fields[a]['field_'+b],
-                                    value:JSON.stringify({
-                                        key:custom_field.key,
-                                        field: Str.get_title_url(org_custom_fields[a].title.toLowerCase()),
-                                        title:org_custom_fields[a].title,
-                                        value:org_custom_fields[a]['field_'+String(b)]
-                                    })
-                                });
-                        }
-                    }
-                    data.custom_fields.push(custom_field);
-                }
             }
         },
     ],
@@ -127,14 +50,12 @@ router.post('/get',function(req,res,next){
         });
 });
 //9_post
-// - required data = {data_type:DataType.PRODUCT,id:123,data:form_data};
+// - required data = {data_type:TYPE_DATAPRODUCT,id:123,data:form_data};
 router.post('/post',function(req,res,next){
     let error = null;
     let database = {};
-    let post_data = DataItem.get_new(req.body.data.data_type,req.body.data.id,req.body.data.data);
-    let data = DataItem.get_new(req.body.data.data_type,0);
-    let option = req.body.data.option ? req.body.data.option : {};
-    let delete_cache = false;
+    let data = Data_Logic.get(req.body.data_type,req.body.data.id,{data:req.body.data});
+    let option = req.body.option ? req.body.option : {};
     async.series([
         async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
@@ -146,16 +67,14 @@ router.post('/post',function(req,res,next){
         },
         async function(call){
             if(Str.check_is_true(option.delete_cache)){
-                const [biz_error,biz_data] = await Portal.delete_cache(database,post_data.data_type,post_data.id,option);
+                const [biz_error,biz_data] = await Portal.delete_cache(database,data.data_type,data.id,option);
                 if(biz_error){
                     error=Log.append(error,biz_error);
-                }else{
-                    delete_cache = biz_data;
                 }
             }
         },
         async function(call){
-            const [biz_error,biz_data] = await Portal.post(database,post_data.data_type,post_data,option);
+            const [biz_error,biz_data] = await Portal.post(database,data.data_type,data,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
@@ -173,9 +92,8 @@ router.post('/post',function(req,res,next){
 router.post('/search',function(req,res,next){
     let error = null;
     let database = {};
-    let search = req.body.data.search;
-    let data = {data_type:search.data_type,data_count:0,page_count:1,filter:{},items:[],app_id:null};
-    let option = req.body.data.option ? req.body.data.option : {};
+    let data = {data_type:search.data_type,search:req.body.search,data_count:0,page_count:1,filter:{},items:[],app_id:database.app_id};
+    let option =  req.body.data.option ? req.body.data.option : {};
     async.series([
         async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
@@ -186,7 +104,7 @@ router.post('/search',function(req,res,next){
             }
         },
         async function(call){
-            const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            const [biz_error,biz_data] = await Portal.search(database,data.search.data_type,data.search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
@@ -210,9 +128,8 @@ router.post('/search',function(req,res,next){
 router.post('/delete',function(req,res,next){
     let error = null;
     let database = {};
-    let post_data = DataItem.get_new(req.body.data.data_type,req.body.data.id);
-    let data = DataItem.get_new(req.body.data.data_type,req.body.data.id);
-    let option = {delete_item:true,delete_group:true,delete_item_query:{parent_id:post_data.id},delete_image:true,delete_image_query:{parent_id:post_data.id}};
+    let data = Data_Logic.get(req.body.data_type,req.body.data.id);
+    let option =  req.body.data.option ? req.body.data.option : {};
     async.series([
         async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
@@ -223,7 +140,7 @@ router.post('/delete',function(req,res,next){
             }
         },
         async function(call){
-            const [biz_error,biz_data] = await Portal.delete(database,post_data.data_type,post_data.id,option);
+            const [biz_error,biz_data] = await Portal.delete(database,data.data_type,data.id,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
@@ -241,9 +158,8 @@ router.post('/delete',function(req,res,next){
 router.post('/copy',function(req,res,next){
     let error = null;
     let database = {};
-    let post_data = DataItem.get_new(req.body.data.data_type,req.body.data.id);
-    let data = DataItem.get_new(req.body.data.data_type,0);
-    let option = req.body.data.option ? req.body.data.option : {};
+    let data = Data_Logic.get(req.body.data_type,req.body.id);
+    let option =  req.body.data.option ? req.body.data.option : {};
     async.series([
         async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
@@ -254,7 +170,7 @@ router.post('/copy',function(req,res,next){
             }
         },
         async function(call){
-            const [biz_error,biz_data] = await Portal.copy(database,post_data.data_type,post_data.id);
+            const [biz_error,biz_data] = await Portal.copy(database,data.data_type,data.id);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
@@ -273,8 +189,8 @@ router.post('/post_items',function(req,res,next){
     let error = null;
     let database = {};
     let items = [];
-    let post_items = req.body.data.data?req.body.data.data : [];
-    let option = req.body.data.option ? req.body.data.option : {};
+    let data = req.body.data ? req.body.data : [];
+    let option =  req.body.data.option ? req.body.data.option : {};
     async.series([
         async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
@@ -305,9 +221,8 @@ router.post('/post_items',function(req,res,next){
 router.post('/delete_search',function(req,res,next){
     let error = null;
     let database = {};
-    let search = req.body.data.search;
-    let data = DataItem.get_new(search.data_type,0);
-    let option = req.body.data.option ? req.body.data.option : {};
+    let data = {data_type:search.data_type,search:req.body.search,data_count:0,page_count:1,filter:{},items:[],app_id:database.app_id,delete_result:{}};
+    let option =  req.body.data.option ? req.body.data.option : {};
     async.series([
         async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
@@ -318,11 +233,11 @@ router.post('/delete_search',function(req,res,next){
             }
         },
         async function(call){
-            const [biz_error,biz_data] = await Portal.delete_search(database,search.data_type,search.filter,option);
+            const [biz_error,biz_data] = await Portal.delete_search(database,data.search.data_type,data.search.filter,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data = biz_data;
+                data.delete_result = biz_data;
             }
         },
     ],
@@ -336,12 +251,11 @@ router.post('/delete_search',function(req,res,next){
 router.post('/database_info',function(req,res,next){
     let error = null;
     let database = {};
-    let data = [];
-    let app_id = req.body.data.app_id;
-    let option = req.body.data.option ? req.body.data.option : {};
+    let data = Data_Logic.get(Type.DATA_APP,0,{data:req.body.data});
+    let option =  req.body.data.option ? req.body.data.option : {};
     async.series([
-        async function(call){
-            const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:app_id}));
+       async function(call){
+            const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:data.app_id,result:[]}));
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
@@ -353,7 +267,7 @@ router.post('/database_info',function(req,res,next){
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data = biz_data;
+                data.result = biz_data;
             }
         },
     ],
