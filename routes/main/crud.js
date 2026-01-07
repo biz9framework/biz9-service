@@ -50,11 +50,11 @@ router.post('/get',function(req,res,next){
         });
 });
 //9_post
-// - required data = {data_type:TYPE_DATAPRODUCT,id:123,data:form_data};
+// - required data = {data_type:TYPE.DATA_PRODUCT,id:123,data:form_data};
 router.post('/post',function(req,res,next){
     let error = null;
     let database = {};
-    let data = Data_Logic.get(req.body.data_type,req.body.data.id,{data:req.body.data});
+    let data = Data_Logic.get(req.body.data_type,req.body.id,{data:req.body.data});
     let option = req.body.option ? req.body.option : {};
     async.series([
         async function(call){
@@ -63,14 +63,6 @@ router.post('/post',function(req,res,next){
                 error=Log.append(error,biz_error);
             }else{
                 database = biz_data;
-            }
-        },
-        async function(call){
-            if(Str.check_is_true(option.delete_cache)){
-                const [biz_error,biz_data] = await Portal.delete_cache(database,data.data_type,data.id,option);
-                if(biz_error){
-                    error=Log.append(error,biz_error);
-                }
             }
         },
         async function(call){
@@ -92,8 +84,8 @@ router.post('/post',function(req,res,next){
 router.post('/search',function(req,res,next){
     let error = null;
     let database = {};
-    let data = {data_type:search.data_type,search:req.body.search,data_count:0,page_count:1,filter:{},items:[],app_id:database.app_id};
-    let option =  req.body.data.option ? req.body.data.option : {};
+    let data = {search:req.body.search};
+    let option = req.body.option ? req.body.option : {};
     async.series([
         async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
@@ -104,17 +96,11 @@ router.post('/search',function(req,res,next){
             }
         },
         async function(call){
-            const [biz_error,biz_data] = await Portal.search(database,data.search.data_type,data.search.filter,search.sort_by,search.page_current,search.page_size,option);
+            const [biz_error,biz_data] = await Portal.search(database,data.search.data_type,data.search.filter,data.search.sort_by,data.search.page_current,data.search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.data_type=biz_data.data_type;
-                data.search=biz_data.search;
-                data.data_count=biz_data.data_count;
-                data.page_count=biz_data.page_count;
-                data.filter=biz_data.filter;
-                data.items=biz_data.items;
-                data.app_id = database.app_id;
+                data = biz_data;
             }
         },
     ],
@@ -128,8 +114,8 @@ router.post('/search',function(req,res,next){
 router.post('/delete',function(req,res,next){
     let error = null;
     let database = {};
-    let data = Data_Logic.get(req.body.data_type,req.body.data.id);
-    let option =  req.body.data.option ? req.body.data.option : {};
+    let data = Data_Logic.get(req.body.data_type,req.body.id);
+    let option =  req.body.option ? req.body.option : {};
     async.series([
         async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
@@ -159,7 +145,7 @@ router.post('/copy',function(req,res,next){
     let error = null;
     let database = {};
     let data = Data_Logic.get(req.body.data_type,req.body.id);
-    let option =  req.body.data.option ? req.body.data.option : {};
+    let option =  req.body.option ? req.body.option : {};
     async.series([
         async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
@@ -190,7 +176,7 @@ router.post('/post_items',function(req,res,next){
     let database = {};
     let items = [];
     let data = req.body.data ? req.body.data : [];
-    let option =  req.body.data.option ? req.body.data.option : {};
+    let option =  req.body.option ? req.body.option : {};
     async.series([
         async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
@@ -221,8 +207,8 @@ router.post('/post_items',function(req,res,next){
 router.post('/delete_search',function(req,res,next){
     let error = null;
     let database = {};
-    let data = {data_type:search.data_type,search:req.body.search,data_count:0,page_count:1,filter:{},items:[],app_id:database.app_id,delete_result:{}};
-    let option =  req.body.data.option ? req.body.data.option : {};
+    let data = {data_type:search.data_type,search:req.body.search,item_count:0,page_count:1,filter:{},items:[],app_id:database.app_id,delete_result:{}};
+    let option =  req.body.option ? req.body.option : {};
     async.series([
         async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
@@ -252,7 +238,7 @@ router.post('/database_info',function(req,res,next){
     let error = null;
     let database = {};
     let data = Data_Logic.get(Type.DATA_APP,0,{data:req.body.data});
-    let option =  req.body.data.option ? req.body.data.option : {};
+    let option =  req.data.option ? req.body.option : {};
     async.series([
        async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:data.app_id,result:[]}));
