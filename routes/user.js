@@ -3,9 +3,9 @@ let router=express.Router();
 const os = require('os');
 /* -- biz9-start -- */
 const {Scriptz}=require("biz9-scriptz");
-const {Portal,Database}=require("/home/think2/www/doqbox/biz9-framework/biz9-data/code");
-const {Type}=require("biz9-logic");
-const {Str,Obj}=require("biz9-utility");
+const {Portal,Database,User_Data}=require("/home/think2/www/doqbox/biz9-framework/biz9-data/code");
+const {Type,Data_Logic}=require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
+const {Log,Str,Obj}=require("biz9-utility");
 /* -- biz9-end -- */
 router.get('/ping', function(req, res, next) {
     let error=null;
@@ -41,8 +41,8 @@ router.post('/dashboard', function(req, res, next) {
 router.post('/post', function(req, res, next) {
     let error = null;
     let database = {};
-    let data = {user:DataItem.get_new(Type.DATA_USER,req.body.data.id),email_resultOK:false,title_resultOK:false};
-    let post_user = DataItem.get_new(Type.DATA_USER,req.body.data.id,req.body.data.data);
+    let data = {user:Data_Logic.get_new(Type.DATA_USER,req.body.data.id),email_resultOK:false,title_resultOK:false};
+    let post_user = Data_Logic.get_new(Type.DATA_USER,req.body.data.id,req.body.data.data);
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -74,9 +74,9 @@ router.post('/post', function(req, res, next) {
 router.post('/register', function(req, res, next) {
     let error = null;
     let database = {};
-    let data = {user:DataItem.get_new(Type.DATA_USER,0),email_resultOK:false,title_resultOK:false,stat:DataItem.get_new(Type.DATA_STAT,0)};
-    let post_user = DataItem.get_new(Type.DATA_USER,0,req.body.data.user);
-    let post_stat = DataItem.get_new(Type.DATA_STAT,0,{type:Type.STAT_REGISTER});
+    let data = {user:Data_Logic.get_new(Type.DATA_USER,0),email_resultOK:false,title_resultOK:false,stat:Data_Logic.get_new(Type.DATA_STAT,0)};
+    let post_user = Data_Logic.get_new(Type.DATA_USER,0,req.body.data.user);
+    let post_stat = Data_Logic.get_new(Type.DATA_STAT,0,{type:Type.STAT_REGISTER});
     let post_device = req.body.data.device;
     let option = {post_stat:true,post_ip_address:true,post_device:true};
     let post_geo_key = GEO_KEY;
@@ -113,13 +113,17 @@ router.post('/register', function(req, res, next) {
 router.post('/login', function(req, res, next) {
     let error = null;
     let database = {};
-    let data = {user:DataItem.get_new(Type.DATA_USER,0),user_resultOK:false,stat:DataItem.get_new(Type.DATA_STAT,0)};
-    let post_user = DataItem.get_new(Type.DATA_USER,0,req.body.data.user);
-    let post_stat = DataItem.get_new(Type.DATA_STAT,0,{type:Type.STAT_LOGIN});
-    let post_device = req.body.data.device;
-    let option = req.body.data.option ? req.body.data.option : {};
-    let post_geo_key = GEO_KEY;
-    let post_ip_address = IP_ADDRESS;
+    console.log('11111111111111111');
+    Log.w('req.body',req.body);
+    let data = Data_Logic.get_new(Type.DATA_USER,0,{data:req.body.user});
+    console.log(data);
+    console.log('22222222222222222');
+    data[Type.FIELD_RESULT_OK_USER] = false;
+    let stat = Data_Logic.get_new(Type.DATA_STAT,0,{data:{type:Type.STAT_LOGIN}});
+    let device = req.body.device;
+    let option = req.body.option ? req.body.option : {};
+    let geo_key = GEO_KEY;
+    let ip_address = IP_ADDRESS;
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -131,13 +135,15 @@ router.post('/login', function(req, res, next) {
             }
         },
         async function(call){
-            const [biz_error,biz_data] = await User_Data.login(database,{user:post_user,ip_address:post_ip_address,geo_key:post_geo_key,device:post_device},option);
+            Log.w('user_11',data);
+            const [biz_error,biz_data] = await User_Data.login(database,data,option);
+            Log.w('biz_user_22',biz_data);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.user =biz_data.user;
-                data.stat.user_id = data.user.id;
-                data.user_resultOK =biz_data.user_resultOK;
+                data = biz_data;
+                //data.stat.user_id = data.user.id;
+                data[Type.FIELD_RESULT_OK_USER] = biz_data[Type.FIELD_RESULT_OK_USER];
             }
         },
         //persist user

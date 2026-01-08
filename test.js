@@ -11,7 +11,7 @@ const {Log,Num,Str} = require("biz9-utility");
 - post_user
 */
 //-env-test - start //
-let APP_ID = "test-stage-jan7";
+let APP_ID = "test-stage-jan8";
 let URL = "http://localhost:1904";
 let PORT_ID = "1904";
 //-env-test - end //
@@ -57,22 +57,27 @@ describe('connect', function(){ this.timeout(25000);
 				console.log('CONNECT-START');
 				let new_data_type = Type.DATA_PRODUCT;
 				let id = '246';
+				let user_id = '246';
 				//-->
 				//let parent = Data_Logic.get(new_data_type,0,{test:true});
 				let parent = Data_Logic.get(new_data_type,id);
-				Log.w('parent',parent);
+				let user = Data_Logic.get(Type.DATA_USER,0,{test:true,data:{email:'ceo@bossappz.com',password:'123456789Ab!'}});
+				//Log.w('parent',parent);
+				//Log.w('user',user);
 				//-->
 				//let search = Data_Logic.get_search(Type.DATA_PRODUCT,{},{},1,0);
 				//-->
-				let post_data = {id:parent.id,data_type:parent.data_type,data:parent};
+				//let post_data = {id:parent.id,data_type:parent.data_type,data:parent};
+				let post_data = {id:user.id,data_type:user.data_type,user:user};
 				//let post_data = {id:parent.id,data_type:parent.data_type};
 				//let post_data = {search};
 				//-->
 				//let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST);
-				let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.GET);
+				//let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.GET);
+				let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.LOGIN);
 				//let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.SEARCH);
 				//let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.DELETE);
-				//Log.w('url',url);
+				Log.w('url',url);
 				//-- URL END --//
 				axios.post(url,
 					post_data
@@ -105,14 +110,10 @@ describe('post_user', function(){ this.timeout(25000);
 		async.series([ function(call){
 			let biz9_config = Scriptz.get_biz9_config();
 			//super_admin - add - start
-			let data_type = Type.DATA_PRODUCT;
-			let id = 0;
-			let data = Data_Logic.get(Type.DATA_USER,0,{title:TITLE,title_url:TITLE_URL,email:EMAIL,password:PASSWORD,role:ROLE});
+			let user = Data_Logic.get(Type.DATA_USER,0,{test:true,data:{email:EMAIL,password:PASSWORD,role:Type.USER_ROLE_SUPER_ADMIN}});
 			let cloud_url =  App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST);
-			Log.w('cloud_url_99',cloud_url);
-			Log.w('data_22',data);
 			axios.post(cloud_url, {
-				data: {data:data}
+				data:user
 			})
 				.then(function (response) {
 					if(response.data.cloud_error){

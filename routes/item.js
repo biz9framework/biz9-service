@@ -22,7 +22,7 @@ router.post('/custom_field', function(req, res, next) {
     let option = req.body.data.option ? req.body.data.option : {};
     data.org_custom_fields = [];
     data.custom_fields = [];
-    data.item=DataItem.get_new(req.body.data.data_type,req.body.data.id);
+    data.item=Data_Logic.get_new(req.body.data.data_type,req.body.data.id);
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -87,7 +87,7 @@ router.post('/cart_delete', function(req, res, next) {
     let error = null;
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
-    data.cart = DataItem.get_new(Type.DATA_CART,req.body.data.id);
+    data.cart = Data_Logic.get_new(Type.DATA_CART,req.body.data.id);
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -116,7 +116,7 @@ router.post('/cart_delete', function(req, res, next) {
 router.post('/cart', function(req, res, next) {
     let error = null;
     let database,data = {};
-    data.cart = DataItem.get_new(Type.DATA_CART,0,{cart_number:req.body.data.cart_number});
+    data.cart = Data_Logic.get_new(Type.DATA_CART,0,{cart_number:req.body.data.cart_number});
     let option = req.body.data.option ? req.body.data.option : {};
     async.series([
         async function(call){
@@ -148,7 +148,7 @@ router.post('/cart_post', function(req, res, next) {
     let database,data = {};
     let post_cart = req.body.data.cart;
     let option = req.body.data.option ? req.body.data.option : {stat_post:false};
-    data = DataItem.get_new(Type.DATA_CART,0);
+    data = Data_Logic.get_new(Type.DATA_CART,0);
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -181,7 +181,7 @@ router.post('/order_post', function(req, res, next) {
     let post_order = req.body.data.order;
     let post_order_payments = req.body.data.order_payments;
     let option = req.body.data.option ? req.body.data.option : {stat_post:false};
-    data = DataItem.get_new(Type.DATA_ORDER,0);
+    data = Data_Logic.get_new(Type.DATA_ORDER,0);
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -211,7 +211,7 @@ router.post('/order_post', function(req, res, next) {
 router.post('/order_delete', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let delete_order = DataItem.get_new(Type.DATA_ORDER,req.body.data.id);
+    let delete_order = Data_Logic.get_new(Type.DATA_ORDER,req.body.data.id);
     let option = req.body.data.option ? req.body.data.option : {};
     async.series([
         async function(call){
@@ -241,7 +241,7 @@ router.post('/order_delete', function(req, res, next) {
 router.post('/order', function(req, res, next) {
     let error = null;
     let database,data = {};
-    data.order = DataItem.get_new(Type.DATA_ORDER,0,{order_number:req.body.data.order_number});
+    data.order = Data_Logic.get_new(Type.DATA_ORDER,0,{order_number:req.body.data.order_number});
     let option = req.body.data.option ? req.body.data.option : {};
     async.series([
         async function(call){
@@ -304,7 +304,7 @@ router.post('/review_post', function(req, res, next) {
     let error = null;
     let database = {};
     let data = {};
-    data.review = DataItem.get_new(Type.DATA_REVIEW,0,req.body.data.review);
+    data.review = Data_Logic.get_new(Type.DATA_REVIEW,0,req.body.data.review);
     let option = req.body.data.option ? req.body.data.option : {post_stat:false,user_id:0};
     async.series([
         async function(call){
@@ -399,10 +399,10 @@ router.post('/field_value_post',function(req,res,next){
     let error=null;
     let database,data={};
     let option = req.body.data.option ? req.body.data.option : {};
-    data.item=DataItem.get_new(req.body.data.item_data_type,req.body.data.item_id);
+    data.item=Data_Logic.get_new(req.body.data.item_data_type,req.body.data.item_id);
     data.item_field_value = req.body.data.item_field_value;
-    data.src_item = DataItem.get_new(req.body.data.item_data_type,req.body.data.item_id);
-    data.delete_cache_item=DataItem.get_new(req.body.data.item_data_type,req.body.data.item_id);
+    data.src_item = Data_Logic.get_new(req.body.data.item_data_type,req.body.data.item_id);
+    data.delete_cache_item=Data_Logic.get_new(req.body.data.item_data_type,req.body.data.item_id);
     data.field_value_items=req.body.data.field_value_items ? req.body.data.field_value_items : [];
     async.series([
         async function(call){
@@ -494,7 +494,7 @@ router.post('/field_value_post',function(req,res,next){
 router.post('/template', function(req, res, next) {
     let error = null;
     let database,data = {};
-    data.template = DataItem.get_new(Type.DATA_TEMPLATE,0,{key:req.body.data.key});
+    data.template = Data_Logic.get_new(Type.DATA_TEMPLATE,0,{key:req.body.data.key});
     let option = req.body.data.option ? req.body.data.option : {};
     async.series([
         async function(call){
@@ -527,7 +527,7 @@ router.post('/content', function(req, res, next) {
     let error = null;
     let database,data = {};
     let option = req.body.data.option ? req.body.data.option : {};
-    data.content = DataItem.get_new(Type.DATA_CONTENT,0,{key:req.body.data.key});
+    data.content = Data_Logic.get_new(Type.DATA_CONTENT,0,{key:req.body.data.key});
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
