@@ -4,7 +4,7 @@ const os = require('os');
 /* -- biz9-start -- */
 const {Scriptz}=require("biz9-scriptz");
 const {Portal,Database,User_Data}=require("/home/think2/www/doqbox/biz9-framework/biz9-data/code");
-const {Type,Data_Logic}=require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
+const {Type,Data_Logic,User_Logic}=require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
 const {Log,Str,Obj}=require("biz9-utility");
 /* -- biz9-end -- */
 router.get('/ping', function(req, res, next) {
@@ -113,11 +113,7 @@ router.post('/register', function(req, res, next) {
 router.post('/login', function(req, res, next) {
     let error = null;
     let database = {};
-    console.log('11111111111111111');
-    Log.w('req.body',req.body);
     let data = Data_Logic.get_new(Type.DATA_USER,0,{data:req.body.user});
-    console.log(data);
-    console.log('22222222222222222');
     data[Type.FIELD_RESULT_OK_USER] = false;
     let stat = Data_Logic.get_new(Type.DATA_STAT,0,{data:{type:Type.STAT_LOGIN}});
     let device = req.body.device;
@@ -135,9 +131,7 @@ router.post('/login', function(req, res, next) {
             }
         },
         async function(call){
-            Log.w('user_11',data);
             const [biz_error,biz_data] = await User_Data.login(database,data,option);
-            Log.w('biz_user_22',biz_data);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{

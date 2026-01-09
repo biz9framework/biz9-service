@@ -56,7 +56,6 @@ router.post('/post',function(req,res,next){
     let database = {};
     let data = Data_Logic.get(req.body.data_type,req.body.id,{data:req.body.data});
     let option = req.body.option ? req.body.option : {};
-    Log.w('33_data',data);
     async.series([
         async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));

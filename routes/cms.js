@@ -48,10 +48,8 @@ router.get('/user_home', function(req, res, next) {
 router.post('/post',function(req,res,next){
     let error=null;
     let database,data={};
-    let post_data=Data_Logic.get(req.body.data.item.data_type,req.body.data.item.id,req.body.data.item);
-    let option = req.body.data.option ? req.body.data.option : {};
-    data.item = Data_Logic.get(req.body.data.data_type,req.body.data.id);
-    data.delete_cache_item=Data_Logic.get(req.body.data.data_type,req.body.data.id);
+    let data=Data_Logic.get(req.body.item.data_type,req.body.item.id,{data:{req.body.item}});
+    let option = req.body.option ? req.body.option : {};
     async.series([
         async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
@@ -63,15 +61,15 @@ router.post('/post',function(req,res,next){
         },
         //clean
         async function(call){
-            for(const field in post_data){
-                if(Obj.check_is_array(post_data[field])){
-                    delete post_data[field];
+            for(const field in data){
+                if(Obj.check_is_array(data[field])){
+                    delete data[field];
                 }
             }
         },
         //post item
         async function(call){
-            const [biz_error,biz_data] = await Portal.post(database,post_data.data_type,post_data,option);
+            const [biz_error,biz_data] = await Portal.post(database,data.data_type,data,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
@@ -84,105 +82,13 @@ router.post('/post',function(req,res,next){
             res.end();
         });
 });
-
-//9_get_item_parent_top_type_category
-//requird = data_type,id
-router.post('/item_parent_top_type_category',function(req,res,next){
-    let error,database = null;
-    let data =
-        {
-            item:Data_Logic.get(req.body.data.data_type,req.body.data.id),
-            parent_item:Data_Logic.get(req.body.data.data_type,req.body.data.id),
-            top_item:Data_Logic.get(req.body.data.data_type,req.body.data.id),
-            types:[],
-            categorys:[],
-        };
-    let post_data = Data_Logic.get(req.body.data.data_type,req.body.data.id);
-    data.item = Data_Logic.get(post_data.data_type,post_data.id);
-    data.parent_item = Data_Logic.get(post_data.data_type,post_data.id);
-    data.top_item = Data_Logic.get(post_data.data_type,post_data.id);
-    data.categorys = [];
-    data.items = [];
-    let option = req.body.data.option ? req.body.data.option : {};
-    async.series([
-        async function(call){
-            const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }else{
-                database = biz_data;
-            }
-        },
-        //item
-        async function(call){
-            if(!Str.check_is_null(data.item.id)){
-                const [biz_error,biz_data] = await Portal.get(database,data.item.data_type,data.item.id,option);
-                if(biz_error){
-                    error=Log.append(error,biz_error);
-                }else{
-                    data.item = biz_data;
-                }
-            }
-        },
-        //parent
-        async function(call){
-            if(!Str.check_is_null(data.item.parent_id) && !Str.check_is_null(data.item.parent_data_type) ){
-                const [biz_error,biz_data] = await Portal.get(database,data.item.parent_data_type,data.item.parent_id);
-                if(biz_error){
-                    error=Log.append(error,biz_error);
-                }else{
-                    data.parent_item = biz_data;
-                }
-            }
-        },
-        //top
-        async function(call){
-            if(!Str.check_is_null(data.item.top_id) &&!Str.check_is_null(data.item.top_data_type) ){
-                const [biz_error,biz_data] = await Portal.get(database,data.item.top_data_type,data.item.top_id);
-                if(biz_error){
-                    error=Log.append(error,biz_error);
-                }else{
-                    data.top_item = biz_data;
-                }
-            }
-        },
-        //type
-        async function(call){
-            let search = Data_Logic.get_search(Type.DATA_TYPE,{},{},1,0);
-            let option ={get_field:true,fields:'title,type'};
-            const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }else{
-                data.types =  biz_data.items;
-            }
-        },
-        //category
-        async function(call){
-            let search = Data_Logic.get_search(Type.DATA_CATEGORY,{category:post_data.data_type},{},1,0);
-            let option = {get_field:false,fields:'title,type,data_type',get_distinct:true,distinct_field:'title'};
-            const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }else{
-                data.categorys =  biz_data.items;
-            }
-        },
-    ],
-        function(err,result){
-            res.send({error:error,data:data});
-            res.end();
-        });
-});
-
-//9_search_item_type_category
 // - required_form_data = data_type
 router.post('/search_item_type_category', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let post_search = req.body.data.search;
-    let post_option = req.body.data.option ? req.body.data.option : {};
-    data.data_type = req.body.data.data_type;
+    let post_search = req.body.search;
+    let post_option = req.body.option ? req.body.option : {};
+    data.data_type = req.body.data_type;
     data.types = [];
     data.categorys = [];
     data.items = [];
@@ -234,41 +140,4 @@ router.post('/search_item_type_category', function(req, res, next) {
             res.end();
         });
 });
-
-//9_demo_post
-// - required_form_data = type_logic.types, data_type, option
-router.post('/demo_post', function(req, res, next) {
-    let error = null;
-    let database = {};
-    let data = {types:[]};
-    let post_types = req.body.data.types;
-    let post_data_type = req.body.data.data_type;
-    let option = req.body.data.option;
-    async.series([
-        async function(call){
-            let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
-            const [biz_error,biz_data] = await Database.get(biz9_config);
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }else{
-                database = biz_data;
-            }
-        },
-        //demo_portal_post
-        async function(call){
-            const [biz_error,biz_data] = await Portal.demo_post(database,post_data_type,post_types,option);
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }else{
-                data =  biz_data;
-            }
-        },
-    ],
-        function(err, result){
-            res.send({error:error,data:data});
-            res.end();
-        });
-});
-
-
 module.exports = router;

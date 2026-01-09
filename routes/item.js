@@ -22,7 +22,7 @@ router.post('/custom_field', function(req, res, next) {
     let option = req.body.data.option ? req.body.data.option : {};
     data.org_custom_fields = [];
     data.custom_fields = [];
-    data.item=Data_Logic.get_new(req.body.data.data_type,req.body.data.id);
+    data.item=Data_Logic.get_new(req.body.data.data_type,{data:{req.body.data.id}});
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
