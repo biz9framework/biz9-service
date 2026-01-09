@@ -19,13 +19,13 @@ router.post('/home', function(req, res, next) {
     let error = null;
     let database,data = {};
     let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter();
-    let app_dev_search_option = {fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count,view_count,is_favorite',get_favorite:true,user_id:req.body.data.user_id};
+    let app_dev_search_option = {fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count,view_count,is_favorite',get_favorite:true,user_id:req.body.user_id};
     let app_dev_search_explore_option = {get_field:true,fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count,view_count'};
-    let option = req.body.data.option ? req.body.data.option : {get_field_value_items:true};
+    let option = req.body.option ? req.body.option : {field_value:true};
     //
-    data.user = req.body.data.user_id ? Data_Logic.get_new(Type.DATA_USER,req.body.data.user_id): User_Logic.get_guest();
+    data.user = req.body.user_id ? Data_Logic.get(Type.DATA_USER,req.body.user_id): User_Logic.get_guest();
     //
-    data.page = Data_Logic.get_new(Type.DATA_PAGE,0,{key:Type.PAGE_HOME});
+    data.page = Data_Logic.get(Type.DATA_PAGE,0,{data:{key:Type.PAGE_HOME}});
     //
     data.favorites = [];
     //
@@ -312,8 +312,8 @@ router.post('/home', function(req, res, next) {
 router.post('/faq', function(req, res, next) {
     let error = null;
     let database,data = {};
-    data.page = Data_Logic.get_new(Type.DATA_PAGE,0);
-    let option = req.body.data.option ? req.body.data.option : {get_field_value_items:true};
+    data.page = Data_Logic.get(Type.DATA_PAGE,0);
+    let option = req.body.option ? req.body.option : {field_value:true};
     data.faqs = [];
     async.series([
         async function(call){
@@ -356,8 +356,8 @@ router.post('/faq', function(req, res, next) {
 router.post('/about', function(req, res, next) {
     let error = null;
     let database,data = {};
-    data.page = Data_Logic.get_new(Type.DATA_PAGE,0);
-    let option = req.body.data.option ? req.body.data.option : {get_field_value_items:true};
+    data.page = Data_Logic.get(Type.DATA_PAGE,0);
+    let option = req.body.option ? req.body.option : {field_value:true};
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -388,8 +388,8 @@ router.post('/about', function(req, res, next) {
 router.post('/contact', function(req, res, next) {
     let error = null;
     let database,data = {};
-    data.page = Data_Logic.get_new(Type.DATA_PAGE,0);
-    let option = req.body.data.option ? req.body.data.option : {get_field_value_items:true};
+    data.page = Data_Logic.get(Type.DATA_PAGE,0);
+    let option = req.body.option ? req.body.option : {field_value:true};
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -420,11 +420,11 @@ router.post('/contact', function(req, res, next) {
 router.post('/blog_post', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_BLOG_POST,{},{},1,6);
-    data.blog_post = Data_Logic.get_new(Type.DATA_BLOG_POST,0,{key:req.body.data.key});
+    let option = req.body.option ? req.body.option : {};
+    let search = req.body.search ? req.body.search : Data_Logic.get_search(Type.DATA_BLOG_POST,{},{},1,6);
+    data.blog_post = Data_Logic.get(Type.DATA_BLOG_POST,0,{data:{key:req.body.key}});
     data.blog_posts = [];
-    data.page = Data_Logic.get_new(Type.DATA_BLOG_POST,0);
+    data.page = Data_Logic.get(Type.DATA_BLOG_POST,0);
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -475,9 +475,9 @@ router.post('/blog_post', function(req, res, next) {
 router.post('/blog_post_home', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_BLOG_POST,{},{},1,6);
-    data.page  = Data_Logic.get_new(Type.DATA_PAGE,0);
+    let option = req.body.option ? req.body.option : {};
+    let search = req.body.search ? req.body.search : Data_Logic.get_search(Type.DATA_BLOG_POST,{},{},1,6);
+    data.page  = Data_Logic.get(Type.DATA_PAGE,0);
     data.blog_posts = [];
     async.series([
         async function(call){
@@ -518,8 +518,8 @@ router.post('/blog_post_home', function(req, res, next) {
 router.post('/blog_post_search', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_BLOG_POST,{},{},1,6);
+    let option = req.body.option ? req.body.option : {};
+    let search = req.body.search ? req.body.search : Data_Logic.get_search(Type.DATA_BLOG_POST,{},{},1,6);
     data.blog_posts = [];
     async.series([
         async function(call){
@@ -551,14 +551,14 @@ router.post('/blog_post_search', function(req, res, next) {
 router.post('/product', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {get_favorite:false,get_image:true,get_item:true,post_stat:false,user_id:0,get_field_value_items:true};
-    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_PRODUCT,{},{},1,6);
-    data.product = Data_Logic.get_new(Type.DATA_PRODUCT,0,{key:req.body.data.key});
+    let option = req.body.option ? req.body.option : {get_favorite:false,get_image:true,get_item:true,post_stat:false,user_id:0,field_value:true};
+    let search = req.body.search ? req.body.search : Data_Logic.get_search(Type.DATA_PRODUCT,{},{},1,6);
+    data.product = Data_Logic.get(Type.DATA_PRODUCT,0,{data:{key:req.body.key}});
     data.products = [];
     data.hosting_products = [];
     data.cms_products = [];
     data.reviews = [];
-    data.page = Data_Logic.get_new(Type.DATA_PRODUCT,0);
+    data.page = Data_Logic.get(Type.DATA_PRODUCT,0);
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -643,9 +643,9 @@ router.post('/product', function(req, res, next) {
 router.post('/product_home', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_PRODUCT,{},{},1,6);
-    data.page  = Data_Logic.get_new(Type.DATA_PAGE,0);
+    let option = req.body.option ? req.body.option : {};
+    let search = req.body.search ? req.body.search : Data_Logic.get_search(Type.DATA_PRODUCT,{},{},1,6);
+    data.page  = Data_Logic.get(Type.DATA_PAGE,0);
     data.types = [];
     /*
     data.categorys = [];
@@ -720,8 +720,8 @@ router.post('/product_home', function(req, res, next) {
 router.post('/product_search', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_PRODUCT,{},{},1,6);
+    let option = req.body.option ? req.body.option : {};
+    let search = req.body.search ? req.body.search : Data_Logic.get_search(Type.DATA_PRODUCT,{},{},1,6);
     data.products = [];
     async.series([
         async function(call){
@@ -757,10 +757,10 @@ router.post('/search', function(req, res, next) {
     if(APP_ENV !=App_Logic.TYPE_ENV_TEST){
         let user = User_Logic.get_request_user(req);
     }else{
-        let user = Data_Logic.get_new(Type.DATA_USER,USER_ID);
+        let user = Data_Logic.get(Type.DATA_USER,USER_ID);
     }
     data.favorites = [];
-    data.product_search = req.body.data.search;
+    data.product_search = req.body.search;
     data.products = [];
     data.product_count = 0;
     data.product_page_count = 0;
@@ -815,11 +815,11 @@ router.post('/search', function(req, res, next) {
 router.post('/event', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_EVENT,{},{},1,6);
-    data.event = Data_Logic.get_new(Type.DATA_EVENT,0,{key:req.body.data.key});
+    let option = req.body.option ? req.body.option : {};
+    let search = req.body.search ? req.body.search : Data_Logic.get_search(Type.DATA_EVENT,{},{},1,6);
+    data.event = Data_Logic.get(Type.DATA_EVENT,0,{data:{key:req.body.key}});
     data.events = [];
-    data.page = Data_Logic.get_new(Type.DATA_EVENT,0);
+    data.page = Data_Logic.get(Type.DATA_EVENT,0);
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -870,9 +870,9 @@ router.post('/event', function(req, res, next) {
 router.post('/event_home', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_EVENT,{},{},1,6);
-    data.page  = Data_Logic.get_new(Type.DATA_PAGE,0);
+    let option = req.body.option ? req.body.option : {};
+    let search = req.body.search ? req.body.search : Data_Logic.get_search(Type.DATA_EVENT,{},{},1,6);
+    data.page  = Data_Logic.get(Type.DATA_PAGE,0);
     data.events = [];
     async.series([
         async function(call){
@@ -913,8 +913,8 @@ router.post('/event_home', function(req, res, next) {
 router.post('/event_search', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_EVENT,{},{},1,6);
+    let option = req.body.option ? req.body.option : {};
+    let search = req.body.search ? req.body.search : Data_Logic.get_search(Type.DATA_EVENT,{},{},1,6);
     data.events = [];
     async.series([
         async function(call){
@@ -945,8 +945,8 @@ router.post('/event_search', function(req, res, next) {
 router.post('/review_home',function(req, res, next) {
     let error = null;
     let database,data = {};
-    let search = req.body.data.search;
-    let option = req.body.data.option ? req.body.data.option : {};
+    let search = req.body.search;
+    let option = req.body.option ? req.body.option : {};
     data.reviews = [];
     async.series([
         async function(call){
@@ -989,11 +989,11 @@ router.post('/review_home',function(req, res, next) {
 router.post('/gallery', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_GALLERY,{},{},1,6);
-    data.gallery = Data_Logic.get_new(Type.DATA_GALLERY,0,{key:req.body.data.key});
+    let option = req.body.option ? req.body.option : {};
+    let search = req.body.search ? req.body.search : Data_Logic.get_search(Type.DATA_GALLERY,{},{},1,6);
+    data.gallery = Data_Logic.get(Type.DATA_GALLERY,0,{data:{key:req.body.key}});
     data.gallerys = [];
-    data.page = Data_Logic.get_new(Type.DATA_GALLERY,0);
+    data.page = Data_Logic.get(Type.DATA_GALLERY,0);
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -1044,9 +1044,9 @@ router.post('/gallery', function(req, res, next) {
 router.post('/gallery_home', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_GALLERY,{},{},1,6);
-    data.page  = Data_Logic.get_new(Type.DATA_PAGE,0);
+    let option = req.body.option ? req.data.option : {};
+    let search = req.body.search ? req.data.search : Data_Logic.get_search(Type.DATA_GALLERY,{},{},1,6);
+    data.page  = Data_Logic.get(Type.DATA_PAGE,0);
     data.gallerys = [];
     async.series([
         async function(call){
@@ -1088,8 +1088,8 @@ router.post('/gallery_home', function(req, res, next) {
 router.post('/gallery_search', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_GALLERY,{},{},1,6);
+    let option = req.body.option ? req.body.option : {};
+    let search = req.body.search ? req.body.search : Data_Logic.get_search(Type.DATA_GALLERY,{},{},1,6);
     data.gallerys = [];
     async.series([
         async function(call){
@@ -1121,11 +1121,11 @@ router.post('/gallery_search', function(req, res, next) {
 router.post('/service', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_SERVICE,{},{},1,6);
-    data.service = Data_Logic.get_new(Type.DATA_SERVICE,0,{key:req.body.data.key});
+    let option = req.body.option ? req.body.option : {};
+    let search = req.body.search ? req.body.search : Data_Logic.get_search(Type.DATA_SERVICE,{},{},1,6);
+    data.service = Data_Logic.get(Type.DATA_SERVICE,0,{data:{key:req.body.key}});
     data.services = [];
-    data.page = Data_Logic.get_new(Type.DATA_SERVICE,0);
+    data.page = Data_Logic.get(Type.DATA_SERVICE,0);
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -1176,9 +1176,9 @@ router.post('/service', function(req, res, next) {
 router.post('/service_home', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_SERVICE,{},{},1,6);
-    data.page  = Data_Logic.get_new(Type.DATA_PAGE,0);
+    let option = req.body.option ? req.body.option : {};
+    let search = req.body.search ? req.body.search : Data_Logic.get_search(Type.DATA_SERVICE,{},{},1,6);
+    data.page  = Data_Logic.get(Type.DATA_PAGE,0);
     data.services = [];
     async.series([
         async function(call){
@@ -1219,8 +1219,8 @@ router.post('/service_home', function(req, res, next) {
 router.post('/service_search', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {};
-    let search = req.body.data.search ? req.body.data.search : Data_Logic.get_search(Type.DATA_SERVICE,{},{},1,6);
+    let option = req.body.option ? req.body.option : {};
+    let search = req.body.search ? req.body.search : Data_Logic.get_search(Type.DATA_SERVICE,{},{},1,6);
     data.services = [];
     async.series([
         async function(call){
@@ -1252,8 +1252,8 @@ router.post('/service_search', function(req, res, next) {
 router.post('/login', function(req, res, next) {
     let error = null;
     let database,data = {};
-    data.page = Data_Logic.get_new(Type.DATA_PAGE,0);
-    let option = req.body.data.option ? req.body.data.option : {get_field_value_items:true};
+    data.page = Data_Logic.get(Type.DATA_PAGE,0);
+    let option = req.body.option ? req.body.option : {field_value:true};
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -1286,8 +1286,9 @@ router.post('/login', function(req, res, next) {
 router.post('/blank', function(req, res, next) {
     let error = null;
     let database,data = {};
-    data.page = Data_Logic.get_new(Type.DATA_PAGE,0);
-    let option = req.body.data.option ? req.body.data.option : {get_field_value_items:true};
+    data.page = Data_Logic.get(Type.DATA_PAGE,0);
+    //let option = req.body.option ? req.body.option : {field_value:true};
+    let option = req.body.option ? req.body.option : {};
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});

@@ -18,11 +18,11 @@ router.get('/ping', function(req, res, next) {
 //required form_data = data_type, id
 router.post('/custom_field', function(req, res, next) {
     let error = null;
-    let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {};
+    let database = {};
+    let option = req.body.option ? req.body.option : {};
     data.org_custom_fields = [];
     data.custom_fields = [];
-    data.item=Data_Logic.get_new(req.body.data.data_type,{data:{req.body.data.id}});
+    data.item=Data_Logic.get(req.data.data_type,{data:req.body.id});
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -86,8 +86,8 @@ router.post('/custom_field', function(req, res, next) {
 router.post('/cart_delete', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {};
-    data.cart = Data_Logic.get_new(Type.DATA_CART,req.body.data.id);
+    let option = req.data.option ? req.data.option : {};
+    data.cart = Data_Logic.get(Type.DATA_CART,req.body.id);
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -116,8 +116,8 @@ router.post('/cart_delete', function(req, res, next) {
 router.post('/cart', function(req, res, next) {
     let error = null;
     let database,data = {};
-    data.cart = Data_Logic.get_new(Type.DATA_CART,0,{cart_number:req.body.data.cart_number});
-    let option = req.body.data.option ? req.body.data.option : {};
+    data.cart = Data_Logic.get(Type.DATA_CART,0,{data:{cart_number:req.data.cart_number}});
+    let option = req.body.option ? req.data.option : {};
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -146,9 +146,9 @@ router.post('/cart', function(req, res, next) {
 router.post('/cart_post', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let post_cart = req.body.data.cart;
-    let option = req.body.data.option ? req.body.data.option : {stat_post:false};
-    data = Data_Logic.get_new(Type.DATA_CART,0);
+    let post_cart = req.body.cart;
+    let option = req.body.option ? req.body.option : {};
+    data = Data_Logic.get(Type.DATA_CART,0);
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -178,10 +178,10 @@ router.post('/cart_post', function(req, res, next) {
 router.post('/order_post', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let post_order = req.body.data.order;
-    let post_order_payments = req.body.data.order_payments;
-    let option = req.body.data.option ? req.body.data.option : {stat_post:false};
-    data = Data_Logic.get_new(Type.DATA_ORDER,0);
+    let post_order = req.body.order;
+    let post_order_payments = req.body.order_payments;
+    let option = req.body.option ? req.data.option : {};
+    data = Data_Logic.get(Type.DATA_ORDER,0);
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -211,8 +211,8 @@ router.post('/order_post', function(req, res, next) {
 router.post('/order_delete', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let delete_order = Data_Logic.get_new(Type.DATA_ORDER,req.body.data.id);
-    let option = req.body.data.option ? req.body.data.option : {};
+    let delete_order = Data_Logic.get(Type.DATA_ORDER,req.body.id);
+    let option = req.body.option ? req.body.option : {};
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -241,8 +241,8 @@ router.post('/order_delete', function(req, res, next) {
 router.post('/order', function(req, res, next) {
     let error = null;
     let database,data = {};
-    data.order = Data_Logic.get_new(Type.DATA_ORDER,0,{order_number:req.body.data.order_number});
-    let option = req.body.data.option ? req.body.data.option : {};
+    data.order = Data_Logic.get(Type.DATA_ORDER,0,{data:{order_number:req.body.order_number}});
+    let option = req.body.option ? req.body.option : {};
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -271,9 +271,9 @@ router.post('/order', function(req, res, next) {
 router.post('/favorite_post', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {};
+    let option = req.body.option ? req.body.option : {};
     data.is_unique = false;
-    data.favorite = Favorite_Logic.get_new(req.body.data.parent_data_type,req.body.data.parent_id,req.body.data.user_id);
+    data.favorite = Favorite_Logic.get_new(req.body.parent_data_type,req.body.parent_id,req.body.user_id);
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -304,8 +304,8 @@ router.post('/review_post', function(req, res, next) {
     let error = null;
     let database = {};
     let data = {};
-    data.review = Data_Logic.get_new(Type.DATA_REVIEW,0,req.body.data.review);
-    let option = req.body.data.option ? req.body.data.option : {post_stat:false,user_id:0};
+    data.review = Data_Logic.get(Type.DATA_REVIEW,0,{data:req.body.review});
+    let option = req.body.option ? req.body.option : {};
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -336,7 +336,7 @@ router.post('/review_delete', function(req, res, next) {
     let error = null;
     let database = {};
     let data = {};
-    data.review = Form.set_item(Type.DATA_REVIEW,0,req.body.data,{parent_data_type:req.body.data.parent_data_type,item_id:req.body.data.item_id,user_id:req.body.data.user_id});
+    data.review = Form.set_item(Type.DATA_REVIEW,0,req.body,{parent_data_type:req.body.parent_data_type,item_id:req.body.item_id,user_id:req.body.user_id});
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -365,8 +365,8 @@ router.post('/review_delete', function(req, res, next) {
 router.post('/review_search', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let search = req.body.data.search;
-    let option = req.body.data.option ? req.body.data.option : {};
+    let search = req.body.search;
+    let option = req.body.option ? req.body.option : {};
     data.reviews = [];
     async.series([
         async function(call){
@@ -398,12 +398,12 @@ router.post('/review_search', function(req, res, next) {
 router.post('/field_value_post',function(req,res,next){
     let error=null;
     let database,data={};
-    let option = req.body.data.option ? req.body.data.option : {};
-    data.item=Data_Logic.get_new(req.body.data.item_data_type,req.body.data.item_id);
-    data.item_field_value = req.body.data.item_field_value;
-    data.src_item = Data_Logic.get_new(req.body.data.item_data_type,req.body.data.item_id);
-    data.delete_cache_item=Data_Logic.get_new(req.body.data.item_data_type,req.body.data.item_id);
-    data.field_value_items=req.body.data.field_value_items ? req.body.data.field_value_items : [];
+    let option = req.body.option ? req.body.option : {};
+    data.item=Data_Logic.get(req.body.item_data_type,req.body.item_id);
+    data.item_field_value = req.body.item_field_value;
+    data.src_item = Data_Logic.get(req.body.item_data_type,req.body.item_id);
+    data.delete_cache_item=Data_Logic.get(req.body.item_data_type,req.body.item_id);
+    data.field_value_items=req.body.field_value_items ? req.body.field_value_items : [];
     async.series([
         async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
@@ -494,8 +494,8 @@ router.post('/field_value_post',function(req,res,next){
 router.post('/template', function(req, res, next) {
     let error = null;
     let database,data = {};
-    data.template = Data_Logic.get_new(Type.DATA_TEMPLATE,0,{key:req.body.data.key});
-    let option = req.body.data.option ? req.body.data.option : {};
+    data.template = Data_Logic.get(Type.DATA_TEMPLATE,0,{data:{key:req.body.key}});
+    let option = req.body.option ? req.body.option : {};
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -526,8 +526,8 @@ router.post('/template', function(req, res, next) {
 router.post('/content', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.data.option ? req.body.data.option : {};
-    data.content = Data_Logic.get_new(Type.DATA_CONTENT,0,{key:req.body.data.key});
+    let option = req.body.option ? req.body.option : {};
+    data.content = Data_Logic.get(Type.DATA_CONTENT,0,{data:{key:req.body.key}});
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -558,8 +558,8 @@ router.post('/stat_search', function(req, res, next) {
     let error = null;
     let database = {};
     let data = {data_type:Type.DATA_STAT,item_count:0,page_count:1,filter:{},stats:[],app_id:null};
-    let search = req.body.data.search;
-    let option = req.body.data.option ? req.body.data.option : {};
+    let search = req.body.search;
+    let option = req.body.option ? req.body.option : {};
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});

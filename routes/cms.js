@@ -46,11 +46,11 @@ router.get('/user_home', function(req, res, next) {
 //9_cms_post - 9_post
 //required form_data = data_type, id
 router.post('/post',function(req,res,next){
-    let error=null;
-    let database,data={};
-    let data=Data_Logic.get(req.body.item.data_type,req.body.item.id,{data:{req.body.item}});
+    let error = null;
+    let database = {};
+    let data = Data_Logic.get(req.body.data_type,req.body.id,{data:req.body.data});
     let option = req.body.option ? req.body.option : {};
-    async.series([
+   async.series([
         async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
             if(biz_error){
