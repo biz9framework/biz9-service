@@ -43,45 +43,6 @@ router.get('/user_home', function(req, res, next) {
             res.end();
         });
 });
-//9_cms_post - 9_post
-//required form_data = data_type, id
-router.post('/post',function(req,res,next){
-    let error = null;
-    let database = {};
-    let data = Data_Logic.get(req.body.data_type,req.body.id,{data:req.body.data});
-    let option = req.body.option ? req.body.option : {};
-   async.series([
-        async function(call){
-            const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }else{
-                database = biz_data;
-            }
-        },
-        //clean
-        async function(call){
-            for(const field in data){
-                if(Obj.check_is_array(data[field])){
-                    delete data[field];
-                }
-            }
-        },
-        //post item
-        async function(call){
-            const [biz_error,biz_data] = await Portal.post(database,data.data_type,data,option);
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }else{
-                data.item = biz_data;
-            }
-        },
-    ],
-        function(err,result){
-            res.send({error:error,data:data});
-            res.end();
-        });
-});
 // - required_form_data = data_type
 router.post('/search_item_type_category', function(req, res, next) {
     let error = null;

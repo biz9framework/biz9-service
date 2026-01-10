@@ -207,7 +207,10 @@ router.post('/post_items',function(req,res,next){
 router.post('/delete_search',function(req,res,next){
     let error = null;
     let database = {};
-    let data = {data_type:search.data_type,search:req.body.search,item_count:0,page_count:1,filter:{},items:[],app_id:database.app_id,delete_result:{}};
+	let data = Data_Logic.get_new(req.body.search.data_type,0,{data:{search:req.body.search}});
+	data[Type.FIELD_RESULT_OK_DELETE] = false;
+	data[Type.FIELD_RESULT_OK_GROUP_DELETE] = false;
+	data[Type.FIELD_RESULT_OK_IMAGE_DELETE] = false;
     let option =  req.body.option ? req.body.option : {};
     async.series([
         async function(call){

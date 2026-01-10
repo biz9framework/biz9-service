@@ -143,7 +143,7 @@ router.post('/login', function(req, res, next) {
         //persist user
         /*
         async function(call){
-            if(!data.user_resultOK && APP_ENV == !App_Logic.ENVIRONMENT_TESTING){
+            if(!data[Type.FIELD_RESULT_OK_USER]  && APP_ENV == !App_Logic.ENVIRONMENT_TESTING){
                 data.user_post_server = true;
                 User_Logic.post_request_user(req,data.user);
             }
