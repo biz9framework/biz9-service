@@ -21,7 +21,8 @@ router.post('/post',function(req,res,next){
     //Log.w('44b_post_file_list',post_file_list);
 
     let post_file_list = req.body.data.file_list;
-    let data = {file_list:[],resultOK:false};
+    let data = {file_list:[]};
+    data[Type.FIELD_RESULT_OK] = false;
     let upload_dir = path.join('public', 'uploads');
     var item = {};
     async.series([
@@ -47,11 +48,11 @@ router.post('/post',function(req,res,next){
                     }
                 }
                 if(!error){
-                    item.resultOK = true;
+                    item[Type.FIELD_RESULT_OK]  = true;
                 }
             }
             if(!error){
-                data.resultOK=true;
+                data[Type.FIELD_RESULT_OK]=true;
             }
         },
         //clean
@@ -59,7 +60,7 @@ router.post('/post',function(req,res,next){
             for(const item of data.file_list) {
                 delete item.file_data;
                 delete item.buffer;
-                delete item.resultOK;
+                delete item[Type.FIELD_RESULT_OK];
             }
         },
         */
@@ -74,7 +75,8 @@ router.post('/post',function(req,res,next){
 /*
 router.post('/cdn_post',function(req,res,next){
     let error = null;
-    let data = {file_list:req.body.data.file_list,resultOK:false};
+    let data = {file_list:req.body.data.file_list};
+    data[Type.FIELD_RESULT_OK] = false;
     let upload_dir = path.join('public', 'uploads');
     var item = {};
     let cloud_flare_batch_token = null;
@@ -98,17 +100,17 @@ router.post('/cdn_post',function(req,res,next){
                     }
                 }
                 if(!error){
-                    item.resultOK = true;
+                    item[Type.FIELD_RESULT_OK] = true;
                 }
             }
             if(!error){
-                data.resultOK = true;
+                data[Type.FIELD_RESULT_OK] = true;
             }
         },
         //clean
         async function(call){
             for(const item of data.file_list) {
-                delete item.resultOK;
+                delete item[Type.FIELD_RESULT_OK];
             }
         },
     ],

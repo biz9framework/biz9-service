@@ -41,7 +41,9 @@ router.post('/dashboard', function(req, res, next) {
 router.post('/post', function(req, res, next) {
     let error = null;
     let database = {};
-    let data = {user:Data_Logic.get_new(Type.DATA_USER,req.body.data.id),email_resultOK:false,title_resultOK:false};
+    let data = {user:Data_Logic.get(Type.DATA_USER,req.body.data.id)};
+    data[Type.FIELD_RESULT_OK] = false;
+    data[Type.FIELD_RESULT_OK_EMAIL] = false;
     let post_user = Data_Logic.get_new(Type.DATA_USER,req.body.data.id,req.body.data.data);
     async.series([
         async function(call){
@@ -59,8 +61,8 @@ router.post('/post', function(req, res, next) {
                 error=Log.append(error,biz_error);
             }else{
                 data.user =biz_data.user;
-                data.email_resultOK =biz_data.email_resultOK;
-                data.title_resultOK =biz_data.title_resultOK;
+                data[Type.FIELD_RESULT_OK_EMAIL] = biz_data[Type.FIELD_RESULT_OK_EMAIL];
+                data[Type.FIELD_RESULT_OK] = biz_data[Type.FIELD_RESULT_OK];
             }
         },
     ],
@@ -74,13 +76,19 @@ router.post('/post', function(req, res, next) {
 router.post('/register', function(req, res, next) {
     let error = null;
     let database = {};
-    let data = {user:Data_Logic.get_new(Type.DATA_USER,0),email_resultOK:false,title_resultOK:false,stat:Data_Logic.get_new(Type.DATA_STAT,0)};
+    let data = {user:Data_Logic.get_new(Type.DATA_USER,0)};
+    data[Type.FIELD_RESULT_OK] = false;
+    data[Type.FIELD_RESULT_OK_EMAIL] = false;
+    let option = {};
+    /*
+    let option = {post_stat:false,post_ip_address:false,post_device:false};
+    let stat = Data_Logic.get_new(Type.DATA_STAT,0);
     let post_user = Data_Logic.get_new(Type.DATA_USER,0,req.body.data.user);
     let post_stat = Data_Logic.get_new(Type.DATA_STAT,0,{type:Type.STAT_REGISTER});
     let post_device = req.body.data.device;
-    let option = {post_stat:true,post_ip_address:true,post_device:true};
     let post_geo_key = GEO_KEY;
     let post_ip_address = IP_ADDRESS;
+    */
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -98,8 +106,8 @@ router.post('/register', function(req, res, next) {
             }else{
                 data.user =biz_data.user;
                 data.stat.user_id = data.user.id;
-                data.email_resultOK =biz_data.email_resultOK;
-                data.title_resultOK =biz_data.title_resultOK;
+                data[FIELD_RESULT_OK_EMAIL] =biz_data[FIELD_RESULT_OK_EMAIL] ;
+                data[FIELD_RESULT_OK_TITLE] =biz_data[FIELD_RESULT_OK_TITLE];
             }
         },
     ],

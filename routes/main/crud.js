@@ -174,8 +174,7 @@ router.post('/copy',function(req,res,next){
 router.post('/post_items',function(req,res,next){
     let error = null;
     let database = {};
-    let items = [];
-    let data = req.body.data ? req.body.data : [];
+    let data =  req.body.data ? req.body.data : [];
     let option =  req.body.option ? req.body.option : {};
     async.series([
         async function(call){
@@ -187,18 +186,18 @@ router.post('/post_items',function(req,res,next){
             }
         },
         async function(call){
-            if(post_items.length > 0){
-                const [biz_error,biz_data] = await Portal.post_items(database,post_items,option);
+            if(data.length > 0){
+                const [biz_error,biz_data] = await Portal.post_items(database,data,option);
                 if(biz_error){
                     error=Log.append(error,biz_error);
                 }else{
-                    items = biz_data;
+                    data = biz_data;
                 }
             }
         },
     ],
         function(err, result){
-            res.send({error:error,data:items});
+            res.send({error:error,data:data});
             res.end();
         });
 });

@@ -6,7 +6,7 @@ const path = require('path');
 /* -- biz9_start -- */
 const {Image_Logic,Data_Logic,Type}=require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
 const {Log}=require("biz9-utility");
-const {Image_Cloud_Flare,Image_File}=require("biz9-image");
+const {Image_Cloud_Flare,Image_File}=require("/home/think2/www/doqbox/biz9-framework/biz9-image/code");
 /* -- biz9-end -- */
 router.get('/ping', function(req, res, next) {
     let error=null;
@@ -18,12 +18,11 @@ router.get('/ping', function(req, res, next) {
 // - required_form_data = images[image_data]
 router.post('/post',function(req,res,next){
     let error = null;
-    let post_image_items = req.body.images;
-    let data = {images:[],resultOK:false};
+    let post_images = req.body.images;
+    let data = Data_Logic.get(Type.DATA_IMAGE,0,{data:{images:[]}});
+    data[Type.FIELD_RESULT_OK] = false;
     let upload_dir = path.join('public', 'uploads');
-    var item = {};
      function get_process_items(upload_dir,image_filename){
-         console.log('start-here');
 		upload_dir = upload_dir ? upload_dir : "";
 		image_filename = image_filename ? image_filename : "";
 		return [
@@ -75,12 +74,11 @@ router.post('/post',function(req,res,next){
 			*/
 		];
 	}
-
     async.series([
         //get images
         async function(call){
-            post_image_items.forEach(item => {
-                data.images.push(Image_Logic.get_new_by_base64(item));
+            post_images.forEach(item => {
+                data.images.push(Image_Logic.get_by_base64(item));
             });
         },
         //write - images
@@ -94,11 +92,11 @@ router.post('/post',function(req,res,next){
                     }
                 }
                 if(!error){
-                    item.resultOK = true;
+                    item[Type.FIELD_RESULT_OK] = true;
                 }
             }
             if(!error){
-                data.resultOK=true;
+                data[Type.FIELD_RESULT_OK]=true;
             }
         },
         //clean
@@ -106,7 +104,7 @@ router.post('/post',function(req,res,next){
             for(const item of data.images) {
                 delete item.image_data;
                 delete item.buffer;
-                delete item.resultOK;
+                delete item[Type.FIELD_RESULT_OK];
             }
         },
     ],
@@ -119,7 +117,8 @@ router.post('/post',function(req,res,next){
 // - required_form_data = images[image_filename]
 router.post('/cdn_post',function(req,res,next){
     let error = null;
-    let data = {images:req.body.images,resultOK:false};
+    let data = {images:req.body.images};
+    data[Type.FIELD_RESULT_OK] = false;
     let upload_dir = path.join('public', 'uploads');
     var item = {};
     let cloud_flare_batch_token = null;
@@ -143,17 +142,17 @@ router.post('/cdn_post',function(req,res,next){
                     }
                 }
                 if(!error){
-                    item.resultOK = true;
+                    item[Type.FIELD_RESULT_OK] = true;
                 }
             }
             if(!error){
-                data.resultOK = true;
+                data[Type.FIELD_RESULT_OK] = true;
             }
         },
         //clean
         async function(call){
             for(const item of data.images) {
-                delete item.resultOK;
+                delete item[Type.FIELD_RESULT_OK];
             }
         },
     ],
