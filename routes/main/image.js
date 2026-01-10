@@ -18,7 +18,7 @@ router.get('/ping', function(req, res, next) {
 // - required_form_data = images[image_data]
 router.post('/post',function(req,res,next){
     let error = null;
-    let post_image_items = req.body.data.images;
+    let post_image_items = req.body.images;
     let data = {images:[],resultOK:false};
     let upload_dir = path.join('public', 'uploads');
     var item = {};
@@ -119,7 +119,7 @@ router.post('/post',function(req,res,next){
 // - required_form_data = images[image_filename]
 router.post('/cdn_post',function(req,res,next){
     let error = null;
-    let data = {images:req.body.data.images,resultOK:false};
+    let data = {images:req.body.images,resultOK:false};
     let upload_dir = path.join('public', 'uploads');
     var item = {};
     let cloud_flare_batch_token = null;
