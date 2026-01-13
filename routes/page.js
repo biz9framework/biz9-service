@@ -90,9 +90,7 @@ router.post('/home', function(req, res, next) {
             }else{
                 data.latest_products =  biz_data.products;
             }
-            Log.w('99_data',biz_data);
         },
-        /*
         //products - rating_avg
         async function(call){
             let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter ,{rating_avg:-1},1,12);
@@ -114,7 +112,9 @@ router.post('/home', function(req, res, next) {
             }else{
                 data.trending_products = biz_data.products;
             }
+            Log.w('99_data',data.trending_products);
         },
+        /*
         //categorys
         async function(call){
             let search = Data_Logic.get_search(Type.DATA_CATEGORY,{category:Type.DATA_PRODUCT},{title:1},1,0);

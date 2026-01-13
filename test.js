@@ -11,7 +11,7 @@ const {Log,Num,Str} = require("biz9-utility");
 - post_user
 */
 //-env-test - start //
-let APP_ID = "test-stage-jan12";
+let APP_ID = "test-stage-jan13";
 let URL = "http://localhost:1904";
 let PORT_ID = "1904";
 //-env-test - end //
@@ -151,13 +151,22 @@ describe('post_app', function(){ this.timeout(25000);
 			let biz9_config = Scriptz.get_biz9_config();
 	        //let parent = Data_Logic.get(new_data_type,0,{test:true});
 			let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST_ITEMS);
-            type_list = ['Admin Panel','Landing Page','Mobile','Website'];
-            delivery_time = ['1 week','3 weeks','1 month','1 year'];
-            category_list = ['Beauty','Church','Fashion','Food Trucks','Health Care','Music','Pets','Services','Service Repair','Sports','Transportation'];
-            feature_list = ['true','false'];
-            hot_list = ['true','false'];
+            let type_list = ['Admin Panel','Landing Page','Mobile','Website'];
+            let delivery_time = ['1 week','3 weeks','1 month','1 year'];
+            let category_list = ['Beauty','Church','Fashion','Food Trucks','Health Care','Music','Pets','Services','Service Repair','Sports','Transportation'];
+            let feature_list = ['true','false'];
+            let hot_list = ['true','false'];
             let count = 30;
             let data = [];
+            //type
+            for(a = 0; a < type_list.length; a++){
+                data.push(Data_Logic.get(Type.DATA_TYPE,0,{title:type_list[a],test:true}));
+                //category
+                for(b = 0; b < category_list.length; b++){
+                    data.push(Data_Logic.get(Type.DATA_CATEGORY,0,{title:category_list[b],test:true,data:{type:type_list[a]}}));
+                }
+            }
+            //product
             for(a = 0; a <  count; a++){
                 data.push(Data_Logic.get(Type.DATA_PRODUCT,0,
                     {test:true,
@@ -166,8 +175,8 @@ describe('post_app', function(){ this.timeout(25000);
                             review_count:Num.get_id(999),
                             rating_avg:Num.get_id(5),
                             type:type_list[Num.get_id(type_list.length)],
-                            delivery_time:delivery_time[Num.get_id(delivery_time.length)],
                             category:category_list[Num.get_id(category_list.length)],
+                            delivery_time:delivery_time[Num.get_id(delivery_time.length)],
                             feature:feature_list[Num.get_id(feature_list.length)],
                             hot:hot_list[Num.get_id(hot_list.length)],
                         }
