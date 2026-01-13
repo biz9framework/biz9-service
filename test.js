@@ -92,6 +92,7 @@ describe('connect', function(){ this.timeout(25000);
 					.catch(function (error) {
 						console.log('CONNECT-END');
 					});
+
 			}
 		],
 			function(error, result){
@@ -145,29 +146,45 @@ describe('post_user', function(){ this.timeout(25000);
 describe('post_app', function(){ this.timeout(25000);
 	it("_post_app", function(done){
 		let cloud_error=null;
-		console.log('BLANK-START');
+		console.log('POST-APP-START');
 		async.series([ function(call){
 			let biz9_config = Scriptz.get_biz9_config();
 	        //let parent = Data_Logic.get(new_data_type,0,{test:true});
-	        //let post_data = {id:parent.id,data_type:parent.data_type,option:{}};
-			let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST);
-
-
-            //product
-            let data = Data_Logic.get(Type.DATA_PRODUCT,0,{test:true,count:2,data:{category:'cat1'}});
-
+			let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST_ITEMS);
+            type_list = ['Admin Panel','Landing Page','Mobile','Website'];
+            delivery_time = ['1 week','3 weeks','1 month','1 year'];
+            category_list = ['Beauty','Church','Fashion','Food Trucks','Health Care','Music','Pets','Services','Service Repair','Sports','Transportation'];
+            feature_list = ['true','false'];
+            hot_list = ['true','false'];
+            let count = 30;
+            let data = [];
+            for(a = 0; a <  count; a++){
+                data.push(Data_Logic.get(Type.DATA_PRODUCT,0,
+                    {test:true,
+                        data:{
+                            view_count:Num.get_id(999),
+                            review_count:Num.get_id(999),
+                            rating_avg:Num.get_id(5),
+                            type:type_list[Num.get_id(type_list.length)],
+                            delivery_time:delivery_time[Num.get_id(delivery_time.length)],
+                            category:category_list[Num.get_id(category_list.length)],
+                            feature:feature_list[Num.get_id(feature_list.length)],
+                            hot:hot_list[Num.get_id(hot_list.length)],
+                        }
+                    }
+                ));
+            }
             Log.w('99_data',data);
-
-            /*
-			axios.post(url, {
+	        let post_data = {data:data};
+			axios.post(url,
 				post_data
-			})
+			)
 				.then(function (response) {
 					if(response.data.cloud_error){
 						cloud_error=Log.append(cloud_error,response.data.error);
 					}else{
 						Log.w('cloud',response.data);
-						console.log('BLANK-SUCCESS');
+						console.log('POST-APP-SUCCESS');
 					}
 					call();
 				})
@@ -175,7 +192,6 @@ describe('post_app', function(){ this.timeout(25000);
 					cloud_error=Log.append(cloud_error,error);
 					call();
 				});
-            */
 		}
 		],
 			function(error, result){

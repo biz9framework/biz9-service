@@ -18,8 +18,8 @@ router.get('/ping', function(req, res, next) {
 router.post('/home', function(req, res, next) {
     let error = null;
     let database,data = {};
-    //let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter();
-    //let app_dev_search_option = {fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count,view_count,is_favorite',get_favorite:true,user_id:req.body.user_id};
+    let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter();
+    let app_dev_search_option ={field:{id:1,title:1,title_url:1,type:1,category:1,image_filename:1,cost:1,featured:1,delivery_time:1,hot:1,rating_avg:1,review_count:1,view_count:1}};
     //let app_dev_search_explore_option = {get_field:true,fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count,view_count'};
     let option = req.body.option ? req.body.option : {field_value:true};
     //
@@ -62,24 +62,18 @@ router.post('/home', function(req, res, next) {
         },
         //page
         async function(call){
-            console.log('aaaaaaa');
-            Log.w('data',data);
-            Log.w('form_page',data.page);
-            Log.w('option',option);
             const [biz_error,biz_data] = await Page_Data.get(database,data.page.id,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
                 data.page = biz_data;
             }
-            Log.w('99_data.page',data.page);
         },
-        /*
         //products - popular
         async function(call){
             let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{view_count:-1},1,12);
             let option = app_dev_search_option;
-            const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,app_dev_search_option);
+            const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
@@ -96,7 +90,9 @@ router.post('/home', function(req, res, next) {
             }else{
                 data.latest_products =  biz_data.products;
             }
+            Log.w('99_data',biz_data);
         },
+        /*
         //products - rating_avg
         async function(call){
             let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter ,{rating_avg:-1},1,12);
