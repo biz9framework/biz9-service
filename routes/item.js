@@ -3,7 +3,7 @@ let router=express.Router();
 const path = require('path');
 //const FormData = require('form-data');
 /* -- biz9_start -- */
-const {Portal,Database,Favorite_Data}=require("/home/think2/www/doqbox/biz9-framework/biz9-data/code");
+const {Portal,Database,Favorite_Data}=require("/home/think1/www/doqbox/biz9-framework/biz9-data/code");
 const {Data_Logic,App_Logic,Favorite_Logic,Type,Field_Logic}=require("biz9-logic");
 const {Scriptz}=require("biz9-scriptz");
 const {Log,Str,Num}=require("biz9-utility");

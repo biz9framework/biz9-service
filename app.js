@@ -7,7 +7,6 @@ bodyParser=require("body-parser");
 path=require("path");
 session=require("express-session");
 const {Scriptz}=require("biz9-scriptz");
-const {Log}=require("biz9-utility");
 biz9_config=Scriptz.get_biz9_config();
 /* --- REQUIRE END -- */
 /* --- CONFIG START --- */
@@ -16,6 +15,7 @@ PROJECT_ID=biz9_config.PROJECT_ID;
 VERSION=biz9_config.VERSION;
 PORT_ID=biz9_config.PORT_ID;
 APP_ID=biz9_config.APP_ID;
+
 IP_ADDRESS = "";
 GEO_KEY = "4A2F0395D906CA7E334C0A332E06F473";
 USER_ID="0d9793ae-04f1-4036-b589-dec56fbcc4d3";
@@ -23,7 +23,8 @@ CLOUD_FLARE_API_TOKEN="ZNnMMXR2MNhKhj1vskWbDbNjabJmiRX6FBIWKKUd";
 CLOUD_FLARE_ACCOUNT_ID="d5141ab35f31b135fa3e3ceef222d3a8";
 /*--- CONFIG END ---*/
 /* --- DEFAULT START --- */
-ENV=process.env.NODE_ENV;
+//APP_ENV=process.env.NODE_ENV;
+APP_ENV='test';
 /*--- DEFAULT END ---*/
 /* --- APP URL-CUSTOM START  -- */
 const cms=require("./routes/cms");
@@ -73,7 +74,7 @@ app.use("/main/image",image);
 app.use(function(err,req,res,next) {
     let cloud_error=err;
     let cloud_data={};
-    Log.error("Service App",err);
+    console.error("Service App Error",err);
     res.send({cloud_error,cloud_data});
     res.end();
 });

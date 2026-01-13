@@ -4,9 +4,9 @@ const fs = require('fs');
 const path = require('path');
 //const FormData = require('form-data');
 /* -- biz9_start -- */
-const {Image_Logic,Data_Logic,Type}=require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
+const {Image_Logic,Data_Logic,Type}=require("/home/think1/www/doqbox/biz9-framework/biz9-logic/code");
 const {Log}=require("biz9-utility");
-const {Image_Cloud_Flare,Image_File}=require("/home/think2/www/doqbox/biz9-framework/biz9-image/code");
+const {Image_Cloud_Flare,Image_File}=require("/home/think1/www/doqbox/biz9-framework/biz9-image/code");
 /* -- biz9-end -- */
 router.get('/ping', function(req, res, next) {
     let error=null;

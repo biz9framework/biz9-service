@@ -1,8 +1,8 @@
 let express=require('express');
 let router=express.Router();
 /* -- biz9_start -- */
-const {Database}=require("/home/think2/www/doqbox/biz9-framework/biz9-data/code");
-const {Type}=require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
+const {Database,Page_Data,Portal,Product_Data,Blog_Post_Data,Faq_Data}=require("/home/think1/www/doqbox/biz9-framework/biz9-data/code");
+const {Type,User_Logic,Data_Logic}=require("/home/think1/www/doqbox/biz9-framework/biz9-logic/code");
 const {Scriptz}=require("biz9-scriptz");
 const {Project_Logic}=require("../project_logic");
 const {Log}=require("biz9-utility");
@@ -18,14 +18,14 @@ router.get('/ping', function(req, res, next) {
 router.post('/home', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter();
-    let app_dev_search_option = {fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count,view_count,is_favorite',get_favorite:true,user_id:req.body.user_id};
-    let app_dev_search_explore_option = {get_field:true,fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count,view_count'};
+    //let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter();
+    //let app_dev_search_option = {fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count,view_count,is_favorite',get_favorite:true,user_id:req.body.user_id};
+    //let app_dev_search_explore_option = {get_field:true,fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count,view_count'};
     let option = req.body.option ? req.body.option : {field_value:true};
     //
     data.user = req.body.user_id ? Data_Logic.get(Type.DATA_USER,req.body.user_id): User_Logic.get_guest();
     //
-    data.page = Data_Logic.get(Type.DATA_PAGE,0,{data:{key:Type.PAGE_HOME}});
+    data.page = Data_Logic.get(Type.DATA_PAGE,'home');
     //
     data.favorites = [];
     //
@@ -62,13 +62,19 @@ router.post('/home', function(req, res, next) {
         },
         //page
         async function(call){
-            const [biz_error,biz_data] = await Page_Data.get(database,data.page.key,option);
+            console.log('aaaaaaa');
+            Log.w('data',data);
+            Log.w('form_page',data.page);
+            Log.w('option',option);
+            const [biz_error,biz_data] = await Page_Data.get(database,data.page.id,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
                 data.page = biz_data;
             }
+            Log.w('99_data.page',data.page);
         },
+        /*
         //products - popular
         async function(call){
             let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{view_count:-1},1,12);
@@ -301,10 +307,11 @@ router.post('/home', function(req, res, next) {
                 data.faqs = biz_data;
             }
         },
+        */
     ],
         function(err, result){
-            res.send({error:error,data:data});
-            res.end();
+            //res.send({error:error,data:data});
+            //res.end();
         });
 });
 //9_faq

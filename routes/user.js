@@ -3,8 +3,8 @@ let router=express.Router();
 const os = require('os');
 /* -- biz9-start -- */
 const {Scriptz}=require("biz9-scriptz");
-const {Portal,Database,User_Data}=require("/home/think2/www/doqbox/biz9-framework/biz9-data/code");
-const {Type,Data_Logic,User_Logic}=require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
+const {Portal,Database,User_Data}=require("/home/think1/www/doqbox/biz9-framework/biz9-data/code");
+const {Type,Data_Logic,User_Logic}=require("/home/think1/www/doqbox/biz9-framework/biz9-logic/code");
 const {Log,Str,Obj}=require("biz9-utility");
 /* -- biz9-end -- */
 router.get('/ping', function(req, res, next) {

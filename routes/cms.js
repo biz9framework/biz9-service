@@ -1,8 +1,8 @@
 let express=require('express');
 let router=express.Router();
 /* -- biz9_start -- */
-const {Portal,Database}=require("/home/think2/www/doqbox/biz9-framework/biz9-data/code");
-const {Type,Data_Logic}=require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
+const {Portal,Database}=require("/home/think1/www/doqbox/biz9-framework/biz9-data/code");
+const {Type,Data_Logic}=require("/home/think1/www/doqbox/biz9-framework/biz9-logic/code");
 const {Scriptz}=require("biz9-scriptz");
 const {Log,Str,Obj}=require("biz9-utility");
 /* -- biz9-end -- */

@@ -1,7 +1,7 @@
 let express=require('express');
 let router=express.Router();
 /* -- biz9-start -- */
-const {Database}=require("/home/think2/www/doqbox/biz9-framework/biz9-data/code");
+const {Database}=require("/home/think1/www/doqbox/biz9-framework/biz9-data/code");
 const {Scriptz}=require("biz9-scriptz");
 /* -- biz9-end -- */
 router.get('/ping_get', function(req, res, next) {

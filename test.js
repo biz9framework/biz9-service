@@ -2,7 +2,7 @@ async = require('async')
 const axios = require('axios');
 const {Data} = require("biz9-data");
 const {Scriptz} = require("biz9-scriptz");
-const {Type,Data_Logic,App_Logic,Url} = require("/home/think2/www/doqbox/biz9-framework/biz9-logic/code");
+const {Type,Data_Logic,App_Logic,Url} = require("/home/think1/www/doqbox/biz9-framework/biz9-logic/code");
 const assert = require('node:assert');
 const {Log,Num,Str} = require("biz9-utility");
 /*
@@ -11,7 +11,7 @@ const {Log,Num,Str} = require("biz9-utility");
 - post_user
 */
 //-env-test - start //
-let APP_ID = "test-stage-jan9";
+let APP_ID = "test-stage-jan12";
 let URL = "http://localhost:1904";
 let PORT_ID = "1904";
 //-env-test - end //
@@ -56,7 +56,8 @@ describe('connect', function(){ this.timeout(25000);
 			function(call){
 				console.log('CONNECT-START');
 				let new_data_type = Type.DATA_PRODUCT;
-				let id = '246';
+				//let id = '246';
+				let id = 'home';
 				let user_id = '246';
 				//-->
 				//let parent = Data_Logic.get(new_data_type,0,{test:true});
@@ -68,15 +69,16 @@ describe('connect', function(){ this.timeout(25000);
 				//let search = Data_Logic.get_search(Type.DATA_PRODUCT,{},{},1,0);
 				//-->
 				//let post_data = {id:parent.id,data_type:parent.data_type,data:parent};
-				let post_data = {id:user.id,data_type:user.data_type,user:user};
-				//let post_data = {id:parent.id,data_type:parent.data_type};
+				//let post_data = {id:user.id,data_type:user.data_type,user:user};
+				let post_data = {id:parent.id,data_type:parent.data_type,option:{field_value:true,id_field:Type.FIELD_TITLE_URL}};
 				//let post_data = {search};
 				//-->
 				//let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST);
 				//let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.GET);
-				let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.LOGIN);
+				//let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.LOGIN);
 				//let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.SEARCH);
 				//let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.DELETE);
+				let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PAGE_HOME);
 				Log.w('url',url);
 				//-- URL END --//
 				axios.post(url,
@@ -109,10 +111,9 @@ describe('post_user', function(){ this.timeout(25000);
 		console.log('POST-USER-START');
 		async.series([ function(call){
 			let biz9_config = Scriptz.get_biz9_config();
-			//super_admin - add - start
 			let user = Data_Logic.get(Type.DATA_USER,0,{test:true,data:{email:EMAIL,password:PASSWORD,role:Type.USER_ROLE_SUPER_ADMIN}});
-			let cloud_url =  App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST);
-			axios.post(cloud_url, {
+			let url =  App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST);
+			axios.post(url, {
 				data:user
 			})
 				.then(function (response) {
@@ -135,6 +136,91 @@ describe('post_user', function(){ this.timeout(25000);
 					Log.error("POST-USER-ERROR-DONE",cloud_error);
 				}else{
 					console.log('POST-USER-SUCCESS-DONE');
+				}
+				done();
+			});
+	});
+});
+//9_post_app
+describe('post_app', function(){ this.timeout(25000);
+	it("_post_app", function(done){
+		let cloud_error=null;
+		console.log('BLANK-START');
+		async.series([ function(call){
+			let biz9_config = Scriptz.get_biz9_config();
+	        //let parent = Data_Logic.get(new_data_type,0,{test:true});
+	        //let post_data = {id:parent.id,data_type:parent.data_type,option:{}};
+			let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST);
+
+
+            //product
+            let data = Data_Logic.get(Type.DATA_PRODUCT,0,{test:true,count:2,data:{category:'cat1'}});
+
+            Log.w('99_data',data);
+
+            /*
+			axios.post(url, {
+				post_data
+			})
+				.then(function (response) {
+					if(response.data.cloud_error){
+						cloud_error=Log.append(cloud_error,response.data.error);
+					}else{
+						Log.w('cloud',response.data);
+						console.log('BLANK-SUCCESS');
+					}
+					call();
+				})
+				.catch(function (error) {
+					cloud_error=Log.append(cloud_error,error);
+					call();
+				});
+            */
+		}
+		],
+			function(error, result){
+				if(cloud_error){
+					Log.error("BLANK-ERROR-DONE",cloud_error);
+				}else{
+					console.log('BLANK-SUCCESS-DONE');
+				}
+				done();
+			});
+	});
+});
+//9_blank
+describe('blank', function(){ this.timeout(25000);
+	it("_blank", function(done){
+		let cloud_error=null;
+		console.log('BLANK-START');
+		async.series([ function(call){
+			let biz9_config = Scriptz.get_biz9_config();
+	        let parent = Data_Logic.get(new_data_type,0,{test:true});
+	        let post_data = {id:parent.id,data_type:parent.data_type,option:{}};
+			let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST);
+			axios.post(url, {
+				post_data
+			})
+				.then(function (response) {
+					if(response.data.cloud_error){
+						cloud_error=Log.append(cloud_error,response.data.error);
+					}else{
+						Log.w('cloud',response.data);
+						console.log('BLANK-SUCCESS');
+					}
+					call();
+				})
+				.catch(function (error) {
+					cloud_error=Log.append(cloud_error,error);
+					call();
+				});
+		}
+		],
+			function(error, result){
+				if(cloud_error){
+					Log.error("BLANK-ERROR-DONE",cloud_error);
+				}else{
+					console.log('BLANK-SUCCESS-DONE');
 				}
 				done();
 			});
