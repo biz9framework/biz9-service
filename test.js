@@ -176,7 +176,6 @@ describe('post_app', function(){ this.timeout(25000);
                 }
             },
             async function(call){
-                console.log('bbbbb');
                 //let parent = Data_Logic.get(new_data_type,0,{test:true});
                 let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST_ITEMS);
                 let page_list = ['Home','About','Contact','FAQs','Blog Posts'];
@@ -221,16 +220,9 @@ describe('post_app', function(){ this.timeout(25000);
                     ));
                 }
                 //blog_post
-                console.log('aaaaaaa');
-                data.push(Data_Logic.get(Type.DATA_BLOG_POST,0,{test:true,count:9}));
-                Log.w('blog_post',data);
-                /*
+                data.push(...Data_Logic.get(Type.DATA_BLOG_POST,0,{test:true,count:9}));
                 //user
-                user_list = Data_Logic.get(Type.DATA_USER,0,{test:true,count:9});
-                for(const user of user_list){
-                    data.push(user);
-                }
-                */
+                data.push(...Data_Logic.get(Type.DATA_USER,0,{test:true,count:9}));
                 const [biz_error,biz_data] = await Portal.post_items(database,data);
                 if(biz_error){
                     error=Log.append(error,biz_error);
@@ -239,7 +231,6 @@ describe('post_app', function(){ this.timeout(25000);
                     Log.w('data',data);
                 }
             },
-            /*
             async function(call){
                 let user_list = data.filter(item_find=>item_find.data_type===Type.DATA_USER);
                 for(a = 0; a < review_count; a++){
@@ -248,7 +239,7 @@ describe('post_app', function(){ this.timeout(25000);
                             data:{
                                 user_id:user_list[Num.get_id(user_list.length)].id,
                                 parent_data_type:Type.DATA_BLANK,
-                                parent_id:1,
+                                parent_id:'1',
                             }
                         }
                     ));
@@ -261,7 +252,6 @@ describe('post_app', function(){ this.timeout(25000);
                     Log.w('data_2',data_2);
                 }
             },
-            */
         ],
             function(error, result){
                 if(cloud_error){
