@@ -268,16 +268,12 @@ router.post('/home', function(req, res, next) {
         },
         //business reviews
         async function(call){
-            console.log('here');
             const [biz_error,biz_data] = await Review_Data.get(database,Type.DATA_PRODUCT,'1',{date_create:-1},1,12);
-            Log.w('dddddddd',biz_data);
-            /*
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
                 data.reviews = biz_data.reviews;
             }
-            */
         },
         /*
         //faqs
@@ -294,8 +290,8 @@ router.post('/home', function(req, res, next) {
         */
     ],
         function(err, result){
-            //res.send({error:error,data:data});
-            //res.end();
+            res.send({error:error,data:data});
+            res.end();
         });
 });
 //9_faq

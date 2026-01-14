@@ -97,7 +97,6 @@ describe('connect', function(){ this.timeout(25000);
                 )
                     .then(function (response) {
                         Log.w('post_data',response.data);
-                        Log.w('post_data',response.data.data);
                         console.log('CONNECT-SUCCESS');
                         call();
                     })
@@ -228,9 +227,9 @@ describe('post_app', function(){ this.timeout(25000);
                     error=Log.append(error,biz_error);
                 }else{
                     data = biz_data;
-                    Log.w('data',data);
                 }
             },
+            //review
             async function(call){
                 let user_list = data.filter(item_find=>item_find.data_type===Type.DATA_USER);
                 for(a = 0; a < review_count; a++){
@@ -238,7 +237,7 @@ describe('post_app', function(){ this.timeout(25000);
                         {test:true,
                             data:{
                                 user_id:user_list[Num.get_id(user_list.length)].id,
-                                parent_data_type:Type.DATA_BLANK,
+                                parent_data_type:Type.DATA_PRODUCT,
                                 parent_id:'1',
                             }
                         }
@@ -249,7 +248,6 @@ describe('post_app', function(){ this.timeout(25000);
                     error=Log.append(error,biz_error);
                 }else{
                     data_2 = biz_data;
-                    Log.w('data_2',data_2);
                 }
             },
         ],
