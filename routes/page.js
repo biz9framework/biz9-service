@@ -19,9 +19,10 @@ router.post('/home', function(req, res, next) {
     let error = null;
     let database,data = {};
     let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter();
-    let app_dev_search_option ={field:{id:1,title:1,title_url:1,type:1,category:1,image_filename:1,cost:1,featured:1,delivery_time:1,hot:1,rating_avg:1,review_count:1,view_count:1}};
-    //let app_dev_search_explore_option = {get_field:true,fields:'id,title,title_url,type,category,image_filename,cost,featured,delivery_time,hot,category,rating_avg,review_count,view_count'};
+    let app_dev_field ={field:{id:1,title:1,title_url:1,type:1,category:1,image_filename:1,cost:1,featured:1,delivery_time:1,hot:1,rating_avg:1,review_count:1,view_count:1}};
     let option = req.body.option ? req.body.option : {field_value:true};
+    //next
+    let app_dev_search_option ={field:{id:1,title:1,title_url:1,type:1,category:1,image_filename:1,cost:1,featured:1,delivery_time:1,hot:1,rating_avg:1,review_count:1,view_count:1}};
     //
     data.user = req.body.user_id ? Data_Logic.get(Type.DATA_USER,req.body.user_id): User_Logic.get_guest();
     //
@@ -112,20 +113,20 @@ router.post('/home', function(req, res, next) {
             }else{
                 data.trending_products = biz_data.products;
             }
-            Log.w('99_data',data.trending_products);
         },
-        /*
         //categorys
         async function(call){
+            let foreign_search_1 = Data_Logic.get_search_foreign(Type.TITLE_COUNT,Type.DATA_PRODUCT,Type.FIELD_CATEGORY,Type.FIELD_TITLE,{field:{id:1},title:'product_count'});
+            let option = {foreigns:[foreign_search_1],distinct:{field:'title'},field:{title:1,title_url:1,product_count:1}};
+            //let option = {};
             let search = Data_Logic.get_search(Type.DATA_CATEGORY,{category:Type.DATA_PRODUCT},{title:1},1,0);
-            let option = {get_distinct:true,distinct_field:'title',distinct_sort:'asc',get_join:true,field_keys:[{foreign_data_type:Type.DATA_PRODUCT,foreign_field:'category',item_field:'title',title:'product_count',type:Type.COUNT}]};
             const [biz_error,biz_data] = await Portal.search(database,search.data_type,search.filter,search.sort_by,search.page_current,search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
                 data.categorys = biz_data.items;
                 biz_data.items.forEach(item => {
-                    data.category_product_titles.push({title:item.title,count:Number(item.item_count),products:[]});
+                    data.category_product_titles.push({title:item.title,count:Number(item.product_count),products:[]});
                 });
             }
         },
@@ -203,7 +204,9 @@ router.post('/home', function(req, res, next) {
             }else{
                 data.category_product_titles[5].products = biz_data.products;
             }
+            Log.w('aaaaaaaa',data.category_product_titles[5].products);
         },
+        /*
         //blog_posts
         async function(call){
             let query = {};

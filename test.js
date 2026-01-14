@@ -47,6 +47,7 @@ DATA_CONFIG = {
 	REDIS_PORT_ID:"27020"
 }
 /* --- TEST DATA CONFIG END --- */
+//9_test connect 9_connect
 describe('connect', function(){ this.timeout(25000);
 	it("_connect", function(done){
 		console.log('TEST-CONNECT-START');
@@ -66,12 +67,20 @@ describe('connect', function(){ this.timeout(25000);
 				//Log.w('parent',parent);
 				//Log.w('user',user);
 				//-->
+				let search = {};
 				//let search = Data_Logic.get_search(Type.DATA_PRODUCT,{},{},1,0);
+                //let search = Data_Logic.get_search(Type.DATA_CATEGORY,{category:Type.DATA_PRODUCT},{title:1},1,0);
+                //let foreign_search_1 = Data_Logic.get_search_foreign(Type.TITLE_LIST,Type.DATA_PRODUCT,Type.FIELD_CATEGORY,Type.FIELD_TITLE,{title:'product_count'});
+                let option = {};
+                //let option = {distinct:{field:'title'},field:{title:1},foreigns:[foreign_search_1]};
+
+                //let option = {get_distinct:true,distinct_field:'title',distinct_sort:'asc',get_join:true,field_keys:[{foreign_data_type:Type.DATA_PRODUCT,foreign_field:'category',item_field:'title',title:'product_count',type:Type.COUNT}]};
 				//-->
+				let post_data = {};
 				//let post_data = {id:parent.id,data_type:parent.data_type,data:parent};
 				//let post_data = {id:user.id,data_type:user.data_type,user:user};
-				let post_data = {id:parent.id,data_type:parent.data_type,option:{field_value:true,id_field:Type.FIELD_TITLE_URL}};
-				//let post_data = {search};
+				//let post_data = {id:parent.id,data_type:parent.data_type,option:{field_value:true,id_field:Type.FIELD_TITLE_URL}};
+				//let post_data = {search:search,option:option};
 				//-->
 				//let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST);
 				//let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.GET);
@@ -79,6 +88,8 @@ describe('connect', function(){ this.timeout(25000);
 				//let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.SEARCH);
 				//let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.DELETE);
 				let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PAGE_HOME);
+				Log.w('search',search);
+				Log.w('option',option);
 				Log.w('url',url);
 				//-- URL END --//
 				axios.post(url,
@@ -86,13 +97,13 @@ describe('connect', function(){ this.timeout(25000);
 				)
 					.then(function (response) {
 						Log.w('post_data',response.data);
+						Log.w('post_data',response.data.data);
 						console.log('CONNECT-SUCCESS');
 						call();
 					})
 					.catch(function (error) {
 						console.log('CONNECT-END');
 					});
-
 			}
 		],
 			function(error, result){
@@ -163,7 +174,7 @@ describe('post_app', function(){ this.timeout(25000);
                 data.push(Data_Logic.get(Type.DATA_TYPE,0,{title:type_list[a],test:true}));
                 //category
                 for(b = 0; b < category_list.length; b++){
-                    data.push(Data_Logic.get(Type.DATA_CATEGORY,0,{title:category_list[b],test:true,data:{type:type_list[a]}}));
+                    data.push(Data_Logic.get(Type.DATA_CATEGORY,0,{title:category_list[b],test:true,data:{type:type_list[a],category:Type.DATA_PRODUCT}}));
                 }
             }
             //product
