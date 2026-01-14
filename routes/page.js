@@ -63,7 +63,8 @@ router.post('/home', function(req, res, next) {
         },
         //page
         async function(call){
-            const [biz_error,biz_data] = await Page_Data.get(database,data.page.id,option);
+            let option_page = {id_field:Type.FIELD_TITLE_URL};
+            const [biz_error,biz_data] = await Page_Data.get(database,data.page.id,option_page);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
@@ -204,21 +205,22 @@ router.post('/home', function(req, res, next) {
             }else{
                 data.category_product_titles[5].products = biz_data.products;
             }
-            Log.w('aaaaaaaa',data.category_product_titles[5].products);
         },
-        /*
         //blog_posts
         async function(call){
-            let query = {};
             let search = Data_Logic.get_search(Type.DATA_BLOG_POST,query,{},1,12);
-            let option = {get_field:true,fields:'id,title,title_url,category,date_create,image_filename,description,author'};
-            const [biz_error,biz_data] = await Blog_Post_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option);
+            let option_blog = {field:{id:1,title:1,title_url:1,category:1,date_create:1,image_filename:1,description:1,author:1}};
+            console.log('aaaaaaaa');
+            const [biz_error,biz_data] = await Blog_Post_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,option_blog);
+            console.log('cool');
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
                 data.blog_posts = biz_data.blog_posts;
             }
+            Lo9.w('blog_posts',data.blog_posts);
         },
+        /*
         //explore_products_1
         async function(call){
             let query = {};
