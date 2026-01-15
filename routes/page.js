@@ -41,11 +41,11 @@ router.post('/home', function(req, res, next) {
     //
     data.blog_posts = [];
     //
-    data.explore_products_1 = [];
-    data.explore_products_2 = [];
-    data.explore_products_3 = [];
-    data.explore_products_4 = [];
-    data.explore_products_5 = [];
+    data.products_explore_1 = [];
+    data.products_explore_2 = [];
+    data.products_explore_3 = [];
+    data.products_explore_4 = [];
+    data.products_explore_5 = [];
     //
     data.reviews = [];
     //
@@ -206,7 +206,7 @@ router.post('/home', function(req, res, next) {
                 data.blog_posts = biz_data.blog_posts;
             }
         },
-        //explore_products_1
+        //products_explore_1
         async function(call){
             let query = {};
             query.category = data.category_product_titles[6].title;
@@ -215,10 +215,10 @@ router.post('/home', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.explore_products_1 = biz_data.products;
+                data.products_explore_1 = biz_data.products;
             }
         },
-        //explore_products_2
+        //products_explore_2
         async function(call){
             let query = {};
             query.category = data.category_product_titles[7].title;
@@ -227,10 +227,10 @@ router.post('/home', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.explore_products_2 = biz_data.products;
+                data.products_explore_2 = biz_data.products;
             }
         },
-        //explore_products_3
+        //products_explore_3
         async function(call){
             let query = {};
             query.category = data.category_product_titles[8].title;
@@ -239,10 +239,10 @@ router.post('/home', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.explore_products_3 = biz_data.products;
+                data.products_explore_3 = biz_data.products;
             }
         },
-        //explore_products_4
+        //products_explore_4
         async function(call){
             let query = {};
             query.category = data.category_product_titles[9].title;
@@ -251,10 +251,10 @@ router.post('/home', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.explore_products_4 = biz_data.products;
+                data.products_explore_4 = biz_data.products;
             }
         },
-        //explore_products_5
+        //products_explore_5
         async function(call){
             let query = {};
             query.category = data.category_product_titles[10].title;
@@ -263,7 +263,7 @@ router.post('/home', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.explore_products_5 = biz_data.products;
+                data.products_explore_5 = biz_data.products;
             }
         },
         //business reviews
