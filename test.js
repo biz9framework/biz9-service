@@ -11,7 +11,7 @@ const {Log,Num,Str} = require("biz9-utility");
 - post_user
 */
 //-env-test - start //
-let APP_ID = "test-stage-jan14";
+let APP_ID = "test-stage-jan22";
 let URL = "http://localhost:1904";
 let PORT_ID = "1904";
 //-env-test - end //
@@ -22,15 +22,6 @@ let URL = "http://service.bossappz.com";
 let PORT_ID = "1904";
 //-env-stage - end //
 */
-
-/* user - start */
-let TITLE = 'ceo';
-let TITLE_URL = 'ceo';
-let EMAIL = 'ceo@bossappz.com';
-let PASSWORD = '123456789Ab!';
-let ROLE = Type.USER_ROLE_SUPER_ADMIN;
-/* user - end */
-
 /* --- TEST CONFIG START --- */
 DATA_CONFIG = {
     APP_ID:APP_ID,
@@ -56,53 +47,52 @@ describe('connect', function(){ this.timeout(25000);
         async.series([
             function(call){
                 console.log('CONNECT-START');
-                let new_data_type = Type.DATA_PRODUCT;
-                //let id = '246';
-                let id = 'home';
-                let user_id = '246';
                 //-->
                 //let parent = Data_Logic.get(new_data_type,0,{test:true});
-                let parent = Data_Logic.get(new_data_type,id);
-                let user = Data_Logic.get(Type.DATA_USER,0,{test:true,data:{email:'ceo@bossappz.com',password:'123456789Ab!'}});
                 //Log.w('parent',parent);
-                //Log.w('user',user);
-                //-->
-                let search = {};
-                //let search = Data_Logic.get_search(Type.DATA_PRODUCT,{},{},1,0);
-                //let search = Data_Logic.get_search(Type.DATA_CATEGORY,{category:Type.DATA_PRODUCT},{title:1},1,0);
-                //let foreign_search_1 = Data_Logic.get_search_foreign(Type.TITLE_LIST,Type.DATA_PRODUCT,Type.FIELD_CATEGORY,Type.FIELD_TITLE,{title:'product_count'});
-                let option = {};
-                //let option = {distinct:{field:'title'},field:{title:1},foreigns:[foreign_search_1]};
+                //-- PAGE-HOME START --//
+                let id = Type.PAGE_HOME;
+                let data_type = Type.DATA_PAGE;
+                //id
+                let id_field = Type.FIELD_TITLE_URL;
+                //joins
+                //products-popular
+                let join_product_popular = Data_Logic.get_search_join(Type.SEARCH_ITEMS,Data_Logic.get_search(Type.DATA_PRODUCT,{},{view_count:-1},1,12),{title:'popular_products'});
+                let join_product_latest = Data_Logic.get_search_join(Type.SEARCH_ITEMS,Data_Logic.get_search(Type.DATA_PRODUCT,{},{date_create:-1},1,12),{title:'latest_products'});
+                let join_product_rating = Data_Logic.get_search_join(Type.SEARCH_ITEMS,Data_Logic.get_search(Type.DATA_PRODUCT,{},{rating_avg:-1},1,12),{title:'top_products'});
+                let join_product_trending = Data_Logic.get_search_join(Type.SEARCH_ITEMS,Data_Logic.get_search(Type.DATA_PRODUCT,{},{view_count:-1},1,12),{title:'trending_products'});
+                let join_foreign_category_product_count = Data_Logic.get_search_foreign(Type.SEARCH_COUNT,Type.DATA_PRODUCT,Type.FIELD_CATEGORY,Type.FIELD_TITLE,{title:'product_count'});
+                let join_foreign_category_product_items = Data_Logic.get_search_foreign(Type.SEARCH_ITEMS,Type.DATA_PRODUCT,Type.FIELD_CATEGORY,Type.FIELD_TITLE,{title:'product_items',page_current:1,page_size:12});
+                let join_category = Data_Logic.get_search_join(Type.SEARCH_ITEMS,Data_Logic.get_search(Type.DATA_CATEGORY,{},{view_count:-1},1,12),{title:'categorys',distinct:{field:Type.FIELD_TITLE,sort_by:Type.SEARCH_SORT_BY_ASC},foreigns:[join_foreign_category_product_count, join_foreign_category_product_items]});
+                let join_blog_post = Data_Logic.get_search_join(Type.SEARCH_ITEMS,Data_Logic.get_search(Type.DATA_BLOG_POST,{},{view_count:-1},1,12),{title:'blog_items'});
 
-                //let option = {get_distinct:true,distinct_field:'title',distinct_sort:'asc',get_join:true,field_keys:[{foreign_data_type:Type.DATA_PRODUCT,foreign_field:'category',item_field:'title',title:'product_count',type:Type.COUNT}]};
-                //-->
-                let post_data = {};
-                //let post_data = {id:parent.id,data_type:parent.data_type,data:parent};
-                //let post_data = {id:user.id,data_type:user.data_type,user:user};
-                //let post_data = {id:parent.id,data_type:parent.data_type,option:{field_value:true,id_field:Type.FIELD_TITLE_URL}};
-                //let post_data = {search:search,option:option};
-                //-->
-                //let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST);
-                //let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.GET);
-                //let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.LOGIN);
-                //let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.SEARCH);
-                //let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.DELETE);
-                let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.PAGE_HOME);
-                Log.w('search',search);
-                Log.w('option',option);
-                Log.w('url',url);
-                //-- URL END --//
+                let = option = {id_field,joins:[join_product_popular,join_product_latest,join_product_rating,join_product_trending,join_category,join_blog_post]};
+                //-- post-start --//
+                let post_data = {id:id,data_type:data_type,option:option};
+                let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.GET);
+                //-- post-end --//
+
+                //-- PAGE-HOME END --//
+
+                //-- PRINT START --//
+                Log.w('66_post_data',post_data);
+                Log.w('66_url',url);
+                //-- PRINT END --//
+
+                //-- SERVICE-POST START --//
                 axios.post(url,
                     post_data
                 )
-                    .then(function (response) {
-                        Log.w('post_data',response.data);
-                        console.log('CONNECT-SUCCESS');
-                        call();
-                    })
-                    .catch(function (error) {
-                        console.log('CONNECT-END');
-                    });
+                .then(function (response) {
+                    Log.w('post_data',response.data);
+                    console.log('CONNECT-SUCCESS');
+                    call();
+                })
+                .catch(function (error) {
+                    console.log('CONNECT-END');
+                });
+                //-- SERVICE-POST END --//
+
             }
         ],
             function(error, result){
@@ -157,7 +147,7 @@ describe('post_app', function(){ this.timeout(25000);
     it("_post_app", function(done){
         let cloud_error=null;
         let database = {};
-        let product_count = 30;
+        let product_count = 90;
         let blog_post_count = 10;
         let review_count = 10;
 
@@ -178,10 +168,10 @@ describe('post_app', function(){ this.timeout(25000);
                 //let parent = Data_Logic.get(new_data_type,0,{test:true});
                 let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST_ITEMS);
                 let page_list = ['Home','About','Contact','FAQs','Blog Posts'];
-                let type_list = ['Admin Panel','Landing Page','Mobile','Website'];
+                let type_list = ['Admin Panel','Landing Page','Mobile','Website','Hosting','Content Management System'];
                 let delivery_time = ['1 week','3 weeks','1 month','1 year'];
                 let category_list = ['Beauty','Church','Fashion','Food Trucks','Health Care','Music','Pets','Services','Service Repair','Sports','Transportation'];
-                let feature_list = ['true','false'];
+                let featured_list = ['true','false'];
                 let hot_list = ['true','false'];
                 //page
                 data.push(Data_Logic.get(Type.DATA_PAGE,0,{data:{type:Type.TITLE_PAGE_ABOUT,url:Url.PAGE_ABOUT},title:Type.TITLE_PAGE_ABOUT}));
@@ -209,11 +199,20 @@ describe('post_app', function(){ this.timeout(25000);
                                 view_count:Num.get_id(999),
                                 review_count:Num.get_id(999),
                                 rating_avg:Num.get_id(5),
-                                type:type_list[Num.get_id(type_list.length)],
+
+                                /*
+                                category:'Category 1',
+                                delivery_time:'1 week',
+                                type:'My Cool Type',
+                                featured:true,
+                                hot:true
+                                */
+
                                 category:category_list[Num.get_id(category_list.length)],
                                 delivery_time:delivery_time[Num.get_id(delivery_time.length)],
-                                feature:feature_list[Num.get_id(feature_list.length)],
-                                hot:hot_list[Num.get_id(hot_list.length)],
+                                type:type_list[Num.get_id(type_list.length)],
+                                featured:featured_list[Num.get_id(featured_list.length)],
+                                hot:hot_list[Num.get_id(hot_list.length)]
                             }
                         }
                     ));
@@ -221,7 +220,7 @@ describe('post_app', function(){ this.timeout(25000);
                 //blog_post
                 data.push(...Data_Logic.get(Type.DATA_BLOG_POST,0,{test:true,count:9}));
                 //user
-                data.push(...Data_Logic.get(Type.DATA_USER,0,{test:true,count:9}));
+                data.push(Data_Logic.get(Type.DATA_USER,0,{test:true,data:{role:Type.USER_ROLE_SUPER_ADMIN,email:'ceo@bossappz.com',password:'123456789Ab!'}}));
                 const [biz_error,biz_data] = await Portal.post_items(database,data);
                 if(biz_error){
                     error=Log.append(error,biz_error);

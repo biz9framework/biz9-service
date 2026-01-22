@@ -73,7 +73,8 @@ router.post('/home', function(req, res, next) {
         },
         //products - popular
         async function(call){
-            let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{view_count:-1},1,12);
+            //let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{view_count:-1},1,12);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,{},{view_count:-1},1,12);
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,app_dev_search_option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -83,7 +84,8 @@ router.post('/home', function(req, res, next) {
         },
         //products - latest
         async function(call){
-            let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            //let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,{},{date_create:-1},1,12);
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,app_dev_search_option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -93,7 +95,8 @@ router.post('/home', function(req, res, next) {
         },
         //products - rating_avg
         async function(call){
-            let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter ,{rating_avg:-1},1,12);
+            //let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter ,{rating_avg:-1},1,12);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,{} ,{rating_avg:-1},1,12);
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,app_dev_search_option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -103,7 +106,8 @@ router.post('/home', function(req, res, next) {
         },
         //products - trending
         async function(call){
-            let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter ,{date_create:-1,view_count:-1},1,12);
+            //let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter ,{date_create:-1,view_count:-1},1,12);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,{} ,{date_create:-1,view_count:-1},1,12);
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,app_dev_search_option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -121,9 +125,6 @@ router.post('/home', function(req, res, next) {
                 error=Log.append(error,biz_error);
             }else{
                 data.categorys = biz_data.items;
-                biz_data.items.forEach(item => {
-                    data.category_product_titles.push({title:item.title,count:Number(item.product_count),products:[]});
-                });
             }
         },
         async function(call){
@@ -132,7 +133,8 @@ router.post('/home', function(req, res, next) {
         //category_product_titles - 0
         async function(call){
             let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_titles[0].title);
-            let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            //let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,{},{date_create:-1},1,12);
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,app_dev_search_option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -143,7 +145,8 @@ router.post('/home', function(req, res, next) {
         //category_product_titles - 1
         async function(call){
             let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_titles[1].title);
-            let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            //let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,{},{date_create:-1},1,12);
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,app_dev_search_option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -154,7 +157,8 @@ router.post('/home', function(req, res, next) {
         //category_product_titles - 2
         async function(call){
             let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_titles[2].title);
-            let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            //let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,{},{date_create:-1},1,12);
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,app_dev_search_option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -165,7 +169,8 @@ router.post('/home', function(req, res, next) {
         //category_product_titles - 3
         async function(call){
             let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_titles[3].title);
-            let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            //let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,{},{date_create:-1},1,12);
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,app_dev_search_option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -176,7 +181,8 @@ router.post('/home', function(req, res, next) {
         //category_product_titles - 4
         async function(call){
             let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_titles[4].title);
-            let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            //let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,{},{date_create:-1},1,12);
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,app_dev_search_option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -187,7 +193,8 @@ router.post('/home', function(req, res, next) {
         //category_product_titles - 5
         async function(call){
             let app_dev_search_query_filter = Project_Logic.get_query_application_development_product_type_query_filter(data.category_product_titles[5].title);
-            let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            //let search = Data_Logic.get_search(Type.DATA_PRODUCT,app_dev_search_query_filter,{date_create:-1},1,12);
+            let search = Data_Logic.get_search(Type.DATA_PRODUCT,{},{date_create:-1},1,12);
             const [biz_error,biz_data] = await Product_Data.search(database,search.filter,search.sort_by,search.page_current,search.page_size,app_dev_search_option);
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -275,7 +282,6 @@ router.post('/home', function(req, res, next) {
                 data.reviews = biz_data.reviews;
             }
         },
-        /*
         //faqs
         async function(call){
             let query = {};
@@ -287,7 +293,6 @@ router.post('/home', function(req, res, next) {
                 data.faqs = biz_data;
             }
         },
-        */
     ],
         function(err, result){
             res.send({error:error,data:data});
