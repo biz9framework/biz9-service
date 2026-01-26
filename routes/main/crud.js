@@ -96,7 +96,10 @@ router.post('/search',function(req,res,next){
             }
         },
         async function(call){
+            console.log('aaaaaaa');
             const [biz_error,biz_data] = await Portal.search(database,data.search.data_type,data.search.filter,data.search.sort_by,data.search.page_current,data.search.page_size,option);
+            console.log('bbbb');
+            Log.w('biz_data',biz_data);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
