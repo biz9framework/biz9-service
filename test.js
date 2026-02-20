@@ -11,7 +11,7 @@ const {Log,Num,Str} = require("biz9-utility");
 - post_user
 */
 //-env-test - start //
-let APP_ID = "test-stage-jan29";
+let APP_ID = "test-stage-feb9";
 let URL = "http://localhost:1904";
 let PORT_ID = "1904";
 //-env-test - end //
@@ -173,8 +173,11 @@ describe('post_app', function(){ this.timeout(25000);
                 let category_list = ['Beauty','Church','Fashion','Food Trucks','Health Care','Music','Pets','Services','Service Repair','Sports','Transportation'];
                 let featured_list = ['true','false'];
                 let hot_list = ['true','false'];
+                //template
+                data.push(Data_Logic.get(Type.DATA_TEMPLATE,0,{title:Str.get_title(Type.TEMPLATE_PRIMARY)}));
                 //page
                 data.push(Data_Logic.get(Type.DATA_PAGE,0,{data:{type:Type.TITLE_PAGE_ABOUT,url:Url.PAGE_ABOUT},title:Type.TITLE_PAGE_ABOUT}));
+
                 data.push(Data_Logic.get(Type.DATA_PAGE,0,{data:{type:Type.TITLE_PAGE_BLOG_POST,url:Url.PAGE_BLOG_POST},title:Type.TITLE_PAGE_BLOG_POST}));
                 data.push(Data_Logic.get(Type.DATA_PAGE,0,{data:{type:Type.TITLE_PAGE_CONTACT,url:Url.PAGE_CONTACT},title:Type.TITLE_PAGE_CONTACT}));
                 data.push(Data_Logic.get(Type.DATA_PAGE,0,{data:{type:Type.TITLE_PAGE_FAQ,url:Url.PAGE_FAQ},title:Type.TITLE_PAGE_FAQ}));
@@ -196,10 +199,11 @@ describe('post_app', function(){ this.timeout(25000);
                     data.push(Data_Logic.get(Type.DATA_PRODUCT,0,
                         {test:true,
                             data:{
-                                view_count:Num.get_id(999),
-                                review_count:Num.get_id(999),
-                                rating_avg:Num.get_id(5),
-
+                               view_post:Num.get_id(999),
+                               order_post:Num.get_id(999),
+                               favorite_post:Num.get_id(999),
+                               review_post:Num.get_id(999),
+                               rating_avg:Num.get_id(5),
                                 /*
                                 category:'Category 1',
                                 delivery_time:'1 week',

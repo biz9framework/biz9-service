@@ -3,8 +3,8 @@ let router=express.Router();
 const path = require('path');
 //const FormData = require('form-data');
 /* -- biz9_start -- */
-const {Portal,Database,Favorite_Data}=require("/home/think1/www/doqbox/biz9-framework/biz9-data/code");
-const {Data_Logic,App_Logic,Favorite_Logic,Type,Field_Logic}=require("biz9-logic");
+const {Portal,Database,Favorite_Data,Cart_Data}=require("/home/think1/www/doqbox/biz9-framework/biz9-data/code");
+const {Data_Logic,App_Logic,Favorite_Logic,Type,Field_Logic}=require("/home/think1/www/doqbox/biz9-framework/biz9-logic/code");
 const {Scriptz}=require("biz9-scriptz");
 const {Log,Str,Num}=require("biz9-utility");
 /* -- biz9-end -- */
@@ -22,7 +22,7 @@ router.post('/custom_field', function(req, res, next) {
     let option = req.body.option ? req.body.option : {};
     data.org_custom_fields = [];
     data.custom_fields = [];
-    data.item=Data_Logic.get(req.data.data_type,{data:req.body.id});
+    data.item=Data_Logic.get(req.body.data_type,{data:req.body.id});
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -86,7 +86,7 @@ router.post('/custom_field', function(req, res, next) {
 router.post('/cart_delete', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.data.option ? req.data.option : {};
+    let option = req.body.option ? req.body.option : {};
     data.cart = Data_Logic.get(Type.DATA_CART,req.body.id);
     async.series([
         async function(call){
@@ -116,8 +116,8 @@ router.post('/cart_delete', function(req, res, next) {
 router.post('/cart', function(req, res, next) {
     let error = null;
     let database,data = {};
-    data.cart = Data_Logic.get(Type.DATA_CART,0,{data:{cart_number:req.data.cart_number}});
-    let option = req.body.option ? req.data.option : {};
+    data.cart = Data_Logic.get(Type.DATA_CART,0,{data:{cart_number:req.body.cart_number}});
+    let option = req.body.option ? req.body.option : {};
     async.series([
         async function(call){
             let biz9_config = Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null});
@@ -164,7 +164,7 @@ router.post('/cart_post', function(req, res, next) {
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-            data = biz_data;
+                data = biz_data;
             }
         },
     ],
@@ -180,7 +180,7 @@ router.post('/order_post', function(req, res, next) {
     let database,data = {};
     let post_order = req.body.order;
     let post_order_payments = req.body.order_payments;
-    let option = req.body.option ? req.data.option : {};
+    let option = req.body.option ? req.body.option : {};
     data = Data_Logic.get(Type.DATA_ORDER,0);
     async.series([
         async function(call){

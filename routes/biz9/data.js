@@ -243,7 +243,7 @@ router.post('/database_info',function(req,res,next){
     let error = null;
     let database = {};
     let data = Data_Logic.get(Type.DATA_APP,0,{data:req.body.data});
-    let option =  req.data.option ? req.body.option : {};
+    let option =  req.body.option ? req.body.option : {};
     async.series([
        async function(call){
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:data.app_id,result:[]}));

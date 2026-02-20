@@ -1036,8 +1036,8 @@ router.post('/gallery', function(req, res, next) {
 router.post('/gallery_home', function(req, res, next) {
     let error = null;
     let database,data = {};
-    let option = req.body.option ? req.data.option : {};
-    let search = req.body.search ? req.data.search : Data_Logic.get_search(Type.DATA_GALLERY,{},{},1,6);
+    let option = req.body.option ? req.body.option : {};
+    let search = req.body.search ? req.body.search : Data_Logic.get_search(Type.DATA_GALLERY,{},{},1,6);
     data.page  = Data_Logic.get(Type.DATA_PAGE,0);
     data.gallerys = [];
     async.series([
