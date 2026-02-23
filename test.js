@@ -1,10 +1,14 @@
 async = require('async')
 const axios = require('axios');
-const {Database,Data,Portal} = require("/home/think1/www/doqbox/biz9-framework/biz9-data/code");
-const {Scriptz} = require("biz9-scriptz");
-const {Type,Data_Logic,App_Logic,Url} = require("/home/think1/www/doqbox/biz9-framework/biz9-logic/code");
 const assert = require('node:assert');
+const {Database,Data} = require(".");
 const {Log,Num,Str} = require("biz9-utility");
+const {Store_Field,Store_Type,Store_Table,Store_Logic}=require("/home/think1/www/doqbox/biz9-framework/biz9-store/source");
+const {Cart_Data}=require("/home/think1/www/doqbox/biz9-framework/biz9-store-data/source");
+const {User_Field,User_Type,User_Table,User_Logic}=require("/home/think1/www/doqbox/biz9-framework/biz9-user/source");
+const {Data_Logic,Data_Value_Type,Data_Table,Data_Field}=require("/home/think1/www/doqbox/biz9-framework/biz9-data-logic/source");
+const {Website_Logic,Url}=require("/home/think1/www/doqbox/biz9-framework/biz9-website/source");
+
 /*
  * availble tests
 - connect
@@ -47,36 +51,18 @@ describe('connect', function(){ this.timeout(25000);
         async.series([
             function(call){
                 console.log('CONNECT-START');
-                //-->
-                //let parent = Data_Logic.get(new_data_type,0,{test:true});
-                //Log.w('parent',parent);
-                //-- PAGE-HOME START --//
-                let id = Type.PAGE_HOME;
-                let data_type = Type.DATA_PAGE;
-                //id
-                let id_field = Type.FIELD_TITLE_URL;
-                //joins
-                //products-popular
-                let join_product_popular = Data_Logic.get_search_join(Type.SEARCH_ITEMS,Data_Logic.get_search(Type.DATA_PRODUCT,{},{view_count:-1},1,12),{title:'popular_products'});
-                let join_product_latest = Data_Logic.get_search_join(Type.SEARCH_ITEMS,Data_Logic.get_search(Type.DATA_PRODUCT,{},{date_create:-1},1,12),{title:'latest_products'});
-                let join_product_rating = Data_Logic.get_search_join(Type.SEARCH_ITEMS,Data_Logic.get_search(Type.DATA_PRODUCT,{},{rating_avg:-1},1,12),{title:'top_products'});
-                let join_product_trending = Data_Logic.get_search_join(Type.SEARCH_ITEMS,Data_Logic.get_search(Type.DATA_PRODUCT,{},{view_count:-1},1,12),{title:'trending_products'});
-                let join_foreign_category_product_count = Data_Logic.get_search_foreign(Type.SEARCH_COUNT,Type.DATA_PRODUCT,Type.FIELD_CATEGORY,Type.FIELD_TITLE,{title:'product_count'});
-                let join_foreign_category_product_items = Data_Logic.get_search_foreign(Type.SEARCH_ITEMS,Type.DATA_PRODUCT,Type.FIELD_CATEGORY,Type.FIELD_TITLE,{title:'product_items',page_current:1,page_size:12});
-                let join_category = Data_Logic.get_search_join(Type.SEARCH_ITEMS,Data_Logic.get_search(Type.DATA_CATEGORY,{},{view_count:-1},1,12),{title:'categorys',distinct:{field:Type.FIELD_TITLE,sort_by:Type.SEARCH_SORT_BY_ASC},foreigns:[join_foreign_category_product_count, join_foreign_category_product_items]});
-                let join_blog_post = Data_Logic.get_search_join(Type.SEARCH_ITEMS,Data_Logic.get_search(Type.DATA_BLOG_POST,{},{view_count:-1},1,12),{title:'blog_items'});
-
-                let = option = {id_field,joins:[join_product_popular,join_product_latest,join_product_rating,join_product_trending,join_category,join_blog_post]};
-                //-- post-start --//
-                let post_data = {id:id,data_type:data_type,option:option};
-                let url = App_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.GET);
-                //-- post-end --//
-
-                //-- PAGE-HOME END --//
+                //-- DATA START --//
+                let option = {};
+                // -- parent --
+                let parent = Data_Logic.get(Data_Table.BLANK,0,{data:{apple:'cool',butter:'bean'}});
+                let post_data = {id:parent.id,table:parent.table,data:parent,option:option};
+                let url = Website_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST);
+                Log.w('33_url',url);
+                //-- DATA END --//
 
                 //-- PRINT START --//
-                Log.w('66_post_data',post_data);
-                Log.w('66_url',url);
+                //Log.w('66_post_data',post_data);
+                //Log.w('66_url',url);
                 //-- PRINT END --//
 
                 //-- SERVICE-POST START --//
@@ -92,6 +78,57 @@ describe('connect', function(){ this.timeout(25000);
                     console.log('CONNECT-END');
                 });
                 //-- SERVICE-POST END --//
+   // -- POST-START --//
+                /*
+                let option = {};
+                // -- parent --
+                //Log.w('33_parent',parent);
+                //let parent = Data_Logic.get(Project_Table.PRODUCT,0);
+                //const [error,biz_data] = await Data.post(database,parent.table,parent,option);
+                // -- sub items --
+                //let sub_items = Data_Logic.get(Project_Table.BLANK,0,{count:10,parent:parent,data:{field_1:'value_'+Num.get_id(),field_2:'value_'+Num.get_id()}});
+                let sub_items = Data_Logic.get(Project_Table.PRODUCT,0,{count:10,data:Store_Logic.get_test_product()});
+                //let sub_items = Data_Logic.get(Project_Table.PRODUCT,0,{count:1,data:User_Logic.get_test_user()});
+                const [error,biz_data] = await Data.post_items(database,sub_items);
+                */
+                // -- POST-END --//
+                //-- GET START --//
+                /*
+                    //let foreign_2 = Data_Logic.get_foreign(Data_Value_Type.ITEMS,Project_Table.IMAGE,Data_Field.PARENT_ID,Field.ID,{title:'images'});
+                    //let join_search_1 = Data_Logic.get_search(Project_Table.BLANK,{},{},1,0,{});
+                    //let join_1 = Data_Logic.get_join(Data_Value_Type.ITEMS,join_search_1,{foreigns:[foreign_2]});
+                    //let foreign_1 = Data_Logic.get_foreign(Data_Value_Type.ITEMS,Project_Table.BLANK,Data_Field.PARENT_ID,Field.ID);
+                    //let group_1 = Data_Logic.get_group({foreigns:[foreign_2]});//Data_Logic.get_group();
+                let option = {};
+                //let option = {joins:[join_1]};//{groups:[group_1]};//{foreigns:[foreign_1]};
+                let parent = Data_Logic.get(Project_Table.PRODUCT,'833');
+                const [error,biz_data] = await Data.get(database,parent.table,parent.id,option);
+                */
+                //-- GET END --//
+                //-->
+                //-- SEARCH START --//
+                /*
+                let join_search_1 = Data_Logic.get_search(Project_Table.BLANK,{},{},1,0,{});
+                let join_1 = Data_Logic.get_join(Data_Value_Type.ITEMS,join_search_1);
+                let foreign_1 = Data_Logic.get_foreign(Data_Value_Type.ITEMS,Project_Table.BLANK,Data_Field.PARENT_ID,Field.ID);
+                let group_1 = Data_Logic.get_group();
+                let option = {groups:[group_1]};//{joins:[join_1],foreigns:[foreign_1]};
+                */
+                //let search = Data_Logic.get_search(Project_Table.PRODUCT,{},{},1,0,{});
+                //const [error,biz_data] = await Data.search(database,search.table,search.filter,search.sort_by,search.page_current,search.page_size,option);
+                //const [error,biz_data] = await Data.count(database,search.table,search.filter);
+                //-- SEARCH START --//
+                // -- DELETE-START --//
+                /*
+                let option = {};
+                // -- parent --
+                //let parent = Data_Logic.get(Project_Table.PRODUCT,'255');
+                //const [error,biz_data] = await Data.delete(database,parent.table,parent.id,option);
+                let search = Data_Logic.get_search(Project_Table.PRODUCT,{},{},1,0,{});
+                const [error,biz_data] = await Data.delete_search(database,search.table,search.filter,search.sort_by,search.page_current,search.page_size,option);
+                */
+                // -- DELETE-END --//
+
 
             }
         ],

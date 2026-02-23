@@ -1,8 +1,8 @@
 let express=require('express');
 let router=express.Router();
 /* -- biz9_start -- */
-const {Portal,Database}=require("/home/think1/www/doqbox/biz9-framework/biz9-data/code");
-const {Type,Data_Logic}=require("/home/think1/www/doqbox/biz9-framework/biz9-logic/code");
+const {Data,Database}=require("/home/think1/www/doqbox/biz9-framework/biz9-data/source");
+const {Data_Type,Data_Logic}=require("/home/think1/www/doqbox/biz9-framework/biz9-data-logic/source");
 const {Scriptz}=require("biz9-scriptz");
 const {Log,Str,Num}=require("biz9-utility");
 /* -- biz9_end -- */
@@ -12,19 +12,11 @@ router.get('/ping',function(req,res,next){
     res.send({error:error,data:data});
     res.end();
 });
-//9_get
-/*
- * Required Form Data
-   - object / {data_type:string,key:string-num};
-   - ex. / {data_type:Type.DATA_PRODUCT,id:123};
- * Option
-   - object / {};
-   - ex. / {image:{0}};
-*/
-router.post('/get',function(req,res,next){
+//9_post
+router.post('/post',function(req,res,next){
     let error = null;
     let database = {};
-    let data = Data_Logic.get(req.body.data_type,req.body.id);
+    let data = Data_Logic.get(req.body.table,req.body.id,{data:req.body.data});
     let option = req.body.option ? req.body.option : {};
     async.series([
         async function(call){
@@ -36,7 +28,7 @@ router.post('/get',function(req,res,next){
             }
         },
         async function(call){
-            const [biz_error,biz_data] = await Portal.get(database,data.data_type,data.id,option);
+            const [biz_error,biz_data] = await Data.post(database,data.table,data,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
@@ -49,12 +41,11 @@ router.post('/get',function(req,res,next){
             res.end();
         });
 });
-//9_post
-// - required data = {data_type:TYPE.DATA_PRODUCT,id:123,data:form_data};
-router.post('/post',function(req,res,next){
+
+router.post('/get',function(req,res,next){
     let error = null;
     let database = {};
-    let data = Data_Logic.get(req.body.data_type,req.body.id,{data:req.body.data});
+    let data = Data_Logic.get(req.body.table,req.body.id);
     let option = req.body.option ? req.body.option : {};
     async.series([
         async function(call){
@@ -66,7 +57,7 @@ router.post('/post',function(req,res,next){
             }
         },
         async function(call){
-            const [biz_error,biz_data] = await Portal.post(database,data.data_type,data,option);
+            const [biz_error,biz_data] = await Portal.get(database,data.table,data.id,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
@@ -97,7 +88,7 @@ router.post('/search',function(req,res,next){
         },
         async function(call){
             console.log('aaaaaaa');
-            const [biz_error,biz_data] = await Portal.search(database,data.search.data_type,data.search.filter,data.search.sort_by,data.search.page_current,data.search.page_size,option);
+            const [biz_error,biz_data] = await Portal.search(database,data.search.table,data.search.filter,data.search.sort_by,data.search.page_current,data.search.page_size,option);
             console.log('bbbb');
             Log.w('biz_data',biz_data);
             if(biz_error){
@@ -113,11 +104,11 @@ router.post('/search',function(req,res,next){
         });
 });
 //9_delete
-// required - data_type,id
+// required - table,id
 router.post('/delete',function(req,res,next){
     let error = null;
     let database = {};
-    let data = Data_Logic.get(req.body.data_type,req.body.id);
+    let data = Data_Logic.get(req.body.table,req.body.id);
     let option =  req.body.option ? req.body.option : {};
     async.series([
         async function(call){
@@ -129,7 +120,7 @@ router.post('/delete',function(req,res,next){
             }
         },
         async function(call){
-            const [biz_error,biz_data] = await Portal.delete(database,data.data_type,data.id,option);
+            const [biz_error,biz_data] = await Portal.delete(database,data.table,data.id,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
@@ -143,11 +134,11 @@ router.post('/delete',function(req,res,next){
         });
 });
 //9_copy
-//required_form_data = data{data_type,id}
+//required_form_data = data{table,id}
 router.post('/copy',function(req,res,next){
     let error = null;
     let database = {};
-    let data = Data_Logic.get(req.body.data_type,req.body.id);
+    let data = Data_Logic.get(req.body.table,req.body.id);
     let option =  req.body.option ? req.body.option : {};
     async.series([
         async function(call){
@@ -159,7 +150,7 @@ router.post('/copy',function(req,res,next){
             }
         },
         async function(call){
-            const [biz_error,biz_data] = await Portal.copy(database,data.data_type,data.id);
+            const [biz_error,biz_data] = await Portal.copy(database,data.table,data.id);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
@@ -209,7 +200,7 @@ router.post('/post_items',function(req,res,next){
 router.post('/delete_search',function(req,res,next){
     let error = null;
     let database = {};
-	let data = Data_Logic.get_new(req.body.search.data_type,0,{data:{search:req.body.search}});
+	let data = Data_Logic.get_new(req.body.search.table,0,{data:{search:req.body.search}});
 	data[Type.FIELD_RESULT_OK_DELETE] = false;
 	data[Type.FIELD_RESULT_OK_GROUP_DELETE] = false;
 	data[Type.FIELD_RESULT_OK_IMAGE_DELETE] = false;
@@ -224,7 +215,7 @@ router.post('/delete_search',function(req,res,next){
             }
         },
         async function(call){
-            const [biz_error,biz_data] = await Portal.delete_search(database,data.search.data_type,data.search.filter,option);
+            const [biz_error,biz_data] = await Portal.delete_search(database,data.search.table,data.search.filter,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{

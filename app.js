@@ -26,18 +26,21 @@ CLOUD_FLARE_ACCOUNT_ID="d5141ab35f31b135fa3e3ceef222d3a8";
 //APP_ENV=process.env.NODE_ENV;
 APP_ENV='test';
 /*--- DEFAULT END ---*/
+/* --- APP URL START  -- */
+const data=require("./routes/biz9/data");
+//const file=require("./routes/main/file");
+//const image=require("./routes/main/image");
+/* --- APP URL END  -- */
+
 /* --- APP URL-CUSTOM START  -- */
+/*
 const cms=require("./routes/cms");
 const item=require("./routes/item");
 const index=require("./routes/index");
 const page=require("./routes/page");
 const user=require("./routes/user");
+*/
 /* --- APP URL-CUSTOM END  -- */
-/* --- APP URL START  -- */
-const crud=require("./routes/main/crud");
-const file=require("./routes/main/file");
-const image=require("./routes/main/image");
-/* --- APP URL END  -- */
 /* --- APP EXPRESS START --- */
 app=express();
 const corsConfig = {
@@ -58,18 +61,20 @@ app.use(bodyParser.json({limit:"50mb"}));
 app.use(bodyParser.urlencoded({limit:"50mb",extended:true,parameterLimit:50000}));
 app.use(express.static(path.join(__dirname,"public")));
 /* --- APP EXPRESS END --- */
+/* --- APP ROUTES START --- */
+app.use("/biz9/data",data);
+/* --- APP ROUTES END --- */
+
+
+
 /* --- APP ROUTES-CUSTOM START --- */
+/*
 app.use("/cms",cms);
 app.use("/item",item);
 app.use("/page",page);
 app.use("/user",user);
+*/
 /* --- APP ROUTES-CUSTOM START --- */
-/* --- APP ROUTES START --- */
-app.use("/",index);
-app.use("/main/crud",crud);
-app.use("/main/file",file);
-app.use("/main/image",image);
-/* --- APP ROUTES END --- */
 /* --- APP ERROR START --- */
 app.use(function(err,req,res,next) {
     let cloud_error=err;
