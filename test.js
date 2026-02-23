@@ -51,18 +51,35 @@ describe('connect', function(){ this.timeout(25000);
         async.series([
             function(call){
                 console.log('CONNECT-START');
-                //-- DATA START --//
+                //-- DATA-POST-ITEMS START --//
+                let option = {};
+                // -- parent --
+                let parent_items = Data_Logic.get(Data_Table.BLANK,'0',{count:3});
+                //let post_data = {id:parent.id,table:parent.table,data:parent,option:option};
+                //let url = Website_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.GET);
+                //-- DATA-POST-ITEMS END --//
+
+                //-- DATA-GET START --//
+                let option = {};
+                // -- parent --
+                let parent = Data_Logic.get(Data_Table.BLANK,'420');
+                //let post_data = {id:parent.id,table:parent.table,data:parent,option:option};
+                //let url = Website_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.GET);
+                //-- DATA-GET END --//
+
+                //-- DATA-POST START --//
+                /*
                 let option = {};
                 // -- parent --
                 let parent = Data_Logic.get(Data_Table.BLANK,0,{data:{apple:'cool',butter:'bean'}});
                 let post_data = {id:parent.id,table:parent.table,data:parent,option:option};
                 let url = Website_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST);
-                Log.w('33_url',url);
-                //-- DATA END --//
+                */
+                //-- DATA-POST END --//
 
                 //-- PRINT START --//
-                //Log.w('66_post_data',post_data);
-                //Log.w('66_url',url);
+                Log.w('66_post_data',post_data);
+                Log.w('66_url',url);
                 //-- PRINT END --//
 
                 //-- SERVICE-POST START --//

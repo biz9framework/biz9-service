@@ -49,6 +49,7 @@ router.post('/get',function(req,res,next){
     let option = req.body.option ? req.body.option : {};
     async.series([
         async function(call){
+            Log.w('11_data',data);
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -57,7 +58,7 @@ router.post('/get',function(req,res,next){
             }
         },
         async function(call){
-            const [biz_error,biz_data] = await Portal.get(database,data.table,data.id,option);
+            const [biz_error,biz_data] = await Data.get(database,data.table,data.id,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
@@ -70,6 +71,39 @@ router.post('/get',function(req,res,next){
             res.end();
         });
 });
+//9_post_items
+router.post('/post_items',function(req,res,next){
+    let error = null;
+    let database = {};
+    let data =  req.body.data ? req.body.data : [];
+    let option =  req.body.option ? req.body.option : {};
+    async.series([
+        async function(call){
+            const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                database = biz_data;
+            }
+        },
+        async function(call){
+            if(data.length > 0){
+                const [biz_error,biz_data] = await Portal.post_items(database,data,option);
+                if(biz_error){
+                    error=Log.append(error,biz_error);
+                }else{
+                    data = biz_data;
+                }
+            }
+        },
+    ],
+        function(err, result){
+            res.send({error:error,data:data});
+            res.end();
+        });
+});
+
+
 //9_search
 // - required_form_data = search
 router.post('/search',function(req,res,next){
@@ -155,38 +189,6 @@ router.post('/copy',function(req,res,next){
                 error=Log.append(error,biz_error);
             }else{
                 data = biz_data;
-            }
-        },
-    ],
-        function(err, result){
-            res.send({error:error,data:data});
-            res.end();
-        });
-});
-//9_post_items
-//required = data = []
-router.post('/post_items',function(req,res,next){
-    let error = null;
-    let database = {};
-    let data =  req.body.data ? req.body.data : [];
-    let option =  req.body.option ? req.body.option : {};
-    async.series([
-        async function(call){
-            const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }else{
-                database = biz_data;
-            }
-        },
-        async function(call){
-            if(data.length > 0){
-                const [biz_error,biz_data] = await Portal.post_items(database,data,option);
-                if(biz_error){
-                    error=Log.append(error,biz_error);
-                }else{
-                    data = biz_data;
-                }
             }
         },
     ],
