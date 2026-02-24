@@ -3,8 +3,8 @@ let router=express.Router();
 /* -- biz9_start -- */
 const {Data,Database}=require("/home/think1/www/doqbox/biz9-framework/biz9-data/source");
 const {Data_Type,Data_Logic}=require("/home/think1/www/doqbox/biz9-framework/biz9-data-logic/source");
+const {Log,Str,Num}=require("/home/think1/www/doqbox/biz9-framework/biz9-utility/source");
 const {Scriptz}=require("biz9-scriptz");
-const {Log,Str,Num}=require("biz9-utility");
 /* -- biz9_end -- */
 router.get('/ping',function(req,res,next){
     let error = null;
@@ -41,7 +41,7 @@ router.post('/post',function(req,res,next){
             res.end();
         });
 });
-
+//9_get
 router.post('/get',function(req,res,next){
     let error = null;
     let database = {};
@@ -49,7 +49,6 @@ router.post('/get',function(req,res,next){
     let option = req.body.option ? req.body.option : {};
     async.series([
         async function(call){
-            Log.w('11_data',data);
             const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
             if(biz_error){
                 error=Log.append(error,biz_error);
@@ -88,7 +87,7 @@ router.post('/post_items',function(req,res,next){
         },
         async function(call){
             if(data.length > 0){
-                const [biz_error,biz_data] = await Portal.post_items(database,data,option);
+                const [biz_error,biz_data] = await Data.post_items(database,data,option);
                 if(biz_error){
                     error=Log.append(error,biz_error);
                 }else{
@@ -102,43 +101,7 @@ router.post('/post_items',function(req,res,next){
             res.end();
         });
 });
-
-
-//9_search
-// - required_form_data = search
-router.post('/search',function(req,res,next){
-    let error = null;
-    let database = {};
-    let data = {search:req.body.search};
-    let option = req.body.option ? req.body.option : {};
-    async.series([
-        async function(call){
-            const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }else{
-                database = biz_data;
-            }
-        },
-        async function(call){
-            console.log('aaaaaaa');
-            const [biz_error,biz_data] = await Portal.search(database,data.search.table,data.search.filter,data.search.sort_by,data.search.page_current,data.search.page_size,option);
-            console.log('bbbb');
-            Log.w('biz_data',biz_data);
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }else{
-                data = biz_data;
-            }
-        },
-    ],
-        function(err,result){
-            res.send({error:error,data:data});
-            res.end();
-        });
-});
 //9_delete
-// required - table,id
 router.post('/delete',function(req,res,next){
     let error = null;
     let database = {};
@@ -154,7 +117,7 @@ router.post('/delete',function(req,res,next){
             }
         },
         async function(call){
-            const [biz_error,biz_data] = await Portal.delete(database,data.table,data.id,option);
+            const [biz_error,biz_data] = await Data.delete(database,data.table,data.id,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
@@ -167,8 +130,38 @@ router.post('/delete',function(req,res,next){
             res.end();
         });
 });
+//9_delete_search
+router.post('/delete_search',function(req,res,next){
+    let error = null;
+    let database = {};
+	let data = Data_Logic.get(req.body.search.table,0,{data:{search:req.body.search}});
+	data[Data_Type.FIELD_RESULT_OK_DELETE] = false;
+	data[Data_Type.FIELD_RESULT_OK_GROUP_DELETE] = false;
+    let option =  req.body.option ? req.body.option : {};
+    async.series([
+        async function(call){
+            const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                database = biz_data;
+            }
+        },
+        async function(call){
+            const [biz_error,biz_data] = await Data.delete_search(database,data.search.table,data.search.filter,option);
+            if(biz_error){
+                error=Log.append(error,biz_error);
+            }else{
+                data = biz_data;
+            }
+        },
+    ],
+        function(err, result){
+            res.send({error:error,data:data});
+            res.end();
+        });
+});
 //9_copy
-//required_form_data = data{table,id}
 router.post('/copy',function(req,res,next){
     let error = null;
     let database = {};
@@ -184,7 +177,7 @@ router.post('/copy',function(req,res,next){
             }
         },
         async function(call){
-            const [biz_error,biz_data] = await Portal.copy(database,data.table,data.id);
+            const [biz_error,biz_data] = await Data.copy(database,data.table,data.id);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
@@ -197,19 +190,15 @@ router.post('/copy',function(req,res,next){
             res.end();
         });
 });
-//9_delete_search
-//required = search
-router.post('/delete_search',function(req,res,next){
+//9_search
+router.post('/search',function(req,res,next){
     let error = null;
     let database = {};
-	let data = Data_Logic.get_new(req.body.search.table,0,{data:{search:req.body.search}});
-	data[Type.FIELD_RESULT_OK_DELETE] = false;
-	data[Type.FIELD_RESULT_OK_GROUP_DELETE] = false;
-	data[Type.FIELD_RESULT_OK_IMAGE_DELETE] = false;
-    let option =  req.body.option ? req.body.option : {};
+    let data = {search:req.body.search};
+    Log.w('my_data',data);
+    let option = req.body.option ? req.body.option : {};
     async.series([
         async function(call){
-            const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
@@ -217,45 +206,15 @@ router.post('/delete_search',function(req,res,next){
             }
         },
         async function(call){
-            const [biz_error,biz_data] = await Portal.delete_search(database,data.search.table,data.search.filter,option);
+            const [biz_error,biz_data] = await Data.search(database,data.search.table,data.search.filter,data.search.sort_by,data.search.page_current,data.search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
-                data.delete_result = biz_data;
+                data = biz_data;
             }
         },
     ],
-        function(err, result){
-            res.send({error:error,data:data});
-            res.end();
-        });
-});
-//9_database_info
-//required = data : app_id
-router.post('/database_info',function(req,res,next){
-    let error = null;
-    let database = {};
-    let data = Data_Logic.get(Type.DATA_APP,0,{data:req.body.data});
-    let option =  req.body.option ? req.body.option : {};
-    async.series([
-       async function(call){
-            const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:data.app_id,result:[]}));
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }else{
-                database = biz_data;
-            }
-        },
-        async function(call){
-            const [biz_error,biz_data] = await Database.info(database,option);
-            if(biz_error){
-                error=Log.append(error,biz_error);
-            }else{
-                data.result = biz_data;
-            }
-        },
-    ],
-        function(err, result){
+        function(err,result){
             res.send({error:error,data:data});
             res.end();
         });

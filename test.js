@@ -51,26 +51,66 @@ describe('connect', function(){ this.timeout(25000);
         async.series([
             function(call){
                 console.log('CONNECT-START');
-                //-- DATA-POST-ITEMS START --//
-                let option = {};
-                // -- parent --
-                let parent_items = Data_Logic.get(Data_Table.BLANK,'0',{count:3});
-                //let post_data = {id:parent.id,table:parent.table,data:parent,option:option};
-                //let url = Website_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.GET);
-                //-- DATA-POST-ITEMS END --//
 
-                //-- DATA-GET START --//
-                let option = {};
-                // -- parent --
-                let parent = Data_Logic.get(Data_Table.BLANK,'420');
-                //let post_data = {id:parent.id,table:parent.table,data:parent,option:option};
-                //let url = Website_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.GET);
-                //-- DATA-GET END --//
+                //-- DATA-SEARCH START --//
 
-                //-- DATA-POST START --//
+                let option = {};
+                let search = Data_Logic.get_search(Data_Table.BLANK,{},{},1,0);
+                let post_data = {data:search,option:option};
+                let url = Website_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.SEARCH);
+
+                //-- DATA-SEARCH END --//
+
+
+                //-- DATA-COPY START --//
                 /*
                 let option = {};
                 // -- parent --
+                let parent = Data_Logic.get(Data_Table.BLANK,'247');
+                let post_data = {id:parent.id,table:parent.table,data:parent,option:option};
+                let url = Website_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.COPY);
+                */
+                //-- DATA-COPY END --//
+
+                //-- DATA-DELETE-SEARCH START --//
+                /*
+                let option = {};
+                let search = Data_Logic.get_search(Data_Table.BLANK,{},{},1,0);
+                let post_data = {search:search,option:option};
+                let url = Website_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.DELETE_SEARCH);
+                */
+                //-- DATA-DELETE-SEARCH END --//
+
+                //-- DATA-DELETE START --//
+                /*
+                let option = {};
+                let parent = Data_Logic.get(Data_Table.BLANK,'420');
+                let post_data = {id:parent.id,table:parent.table,data:parent,option:option};
+                let url = Website_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.DELETE);
+                */
+                //-- DATA-DELETE END --//
+
+                //-- DATA-POST-ITEMS START --//
+                /*
+                let option = {};
+                let parent_items = Data_Logic.get(Data_Table.BLANK,'0',{count:5});
+                let post_data = {data:parent_items,option:option};
+                let url = Website_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST_ITEMS);
+                */
+                //-- DATA-POST-ITEMS END --//
+
+                //-- DATA-GET START --//
+                /*
+                let option = {};
+                let parent = Data_Logic.get(Data_Table.BLANK,'420');
+                //let post_data = {id:parent.id,table:parent.table,data:parent,option:option};
+                //let url = Website_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.GET);
+                */
+                //-- DATA-GET END --//
+
+                //-- DATA-POST START --//
+               /*
+                let option = {};
                 let parent = Data_Logic.get(Data_Table.BLANK,0,{data:{apple:'cool',butter:'bean'}});
                 let post_data = {id:parent.id,table:parent.table,data:parent,option:option};
                 let url = Website_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.POST);
