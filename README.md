@@ -1,11 +1,11 @@
-# BiZ9 Blank
+# BiZ9 Service
 ** Description
 
 ## Installation
 Use the [npm](https://npm.com) installer to install.
 
 ```bash
-npm i biz9-blank
+npm i biz9-service
 ```
 
 ## Required
