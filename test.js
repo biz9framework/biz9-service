@@ -15,7 +15,7 @@ const {Website_Logic,Url}=require("/home/think1/www/doqbox/biz9-framework/biz9-w
 - post_user
 */
 //-env-test - start //
-let APP_ID = "test-stage-feb9";
+let APP_ID = "test-stage-feb23";
 let URL = "http://localhost:1904";
 let PORT_ID = "1904";
 //-env-test - end //
@@ -52,15 +52,22 @@ describe('connect', function(){ this.timeout(25000);
             function(call){
                 console.log('CONNECT-START');
 
-                //-- DATA-SEARCH START --//
+                //-- FAVORITE-POST START --//
+                let option = {};
+                let parent = Data_Logic.get(Data_Table.BLANK,'247');
+                let favorite = Favorite_Logic.get_search(Data_Table.BLANK,{},{},1,0);
+                let post_data = {search:search,option:option};
+                let url = Website_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.SEARCH);
+                //-- FAVORITE-POST END --//
 
+                //-- DATA-SEARCH START --//
+                /*
                 let option = {};
                 let search = Data_Logic.get_search(Data_Table.BLANK,{},{},1,0);
-                let post_data = {data:search,option:option};
+                let post_data = {search:search,option:option};
                 let url = Website_Logic.get_url(DATA_CONFIG.APP_ID,DATA_CONFIG.URL,Url.SEARCH);
-
+                */
                 //-- DATA-SEARCH END --//
-
 
                 //-- DATA-COPY START --//
                 /*

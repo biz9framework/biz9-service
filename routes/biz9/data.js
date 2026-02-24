@@ -8,7 +8,7 @@ const {Scriptz}=require("biz9-scriptz");
 /* -- biz9_end -- */
 router.get('/ping',function(req,res,next){
     let error = null;
-    let data="crud-ping";
+    let data="data-ping";
     res.send({error:error,data:data});
     res.end();
 });
@@ -195,17 +195,17 @@ router.post('/search',function(req,res,next){
     let error = null;
     let database = {};
     let data = {search:req.body.search};
-    Log.w('my_data',data);
     let option = req.body.option ? req.body.option : {};
     async.series([
-        async function(call){
+         async function(call){
+            const [biz_error,biz_data] = await Database.get(Scriptz.get_biz9_config({app_id:(req.query.app_id)?req.query.app_id:null}));
             if(biz_error){
                 error=Log.append(error,biz_error);
             }else{
                 database = biz_data;
             }
         },
-        async function(call){
+       async function(call){
             const [biz_error,biz_data] = await Data.search(database,data.search.table,data.search.filter,data.search.sort_by,data.search.page_current,data.search.page_size,option);
             if(biz_error){
                 error=Log.append(error,biz_error);
