@@ -4,7 +4,6 @@ Author: Brandon Poole Sr. (biz9framework@gmail.com)
 License GNU General Public License v3.0
 Description: BiZ9 Framework: Service
 */
-const {Scriptz}=require("biz9-scriptz");
 const {Log}=require("biz9-utility");
 class Url {
     //crud
