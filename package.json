@@ -1,6 +1,6 @@
 {
-  "name": "biz9-blank",
-  "version": "1.0.9",
+  "name": "biz9-service",
+  "version": "1.0.10",
   "description": "** Description",
   "main": "index.js",
   "scripts": {
@@ -12,5 +12,6 @@
     "async": "^3.2.6",
     "biz9-scriptz": "^5.8.28",
     "biz9-utility": "^4.7.16"
-  }
+  },
+  "devDependencies": {}
 }
