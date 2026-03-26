@@ -19,7 +19,7 @@ const APP_ID = 'test-stage-feb17';
 //9_connect - 9_test_connect
 describe('connect', function(){ this.timeout(25000);
     it("_connect", function(done){
-        let error=null;
+        let response={};
         let database = {};
         let data = {};
         async.series([

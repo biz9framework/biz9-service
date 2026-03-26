@@ -1,6 +1,6 @@
 {
   "name": "biz9-service",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "** Description",
   "main": "index.js",
   "scripts": {
@@ -11,6 +11,6 @@
   "dependencies": {
     "async": "^3.2.6",
     "biz9-scriptz": "^5.8.30",
-    "biz9-utility": "^4.7.19"
+    "biz9-utility": "^4.7.38"
   }
 }
